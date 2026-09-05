@@ -10,7 +10,7 @@ Central de painéis gerenciais das obras da Marka Engenharia Ltda no Terminal Fe
 |---|---|---|
 | [Medição](medicao/) | Boletins de medição por contrato | 2 painéis publicados |
 | [Cronogramas](cronogramas/) | Análises de prazo, caminho crítico, curva de avanço | estrutura pronta |
-| [DRE e Custos](dre/) | Resultado por contrato, custo por natureza, margem por frente | estrutura pronta |
+| [DRE e Custos](dre/) | Resultado por contrato, custo por natureza, material por fornecedor | 1 painel publicado |
 
 ## Painéis de medição
 
@@ -18,6 +18,17 @@ Central de painéis gerenciais das obras da Marka Engenharia Ltda no Terminal Fe
 |---|---|---|
 | [Medição OCG](medicao/ocg/) | RT-2180KF-G-17251 · Obra 754 | `Medição OCG.xlsx`, aba QQP |
 | [Medição TP](medicao/trem/) | PQ-2180KF-G-10017 · L9057 | `Medição Trem de Passageiros.xlsx`, aba QQP |
+
+## Painel de DRE e custos
+
+| Painel | Contrato | Base |
+|---|---|---|
+| [DRE e Custos 754](dre/754/) | RT-2180KF-G-17251 · Obra 754 | `DRE_754_Evolucao_Contrato_Marka.xlsx` (aba Consolidado) + `Painel_Custos_Contrato_Obra754.xlsx` |
+
+```
+python3 extract_dre.py "DRE_754.xlsx" "Painel_Custos.xlsx" > dre_data.json
+python3 build_dre.py                  # gera dre_custos_754.html
+```
 
 ## Atualizar um painel de medição
 
@@ -45,7 +56,9 @@ Marka-Central/
 │   ├── ocg/                painel + scripts de extração
 │   └── trem/               painel + scripts de extração
 ├── cronogramas/            estrutura pronta
-└── dre/                    estrutura pronta
+└── dre/
+    ├── index.html          índice da área
+    └── 754/                painel + scripts de extração
 ```
 
 Marka Engenharia Ltda · Coordenação de Obras
