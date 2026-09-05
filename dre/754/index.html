@@ -1,0 +1,595 @@
+<title>DRE e Custos 754</title>
+<style>
+:root{
+  color-scheme:light;
+  --azul:#3871C1; --azul-esc:#2B5A9B; --azul-claro:#8FB2DE; --azul-tint:#E8F0FA; --azul-tint2:#D3E1F3;
+  --cinza:#656263; --ouro:#C9A84C; --ouro-tint:#F7F1DF;
+  --bg:#FFFFFF; --bg2:#F4F6F9; --bg3:#EBEFF5; --linha:#D0D7E3; --linha2:#E4E9F0;
+  --ink:#1F2933; --ink2:#656263; --ink3:#8A8F98;
+  --ok:#2E7D32; --ok-tint:#E6F2E7; --warn:#B25E00; --warn-tint:#FDF1E1; --crit:#C62828; --crit-tint:#FBE9E9;
+  --s-marka:#3871C1; --s-klog:#E07B39; --s-vca:#8C6BB1; --g1:#3871C1; --g2:#E07B39; --g3:#8C6BB1; --g4:#1BA39C; --g5:#B5A03A; --rec:#3871C1; --cus:#E07B39;
+  --s-ct:#3871C1; --s-tac1:#8C6BB1; --s-tac2:#E07B39;
+  --seq1:#E8F0FA; --seq2:#BFD3EE; --seq3:#8FB2DE; --seq4:#5A8ED0; --seq5:#3871C1; --seq6:#264F87;
+  --sombra:0 1px 2px rgba(31,41,51,.06),0 4px 12px rgba(31,41,51,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --azul:#5B93D9; --azul-esc:#3871C1; --azul-claro:#7FA6D6; --azul-tint:#1C2A3D; --azul-tint2:#25385A;
+    --cinza:#B4B7BC; --ouro:#D6B75F; --ouro-tint:#2E2A1C;
+    --bg:#15181D; --bg2:#1C2026; --bg3:#242930; --linha:#353B45; --linha2:#2A3038;
+    --ink:#EEF1F5; --ink2:#B4B7BC; --ink3:#848A94;
+    --ok:#66BB6A; --ok-tint:#1B2E1D; --warn:#F5A623; --warn-tint:#33270F; --crit:#EF5350; --crit-tint:#3A1C1C;
+    --s-marka:#5B93D9; --s-klog:#E88A4D; --s-vca:#A98BD0; --g1:#5B93D9; --g2:#D95926; --g3:#9878C0; --g4:#17A093; --g5:#9A8A28; --rec:#5B93D9; --cus:#D95926;
+    --s-ct:#5B93D9; --s-tac1:#A98BD0; --s-tac2:#E88A4D;
+    --seq1:#1C2A3D; --seq2:#25385A; --seq3:#2F4C7C; --seq4:#3D66A5; --seq5:#5B93D9; --seq6:#8FB2DE;
+    --sombra:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --azul:#5B93D9; --azul-esc:#3871C1; --azul-claro:#7FA6D6; --azul-tint:#1C2A3D; --azul-tint2:#25385A;
+  --cinza:#B4B7BC; --ouro:#D6B75F; --ouro-tint:#2E2A1C;
+  --bg:#15181D; --bg2:#1C2026; --bg3:#242930; --linha:#353B45; --linha2:#2A3038;
+  --ink:#EEF1F5; --ink2:#B4B7BC; --ink3:#848A94;
+  --ok:#66BB6A; --ok-tint:#1B2E1D; --warn:#F5A623; --warn-tint:#33270F; --crit:#EF5350; --crit-tint:#3A1C1C;
+  --s-marka:#5B93D9; --s-klog:#E88A4D; --s-vca:#A98BD0; --g1:#5B93D9; --g2:#D95926; --g3:#9878C0; --g4:#17A093; --g5:#9A8A28; --rec:#5B93D9; --cus:#D95926;
+  --s-ct:#5B93D9; --s-tac1:#A98BD0; --s-tac2:#E88A4D;
+  --seq1:#1C2A3D; --seq2:#25385A; --seq3:#2F4C7C; --seq4:#3D66A5; --seq5:#5B93D9; --seq6:#8FB2DE;
+  --sombra:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg2);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.45;font-variant-numeric:tabular-nums}
+a{color:var(--azul)}
+button,select,input{font:inherit;color:inherit}
+h1,h2,h3{margin:0;text-wrap:balance}
+/* ---------- topo ---------- */
+.topo{background:#3871C1;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.marca{display:flex;flex-direction:column;line-height:1;padding-right:22px;border-right:1px solid rgba(255,255,255,.35)}
+.marca b{font-size:26px;letter-spacing:.12em;font-weight:900}
+.marca span{font-size:9px;letter-spacing:.34em;margin-top:5px;opacity:.9}
+.titulo h1{font-size:20px;font-weight:700;letter-spacing:.01em}
+.titulo p{margin:3px 0 0;font-size:12px;opacity:.9}
+.meta{margin-left:auto;display:flex;gap:18px;font-size:12px}
+.meta div{display:flex;flex-direction:column;gap:2px}
+.meta small{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.meta b{font-size:14px}
+/* ---------- abas ---------- */
+.abas{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--linha);display:flex;gap:2px;padding:0 16px;overflow-x:auto;scrollbar-width:thin}
+.abas button{background:none;border:0;border-bottom:3px solid transparent;padding:11px 12px 9px;color:var(--ink2);cursor:pointer;white-space:nowrap;font-size:12.5px;font-weight:700;letter-spacing:.01em}
+.abas button:hover{color:var(--ink);background:var(--bg2)}
+.abas button.on{color:var(--azul);border-bottom-color:var(--azul)}
+.abas button:focus-visible{outline:2px solid var(--azul);outline-offset:-2px}
+main{padding:18px 24px 48px;max-width:1600px;margin:0 auto}
+.view{display:none}.view.on{display:block}
+/* ---------- blocos ---------- */
+.sec{margin-top:22px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.sec-h h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--azul);font-weight:700}
+.sec-h .sub{font-size:12px;color:var(--ink3)}
+.painel{background:var(--bg);border:1px solid var(--linha);border-radius:6px;padding:14px 16px;box-shadow:var(--sombra)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--linha);border-top:4px solid var(--azul);border-radius:6px;padding:12px 14px 12px;box-shadow:var(--sombra);min-width:0}
+.kpi.ouro{border-top-color:var(--ouro)}
+.kpi.crit{border-top-color:var(--crit)}.kpi.warn{border-top-color:var(--warn)}.kpi.ok{border-top-color:var(--ok)}
+.kpi small{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px}
+.kpi b{display:block;font-size:22px;font-weight:700;color:var(--azul);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi.ouro b{color:var(--ouro)}.kpi.crit b{color:var(--crit)}.kpi.warn b{color:var(--warn)}.kpi.ok b{color:var(--ok)}
+.kpi em{display:block;font-style:normal;font-size:11.5px;color:var(--ink3);margin-top:4px}
+/* ---------- filtros ---------- */
+.filtros{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-end;padding:12px 14px;background:var(--bg);border:1px solid var(--linha);border-radius:6px;margin-bottom:14px}
+.filtros label{display:flex;flex-direction:column;gap:3px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.filtros select,.filtros input{border:1px solid var(--linha);background:var(--bg);border-radius:4px;padding:6px 8px;font-size:12.5px;min-width:130px;max-width:290px}
+.filtros input[type=text],.filtros input[type=search]{min-width:220px}
+.filtros input[type=number]{min-width:110px;max-width:140px}
+.filtros .chips{display:flex;gap:4px;flex-wrap:wrap}
+.chip{border:1px solid var(--linha);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer;color:var(--ink2)}
+.chip.on{background:var(--azul);border-color:var(--azul);color:#fff}
+.btn{border:1px solid var(--linha);background:var(--bg);border-radius:4px;padding:6px 10px;font-size:12px;cursor:pointer;color:var(--ink)}
+.btn:hover{background:var(--bg2)}
+.btn.pri{background:var(--azul);border-color:var(--azul);color:#fff}
+.conta{font-size:12px;color:var(--ink3);margin-left:auto;align-self:center}
+/* ---------- tabelas ---------- */
+.tw{overflow-x:auto;border:1px solid var(--linha);border-radius:6px;background:var(--bg)}
+.tw.alto{max-height:70vh;overflow-y:auto}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.3px}
+thead th{position:sticky;top:0;z-index:2;background:var(--azul-esc);color:#fff;font-weight:700;text-align:left;padding:8px 9px;white-space:nowrap;font-size:11px;letter-spacing:.04em;border-bottom:1px solid var(--linha)}
+:root[data-theme="dark"] thead th{background:#2B4E80}
+thead th.num{text-align:right}
+thead th.sort{cursor:pointer;user-select:none}
+thead th.sort:hover{background:var(--azul)}
+thead th .seta{opacity:.6;font-size:9px;margin-left:3px}
+tbody td{padding:6px 9px;border-bottom:1px solid var(--linha2);vertical-align:top}
+tbody tr:nth-child(even) td{background:var(--bg2)}
+tbody tr:hover td{background:var(--azul-tint)}
+tbody tr.clk{cursor:pointer}
+td.num,th.num{text-align:right;white-space:nowrap}
+td.neg{color:var(--crit)}
+td.pos{color:var(--ok)}
+tfoot td,tr.total td{background:var(--ouro-tint)!important;color:var(--ink);font-weight:700;border-top:2px solid var(--ouro);padding:7px 9px;white-space:nowrap}
+tr.grp td{background:var(--azul-tint)!important;font-weight:700;color:var(--azul-esc);cursor:pointer}
+tr.grp.n2 td{background:var(--bg3)!important;color:var(--ink);font-weight:700}
+tr.grp td .tri{display:inline-block;width:14px;color:var(--ink3);transition:transform .15s}
+tr.grp.fechado td .tri{transform:rotate(-90deg)}
+td.desc{min-width:280px;max-width:520px;white-space:normal}
+td.mono{font-family:Consolas,Menlo,monospace;font-size:11.5px;white-space:nowrap}
+.barra{display:inline-block;height:8px;border-radius:2px;background:var(--azul);vertical-align:middle;margin-right:6px}
+.barra.ouro{background:var(--ouro)}.barra.crit{background:var(--crit)}.barra.warn{background:var(--warn)}.barra.ok{background:var(--ok)}
+.pct{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pct i{display:inline-block;width:70px;height:7px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.pct i b{display:block;height:100%;background:var(--azul);border-radius:2px}
+.tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10.5px;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+.tag.A{background:var(--azul);color:#fff}.tag.B{background:var(--azul-tint2);color:var(--azul-esc)}.tag.C{background:var(--bg3);color:var(--ink2)}
+.tag.ok{background:var(--ok-tint);color:var(--ok)}.tag.warn{background:var(--warn-tint);color:var(--warn)}.tag.crit{background:var(--crit-tint);color:var(--crit)}.tag.neu{background:var(--bg3);color:var(--ink2)}
+.emp{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.emp i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.emp.MARKA i{background:var(--s-marka)}.emp.KLOG i{background:var(--s-klog)}.emp.VCA i{background:var(--s-vca)}.emp.x i{background:var(--ink3)}
+/* heatmap */
+.heat td.h{text-align:right;padding:5px 7px;font-size:11.5px}
+/* charts */
+.ch{position:relative;height:280px}
+.ch.baixo{height:220px}.ch.alto{height:360px}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink2);margin-bottom:6px}
+.leg span{display:inline-flex;align-items:center;gap:5px}.leg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+/* dica */
+.dica{border-left:3px solid var(--ouro);background:var(--ouro-tint);padding:9px 12px;border-radius:0 4px 4px 0;font-size:12.3px;color:var(--ink);margin-top:10px}
+.dica b{color:var(--ink)}
+.nota{font-size:11.5px;color:var(--ink3);margin-top:8px}
+/* drawer */
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(560px,100%);background:var(--bg);border-left:1px solid var(--linha);box-shadow:-8px 0 24px rgba(0,0,0,.15);z-index:40;transform:translateX(100%);transition:transform .2s;overflow-y:auto;padding:18px 20px}
+.drawer.on{transform:none}
+.drawer h3{font-size:15px;color:var(--azul);margin-bottom:4px}
+.drawer .fech{position:absolute;top:10px;right:12px}
+.dl{display:grid;grid-template-columns:150px 1fr;gap:4px 10px;font-size:12.3px;margin:12px 0}
+.dl dt{color:var(--ink3);text-transform:uppercase;font-size:10.5px;letter-spacing:.08em;padding-top:2px}
+.dl dd{margin:0}
+.rodape{margin-top:32px;padding-top:12px;border-top:2px solid var(--azul);font-size:11.5px;color:var(--ink3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media (max-width:760px){.topo{padding:12px 14px}.meta{margin-left:0}main{padding:12px 12px 40px}.kpi b{font-size:18px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="topo">
+  <div class="marca"><b>MARKA</b><span>ENGENHARIA</span></div>
+  <div class="titulo">
+    <h1>DRE e Custos · Obra 754</h1>
+    <p>Obras Civis Gerais · Contrato RT-2180KF-G-17251 · Vale S.A. · TFPM · São Luís, MA</p>
+  </div>
+  <div class="meta" id="meta"></div>
+</header>
+<nav class="abas" id="abas"></nav>
+<main id="main"></main>
+<aside class="drawer" id="drawer"></aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+window.DRE = {"meta":{"arquivos":["DRE_754.xlsx","Painel_Custos.xlsx"],"extraido_em":"2026-09-05","obra":"754","contrato":"RT-2180KF-G-17251","meses":["mar/25","abr/25","mai/25","jun/25","jul/25","ago/25","set/25","out/25","nov/25","dez/25","jan/26","fev/26","mar/26","abr/26","mai/26","jun/26","jul/26"],"nota_serie":"Serie integral extraida do DRE (mar/25-mar/26) + abr/26, mai/26, jun/26 e jul/26. ago/26: coluna Material FECHADA (R$ 977.071,72, contas 2.07.09 + 2.07.28, 01 a 31/08/2026, extracao 04/09/2026); demais grupos aguardam o DRE. Media exclui meses zerados.","mat_meses":["Maio","Junho","Julho","Agosto"],"medicao_qqp":{"contrato":88714693.0852044,"medido":44494303.86104617,"bm":"BM16"}},"receita":[0.0,0.0,0.0,457347.52,1000997.96,985238.89,2222385.37,4927118.13,0.0,3435994.94,3354804.13,3708871.96,2262350.25,1863292.39,3257475.39,3920630.35,3164542.01],"iss":[0.0,0.0,0.0,-13720.43,-30029.94,-29557.17,-66671.57,-147813.53,0.0,-117911.98,-100644.12,-185443.6,-111172.66,-93164.62,-162873.77,-196031.52,-158227.1],"contas":[{"cod":"04.01.09","conta":"Obras (material)","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,149826.47,189885.25,256534.36,419199.05,796514.75,575087.58,824574.73,1002425.75,465135.44,653453.6,827668.73,562034.36,914145.47,434769.67,670686.38]},{"cod":"04.01.19","conta":"Obras (serviços)","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,0.0,3850.0,7530.0,84658.56,97494.84,59406.83,204479.5,197767.33,190997.7,68928.91,149614.09,42562.55,61439.55,29100.0,35101.32]},{"cod":"04.01.18","conta":"COFINS a recolher","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,0.0,13720.42,30029.94,29557.17,66671.56,147813.55,0.0,103079.84,35475.94,0.0,67870.51,55898.77,97724.26,117618.91,94936.26]},{"cod":"04.01.02","conta":"Container - Locação","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,0.0,29736.43,44473.0,45013.0,47533.0,46093.0,48253.0,81386.0,10260.0,46633.0,41773.0,46813.0,46813.0,45913.0,48013.14]},{"cod":"04.01.07","conta":"Locação de WC's","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,0.0,0.0,4474.05,12967.39,21507.39,22150.71,21186.92,28427.66,24471.91,23313.33,22333.33,17310.0,18610.0,20366.67,19500.0]},{"cod":"04.01.01","conta":"Andaimes - Locação","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,0.0,0.0,0.0,0.0,7914.86,16800.27,20509.93,22754.33,12124.65,1889.46,18383.55,5170.07,9412.85,8033.89,8033.89]},{"cod":"04.01.17","conta":"PIS a recolher","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,0.0,2621.53,6506.49,6404.05,14445.49,32026.27,0.0,22333.96,21806.23,13858.03,14705.27,12111.4,21173.59,25484.09,19959.17]},{"cod":"04.01.05","conta":"Ferramentas","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,83798.26,7338.83,34161.48,9950.3,11056.77,13327.65,24669.79,13282.69,3203.37,4440.55,3511.86,12242.54,3276.65,4436.84,7320.48]},{"cod":"04.01.04","conta":"Frete","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,490.74,961.85,4890.49,0.0,30846.91,5124.77,2012.09,21137.65,0.0,1607.09,3781.87,2945.23,3289.45,0.0,171.8]},{"cod":"04.01.20","conta":"Eletro-Eletrônico","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,3185.37,75297.63,22822.3,15006.27,6099.93,26131.31,0.0,1042.69,632.0,1925.27,8706.55,713.2,2066.32,6962.3,5488.28,618.0]},{"cod":"04.01.08","conta":"Meio Ambiente","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,10554.69,4490.15,6256.3,5853.13,4184.17,3424.63,5530.11,2385.92,2893.78,3158.19,3826.88,3214.73,4360.25,6311.5,4878.98]},{"cod":"04.01.16","conta":"ICMS - Diferença Alíquota","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,117.89,335.64,605.45,3670.92,4582.03,10626.85,1952.48,1541.87,1037.45,1381.7,458.25,1427.54,9036.87,690.64,1699.68,3109.28]},{"cod":"04.01.14","conta":"Seguro garantia de obra","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,0.0,0.0,24909.34,0.0,0.0,0.0,0.0,0.0,0.0,0.0,197.7,0.0,0.0,0.0,0.0]},{"cod":"04.01.13","conta":"CREA e outras taxas","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,271.47,103.03,0.0,0.0,103.03,922.1,0.0,0.0,0.0,955.0,0.0,0.0,1008.39,0.0,0.0,306.87]},{"cod":"04.01.06","conta":"Limpeza de WC's","grupo":"CUSTO EM OBRA","gcod":"04.01","v":[0.0,0.0,0.0,0.0,0.0,0.0,310.0,0.0,0.0,2475.0,2475.0,0.0,1425.0,750.0,2700.0,1950.0,1425.0]},{"cod":"04.02.04","conta":"Folha de Pagamento Direta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,7904.02,49112.77,105549.83,226404.55,268745.16,289577.04,267620.11,0.0,282532.98,250835.12,263440.75,290801.4,304934.73,257975.06,250203.29]},{"cod":"04.02.05","conta":"Folha de Pagamento Indireta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,23410.91,57691.61,73374.92,173604.09,155538.66,182510.36,184738.92,182236.61,165306.15,157674.42,157966.86,196199.22,198785.46,185185.74,171768.52]},{"cod":"04.02.18","conta":"Refeições","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,2196.0,18718.49,58807.68,112917.58,167415.88,129187.95,27755.11,189002.63,74128.55,8452.47,160436.76,89305.99,8172.59,87549.84,75819.5]},{"cod":"04.02.08","conta":"FGTS s/ Folha Direta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,2314.31,4432.39,9807.05,25697.2,34956.48,38093.91,47171.12,38567.93,49623.42,46900.89,51130.46,58935.52,61903.41,52705.23,53000.61]},{"cod":"04.02.01","conta":"Plano de Saúde","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,4775.61,10424.55,23066.9,0.0,93451.46,45620.23,45157.62,43321.34,42583.34,40462.92,39600.32,40716.9,44142.75,37320.46]},{"cod":"04.02.02","conta":"Rescisões","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,3877.12,0.0,0.0,24568.6,43823.54,4428.55,64928.23,8945.56,9470.79,130384.48,29505.13,25711.58,4352.19,59875.02]},{"cod":"04.02.34","conta":"13º salário indireta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,188897.0,139590.18,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},{"cod":"04.02.31","conta":"13º salário direta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,187875.36,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},{"cod":"04.02.09","conta":"FGTS s/ Folha Indireta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,208.47,5901.1,7449.0,17491.93,19912.22,20686.44,29946.79,25234.4,27327.11,23997.35,23258.45,25558.08,31733.12,32271.84,35817.64]},{"cod":"04.02.23","conta":"EPI","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,414.0,14458.68,22333.84,30119.41,39599.56,20910.08,28883.88,26325.21,13206.24,27370.42,16318.36,24347.2,32661.2,22875.4,25724.34,17673.5]},{"cod":"04.02.13","conta":"IRPF s/ Folha Indireta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,2400.12,11381.77,16468.64,19277.19,21124.45,20042.53,35035.49,21750.44,13728.35,15937.48,17629.8,27113.23,25807.88,25150.94]},{"cod":"04.02.17","conta":"Férias","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,0.0,0.0,0.0,6588.88,12944.7,12981.11,21197.91,17405.67,17245.86,17911.64,48466.81,38705.29,42093.3,93395.21]},{"cod":"04.02.03","conta":"FGTS sobre rescisões","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,316.32,0.0,0.0,4920.98,8551.8,0.0,10330.92,0.0,3329.0,42993.17,5647.95,16142.57,643.08,15497.49]},{"cod":"04.02.22","conta":"Água Mineral","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,560.0,3672.5,6421.19,10664.85,10860.2,12243.2,11057.3,7037.1,7435.4,6492.85,7917.8,8918.8,9413.7,9008.1]},{"cod":"04.02.25","conta":"Uniformes","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,23465.0,0.0,13595.0,0.0,22523.0,10443.0,3010.0,5520.0,10955.0,4601.1,12925.0,12732.4,11305.0,8900.0,6906.0]},{"cod":"04.02.24","conta":"ASO's e Exames","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,40.0,7179.0,12262.49,9981.5,4583.5,10907.37,0.0,3285.5,3018.0,5457.63,5606.0,5577.5,11032.0,5906.0,9420.5]},{"cod":"04.02.06","conta":"INSS (folha+ret+resc) Direta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,706.29,0.0,0.0,0.0,0.0,0.0,0.0,16005.93,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},{"cod":"04.02.32","conta":"Treinamentos Seg. Trabalho","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,250.0,500.0,17866.5,6275.0,1400.0,1117.28,1131.42,1104.93,3700.0,1166.59,4611.08,1206.92,1335.67,0.0,1450.0]},{"cod":"04.02.10","conta":"Contribuição s/ Folha Direta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,152.44,540.51,1240.88,2401.33,2871.92,2954.9,2955.08,2830.17,4837.11,2789.46,3079.15,8938.92,3072.97,2490.84,2776.16]},{"cod":"04.02.21","conta":"Vale Transporte","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,1789.2,1940.4,1932.0,3267.6,3864.0,3410.4,1789.2,2385.6,2797.2,3343.2,3267.6,3200.4,3427.2,3704.4]},{"cod":"04.02.19","conta":"Seguro de Vida","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,187.56,51071.13,833.6,838.81,963.85,937.8,953.43,859.65,927.38,979.48,1473.86,1026.37,1042.0,880.49]},{"cod":"04.02.11","conta":"Contribuição s/ Folha Indireta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,419.82,565.42,1115.48,1164.24,1160.84,1226.73,1252.33,1235.1,1331.7,1361.99,3750.42,1345.92,1222.12,1241.66]},{"cod":"04.02.12","conta":"IRPF s/ Folha Direta","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,0.0,441.68,1364.79,2732.89,3793.6,4352.41,4216.8,254.91,207.43,859.06,826.65,2743.42,1062.91,1733.09]},{"cod":"04.02.15","conta":"Pgto Adicional Indireta 25%","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1600.0,1600.0,1600.0,3860.0,0.0,2180.0,2180.0]},{"cod":"04.02.16","conta":"Pensão Alimentícia","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,0.0,0.0,0.0,436.86,590.68,668.54,800.0,1077.29,0.0,0.0,0.0,28.53,0.0,0.0]},{"cod":"04.02.29","conta":"Despesa com Viagem","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,50.89,0.0,0.0]},{"cod":"04.02.27","conta":"Responsabilidade Social","grupo":"OBRA PESSOAL","gcod":"04.02","v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,195.0,0.0,0.0,59.59,0.0,1052.95,612.35,0.0,0.0,0.0]},{"cod":"04.03.09","conta":"Locação Equip. Terceiros","grupo":"OBRAS VEÍCULOS/MÁQUINAS","gcod":"04.03","v":[0.0,0.0,0.0,3490.0,246242.07,4028.55,333221.97,397351.39,445109.56,503756.64,379611.57,385661.76,376164.85,322350.57,396340.21,738764.01,3947.68]},{"cod":"04.03.03","conta":"Manut. Equip. e Ferramentas","grupo":"OBRAS VEÍCULOS/MÁQUINAS","gcod":"04.03","v":[0.0,0.0,13366.41,40.0,560.0,12608.76,31305.01,44808.89,33852.31,8293.78,52308.17,39500.08,39303.92,38716.09,40699.89,28972.45,77587.94]},{"cod":"04.03.05","conta":"Combustível","grupo":"OBRAS VEÍCULOS/MÁQUINAS","gcod":"04.03","v":[0.0,0.0,970.2,3732.7,16403.55,18232.94,23900.03,21991.43,20690.31,17398.68,13021.4,20133.9,11382.81,16116.01,13234.22,19837.41,16504.86]},{"cod":"04.03.02","conta":"Manutenção de Veículos","grupo":"OBRAS VEÍCULOS/MÁQUINAS","gcod":"04.03","v":[0.0,0.0,0.0,11778.46,53023.73,9586.64,0.0,1124.1,1603.99,0.0,195.0,405.0,7315.0,939.34,2536.2,517.0,80.57]},{"cod":"04.03.01","conta":"Lavagem de Carros","grupo":"OBRAS VEÍCULOS/MÁQUINAS","gcod":"04.03","v":[0.0,0.0,0.0,0.0,150.0,510.0,2280.0,5790.0,6665.0,4910.0,6380.0,4399.44,4770.0,5540.0,4120.0,5040.0,2880.0]},{"cod":"04.03.06","conta":"Rastreador Positron","grupo":"OBRAS VEÍCULOS/MÁQUINAS","gcod":"04.03","v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,265.81,265.81,265.81,265.81,265.81,265.81,4265.81]},{"cod":"04.03.08","conta":"IPVA/Multa","grupo":"OBRAS VEÍCULOS/MÁQUINAS","gcod":"04.03","v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,260.32,0.0]},{"cod":"04.04.12","conta":"Aluguel de Veículos","grupo":"OBRA GASTOS GERAIS","gcod":"04.04","v":[0.0,0.0,0.0,2745.79,15590.4,18505.87,27879.04,20506.11,23252.21,28145.38,24190.16,30384.56,20504.74,23569.99,25714.21,26423.64,23288.5]},{"cod":"04.04.06","conta":"Segurança","grupo":"OBRA GASTOS GERAIS","gcod":"04.04","v":[0.0,0.0,0.0,0.0,16012.0,16012.0,16012.0,16012.0,32618.46,21205.38,21205.38,21205.38,21205.38,21205.38,21205.38,22629.54,22629.54]},{"cod":"04.04.14","conta":"Manutenção de Informática","grupo":"OBRA GASTOS GERAIS","gcod":"04.04","v":[0.0,236.57,1171.8,1167.0,1701.78,535.09,725.0,2834.9,1116.03,1326.46,19.0,1656.1,682.0,2092.61,676.0,1271.1,5504.42]},{"cod":"04.04.04","conta":"Mat. Escritório/Papelaria","grupo":"OBRA GASTOS GERAIS","gcod":"04.04","v":[0.0,0.0,2846.98,1630.59,4061.82,1328.9,2517.6,2168.92,4354.68,1166.73,1619.33,1390.42,1077.8,1225.87,720.3,1023.29,3218.98]},{"cod":"04.04.08","conta":"Telefone Celular","grupo":"OBRA GASTOS GERAIS","gcod":"04.04","v":[0.0,0.0,0.0,0.0,0.0,470.54,481.29,481.29,519.68,928.9,928.91,928.91,931.51,929.6,950.26,1164.69,1164.68]},{"cod":"04.04.09","conta":"Internet/Modem","grupo":"OBRA GASTOS GERAIS","gcod":"04.04","v":[0.0,0.0,0.0,800.0,623.34,550.0,550.0,550.0,550.0,550.0,550.0,550.0,550.0,550.0,550.0,550.0,550.0]},{"cod":"04.04.13","conta":"Relógio de Ponto (manut.)","grupo":"OBRA GASTOS GERAIS","gcod":"04.04","v":[0.0,0.0,0.0,0.0,1850.01,1850.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},{"cod":"04.04.11","conta":"Brindes","grupo":"OBRA GASTOS GERAIS","gcod":"04.04","v":[0.0,0.0,0.0,460.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},{"cod":"06.01.01","conta":"Custos Fixos ADM (Plano Saúde)","grupo":"CUSTOS FIXOS ADM","gcod":"06.01","v":[0.0,0.0,103.03,25.7,25.7,77.1,205.6,272.6,272.6,272.6,408.9,449.79,477.05,0.0,422.53,436.16,395.27]}],"serie":[{"mes":"mar/25","obra":0.0,"pessoal":0.0,"veic":0.0,"gerais":0.0,"adm":0.0,"total":0.0,"material":0.0},{"mes":"abr/25","obra":3574.73,"pessoal":414.0,"veic":0.0,"gerais":236.57,"adm":0.0,"total":4225.3,"material":0.0},{"mes":"mai/25","obra":320406.46,"pessoal":75106.12,"veic":14336.61,"gerais":4018.78,"adm":103.03,"total":413971.00000000006,"material":149826.47},{"mes":"jun/25","obra":276032.21,"pessoal":180735.46,"veic":19041.16,"gerais":6803.38,"adm":25.7,"total":482637.91000000003,"material":189885.25},{"mes":"jul/25","obra":438442.64,"pessoal":409570.21,"veic":316379.35,"gerais":39839.35,"adm":25.7,"total":1204257.2500000002,"material":256534.36},{"mes":"ago/25","obra":624387.64,"pessoal":665575.34,"veic":44966.89,"gerais":39252.4,"adm":77.1,"total":1374259.3699999999,"material":419199.05},{"mes":"set/25","obra":1136160.01,"pessoal":773317.8,"veic":390707.01,"gerais":48164.93,"adm":205.6,"total":2348555.3500000006,"material":796514.75},{"mes":"out/25","obra":923207.75,"pessoal":915686.25,"veic":471065.81,"gerais":42553.22,"adm":272.6,"total":2352785.6300000004,"material":575087.58},{"mes":"nov/25","obra":1153800.64,"pessoal":885462.26,"veic":507921.17,"gerais":62411.06,"adm":272.6,"total":2609867.73,"material":824574.73},{"mes":"dez/25","obra":1499125.58,"pessoal":1001179.1,"veic":534359.1,"gerais":53322.85,"adm":272.6,"total":3088259.2300000004,"material":1002425.75},{"mes":"jan/26","obra":773105.98,"pessoal":754730.99,"veic":451781.95,"gerais":48512.78,"adm":408.9,"total":2028540.5999999999,"material":465135.44},{"mes":"fev/26","obra":826446.97,"pessoal":618849.84,"veic":450365.99,"gerais":56115.37,"adm":449.79,"total":1952227.9600000002,"material":653453.6},{"mes":"mar/26","obra":1149295.84,"pessoal":970180.94,"veic":447139.08,"gerais":44951.43,"adm":477.05,"total":2612044.3400000003,"material":827668.73},{"mes":"abr/26","obra":773164.23,"pessoal":884475.85,"veic":383927.81,"gerais":49573.45,"adm":0.0,"total":2091141.34,"material":562034.36},{"mes":"mai/26","obra":1190598.01,"pessoal":820854.25,"veic":457196.33,"gerais":49816.14,"adm":422.53,"total":2518887.26,"material":914145.47},{"mes":"jun/26","obra":701172.53,"pessoal":794096.01,"veic":1145089.65,"gerais":53062.26,"adm":436.16,"total":2693856.61,"material":434538.37},{"mes":"jul/26","obra":722038.77,"pessoal":754889.95,"veic":80867.13,"gerais":51953.41,"adm":395.27,"total":1610144.53,"material":705669.7},{"mes":"ago/26","obra":977071.7299999999,"pessoal":789000.0,"veic":457196.33,"gerais":51953.41,"adm":395.27,"total":2275616.74,"material":977071.7299999999}],"fornecedores":[{"nome":"3K Construções Terraplenagem LTDA - ME","cat":"Terraplenagem/Serviços","v":[328055.73,0.0,221343.24,391661.99],"lanc":[1,0,2,3]},{"nome":"Polimix Concreto LTDA","cat":"Concreto","v":[304467.24,277124.72,103875.67,117588.44],"lanc":[4,5,8,4]},{"nome":"Brasil Mineração E Transportes LTDA","cat":"Agregados/Transporte","v":[0.0,0.0,0.0,104481.03],"lanc":[0,0,0,26]},{"nome":"Arcelormittal Brasil S.A.","cat":"Aço / Vergalhão / Ferragens","v":[0.0,33498.5,83241.52,85129.55],"lanc":[0,3,9,9]},{"nome":"Supermix Concreto S/A","cat":"Concreto","v":[127997.9,25432.4,94500.0,73270.0],"lanc":[3,2,2,2]},{"nome":"Valor Comercio De Acos LTDA","cat":"Aço / Vergalhão / Ferragens","v":[0.0,0.0,0.0,46920.0],"lanc":[0,0,0,1]},{"nome":"AALC Portas Corta Fogo Industria E Comercio LTDA","cat":"Combate a Incêndio","v":[0.0,0.0,0.0,30716.0],"lanc":[0,0,0,2]},{"nome":"Nova Estruturas Engenharia E Gestao LTDA","cat":"Serviços de Engenharia","v":[0.0,0.0,0.0,22100.0],"lanc":[0,0,0,1]},{"nome":"B P C Artefatos De Cimentos LTDA","cat":"Artefatos de Cimento","v":[7659.0,11898.0,21310.0,17325.0],"lanc":[3,6,8,7]},{"nome":"Acos Continente Industria E Comercio LTDA","cat":"Aço / Vergalhão / Ferragens","v":[0.0,0.0,0.0,10008.48],"lanc":[0,0,0,1]},{"nome":"Ferronorte Comercio De Ferragens LTDA","cat":"Aço / Vergalhão / Ferragens","v":[103648.09,24516.33,118142.78,9570.19],"lanc":[16,9,17,8]},{"nome":"Selmec Equipamentos Para Processo LTDA","cat":"Equipamentos/Grades","v":[0.0,0.0,0.0,8276.71],"lanc":[0,0,0,1]},{"nome":"Tym Distribuidora LTDA","cat":"Material/Diversos","v":[0.0,0.0,0.0,7636.42],"lanc":[0,0,0,3]},{"nome":"Nova Samber - Industria De Paineis Luminosos LTDA","cat":"Serviços/Diversos","v":[0.0,0.0,0.0,5940.0],"lanc":[0,0,0,1]},{"nome":"Lrc Comercio LTDA","cat":"Material/Diversos","v":[6489.11,3399.62,246.6,4657.2],"lanc":[3,3,1,5]},{"nome":"Cimar - Cimentos Do Maranhão S.A.","cat":"Concreto","v":[0.0,6240.0,0.0,4016.0],"lanc":[0,2,0,2]},{"nome":"VCA Transportes E Locação LTDA","cat":"Transporte/Locação","v":[0.0,0.0,0.0,4000.0],"lanc":[0,0,0,1]},{"nome":"S M S Cruz","cat":"Material/Diversos","v":[1036.5,1083.5,211.66,3737.7],"lanc":[4,5,2,5]},{"nome":"Maq-Fix Comercio Ferragista LTDA","cat":"Ferragens","v":[396.0,640.0,225.0,2957.0],"lanc":[1,2,1,6]},{"nome":"R. Mota Engenharia E Construção LTDA.","cat":"Serviços de Engenharia","v":[1100.0,1300.0,1200.0,2700.0],"lanc":[1,1,1,2]},{"nome":"Topos Topografia LTDA","cat":"Serviços Técnicos","v":[0.0,0.0,2600.0,2600.0],"lanc":[0,0,1,1]},{"nome":"Iluminar - Comercio E Serviços LTDA","cat":"Material/Elétrico","v":[223.0,1491.74,1077.8,2422.0],"lanc":[1,5,2,3]},{"nome":"Maquisul Comercial LTDA","cat":"Ferramentas/EPI","v":[1094.23,2645.0,3381.8,2227.6],"lanc":[2,3,3,3]},{"nome":"Bella Eletrica E Hidraulica Eireli","cat":"Material/Elétrico","v":[0.0,1737.09,0.0,2049.3],"lanc":[0,1,0,1]},{"nome":"Moxoto Comercio LTDA","cat":"Madeira","v":[2914.9,10878.83,25035.98,1882.5],"lanc":[2,5,10,3]},{"nome":"Solotest Apar Mecanica Do Solo LTDA","cat":"Serviços Técnicos","v":[0.0,0.0,0.0,1650.0],"lanc":[0,0,0,1]},{"nome":"L4 Sinalizacao LTDA","cat":"Material/Diversos","v":[0.0,0.0,0.0,1640.0],"lanc":[0,0,0,1]},{"nome":"Ferbras Tintas Suprimentos Industriais LTDA","cat":"Tintas","v":[0.0,524.75,198.1,1383.85],"lanc":[0,1,1,2]},{"nome":"Brasil Aluminio Comercio LTDA","cat":"Material/Construção","v":[0.0,0.0,0.0,1199.8],"lanc":[0,0,0,1]},{"nome":"Topseg Equipamentos Eletronicos De Seguranca LTDA","cat":"EPI/Segurança","v":[0.0,0.0,0.0,936.0],"lanc":[0,0,0,1]},{"nome":"J Goncalves Dos Santos Filho & Cia LTDA Guajajaras","cat":"Material/Diversos","v":[780.63,5743.55,3586.34,761.02],"lanc":[4,8,7,2]},{"nome":"H2O Transportes E Locacao De Veiculos E Maquinas LTDA","cat":"Transporte/Locação","v":[1250.0,1375.0,1750.0,750.0],"lanc":[1,1,1,1]},{"nome":"S J Pimenta Penha Engenharia Comercio E Servicos","cat":"Serviços de Engenharia","v":[0.0,700.0,2500.0,700.0],"lanc":[0,1,1,1]},{"nome":"Alfa Omega Ferramentas LTDA","cat":"Ferramentas/EPI","v":[0.0,0.0,0.0,579.0],"lanc":[0,0,0,1]},{"nome":"Casa Das Mangueiras","cat":"Material/Diversos","v":[719.8,0.0,0.0,578.5],"lanc":[4,0,0,2]},{"nome":"B A S Soares","cat":"Material/Diversos","v":[372.4,0.0,0.0,567.0],"lanc":[1,0,0,1]},{"nome":"A De J C Bayma LTDA","cat":"Serviços/Diversos","v":[0.0,691.8,360.0,495.6],"lanc":[0,3,1,3]},{"nome":"V S Barbosa Epis E Suprimentos LTDA","cat":"EPI/Suprimentos","v":[0.0,0.0,0.0,374.4],"lanc":[0,0,0,1]},{"nome":"Carbosolda Comercial De Ferramentas E Eletricos LTDA","cat":"Ferramentas/Solda","v":[2425.0,1663.0,3080.0,353.0],"lanc":[3,3,4,3]},{"nome":"R Costa Varejista","cat":"Material/Diversos","v":[125.0,0.0,264.4,314.0],"lanc":[1,0,1,2]},{"nome":"Polplasticos Comercio E Representacoes LTDA","cat":"Material/Diversos","v":[0.0,0.0,0.0,258.0],"lanc":[0,0,0,1]},{"nome":"Jacare Atacado E Distribuidora LTDA","cat":"Material/Diversos","v":[505.27,1390.43,1021.58,181.55],"lanc":[2,2,2,1]},{"nome":"A W S Produtos De Soldagem LTDA","cat":"Ferramentas/Solda","v":[0.0,0.0,0.0,158.0],"lanc":[0,0,0,1]},{"nome":"F L Correia Filho LTDA","cat":"Material/Diversos","v":[0.0,0.0,1025.0,142.2],"lanc":[0,0,3,2]},{"nome":"Casa Manresana LTDA","cat":"Material/Diversos","v":[0.0,0.0,0.0,96.0],"lanc":[0,0,0,1]},{"nome":"Leite & Catossi LTDA","cat":"Material/Diversos","v":[0.0,69.9,296.0,73.5],"lanc":[0,1,1,1]},{"nome":"Papelaria Renascenca LTDA","cat":"Papelaria","v":[15.6,267.0,144.07,7.2],"lanc":[1,2,2,1]},{"nome":"Paulistinha Tintas LTDA","cat":"Tintas","v":[199.8,2916.54,4987.71,0.0],"lanc":[1,4,5,0]},{"nome":"A P Carvalho Comercio e Servicos (Locação)","cat":"Transporte/Locação","v":[13800.0,14850.0,3960.0,0.0],"lanc":[3,2,2,0]},{"nome":"V. L. Araujo De Moraes","cat":"Material/Diversos","v":[799.2,822.6,1696.8,0.0],"lanc":[1,1,2,0]},{"nome":"Rafaella Veras Pedrosa Rio Lima","cat":"Serviços de Engenharia","v":[0.0,0.0,1200.0,0.0],"lanc":[0,0,1,0]},{"nome":"Roque E Materiais De Construção E Transporte LTDA","cat":"Material/Construção","v":[0.0,0.0,760.0,0.0],"lanc":[0,0,1,0]},{"nome":"Real Comercio De Equipamentos De Seguranca LTDA","cat":"EPI/Segurança","v":[420.0,0.0,420.0,0.0],"lanc":[1,0,1,0]},{"nome":"L A Borges E Cia LTDA","cat":"Material/Diversos","v":[0.0,0.0,297.49,0.0],"lanc":[0,0,1,0]},{"nome":"Tsubodai Empreendimentos LTDA","cat":"Serviços/Diversos","v":[25.0,0.0,25.0,0.0],"lanc":[1,0,1,0]},{"nome":"Papelaria E Armarinho Mendes Eireli EPP","cat":"Papelaria","v":[0.0,0.0,5.16,0.0],"lanc":[0,0,1,0]},{"nome":"F de Sa L Uchoa Eireli","cat":"Material/Diversos","v":[916.4,715.0,0.0,0.0],"lanc":[1,1,0,0]},{"nome":"R B Fixadores LTDA","cat":"Ferragens","v":[0.0,630.0,0.0,0.0],"lanc":[0,1,0,0]},{"nome":"Odc Preparacao De Artigos De Acesso E Identificacao LTDA","cat":"EPI/Segurança","v":[0.0,293.07,0.0,0.0],"lanc":[0,1,0,0]},{"nome":"D R A Aguiar 02 LTDA","cat":"Material/Diversos","v":[2496.2,0.0,0.0,0.0],"lanc":[1,0,0,0]},{"nome":"Slz Solucoes E Consultoria LTDA","cat":"Serviços/Consultoria","v":[1150.0,0.0,0.0,0.0],"lanc":[1,0,0,0]},{"nome":"B C Rodrigues ME","cat":"Material/Diversos","v":[799.98,0.0,0.0,0.0],"lanc":[1,0,0,0]},{"nome":"Embratop Geo-Tecnologias LTDA","cat":"Serviços Técnicos","v":[510.0,0.0,0.0,0.0],"lanc":[1,0,0,0]},{"nome":"Veloso Material De Construcao LTDA - J K Material","cat":"Material/Construção","v":[49.0,0.0,0.0,0.0],"lanc":[1,0,0,0]},{"nome":"Vitec Office Informatica Eireli","cat":"Informática","v":[4.5,0.0,0.0,0.0],"lanc":[1,0,0,0]},{"nome":"Shopfire Engenharia De Incendio LTDA","cat":"Combate a Incêndio","v":[0.0,0.0,0.0,0.0],"lanc":[0,0,0,0]},{"nome":"R.E.L. Comercio De Tintas LTDA","cat":"Tintas","v":[0.0,0.0,0.0,0.0],"lanc":[0,0,0,0]},{"nome":"Reis E Reis Industria E Comercio LTDA","cat":"Artefatos/Indústria","v":[0.0,0.0,0.0,0.0],"lanc":[0,0,0,0]},{"nome":"Comercial Ferro Norte LTDA - Santa Ines","cat":"Ferragens/Material","v":[0.0,0.0,0.0,0.0],"lanc":[0,0,0,0]},{"nome":"R.M.L. Bayma - ME (Desativado)","cat":"Serviços/Diversos","v":[0.0,0.0,0.0,0.0],"lanc":[0,0,0,0]},{"nome":"Acro Cabos De Aco Industria E Comercio LTDA","cat":"Cabos de Aço","v":[0.0,0.0,0.0,0.0],"lanc":[0,0,0,0]},{"nome":"Maranhão Motosserras E Máquinas LTDA","cat":"Máquinas/Ferramentas","v":[0.0,0.0,0.0,0.0],"lanc":[0,0,0,0]},{"nome":"Alpha Comercio E Servicos LTDA","cat":"Material/Serviços","v":[0.0,0.0,0.0,0.0],"lanc":[0,0,0,0]},{"nome":"LV Distribuidora E Servicos LTDA","cat":"Material/Diversos","v":[0.0,0.0,900.0,0.0],"lanc":[0,0,1,0]},{"nome":"Klaus Makella Brandao De Oliveira - ME","cat":"Serviços/Diversos","v":[0.0,0.0,800.0,0.0],"lanc":[0,0,1,0]},{"nome":"Pequenos Fornecedores Indiretos - Obras Civis Cais Marinha","cat":"Caixa/Diversos","v":[0.0,0.0,0.0,0.0],"lanc":[0,0,0,0]}],"categorias":[{"nome":"Terraplenagem/Serviços","v":[328055.73,0.0,221343.24,391661.99]},{"nome":"Aço / Vergalhão / Ferragens","v":[103648.09,58014.83,201384.3,151628.22]},{"nome":"Concreto","v":[432465.14,308797.12,198375.66999999998,194874.44]},{"nome":"Madeira","v":[2914.9,10878.83,25035.98,1882.5]},{"nome":"Artefatos de Cimento","v":[7659.0,11898.0,21310.0,17325.0]},{"nome":"Material/Diversos","v":[15040.49,13224.6,9545.869999999999,20643.09]},{"nome":"Transporte/Locação","v":[15050.0,16225.0,5710.0,4750.0]},{"nome":"Tintas","v":[199.8,3441.29,5185.81,1383.85]},{"nome":"Serviços de Engenharia","v":[1100.0,2000.0,4900.0,25500.0]},{"nome":"Ferramentas/EPI","v":[1094.23,2645.0,3381.8,2806.6]},{"nome":"Ferramentas/Solda","v":[2425.0,1663.0,3080.0,511.0]},{"nome":"Material/Elétrico","v":[223.0,3228.83,1077.8,4471.3]},{"nome":"Material/Construção","v":[49.0,0.0,760.0,1199.8]},{"nome":"EPI/Segurança","v":[420.0,293.07,420.0,936.0]},{"nome":"Serviços/Diversos","v":[25.0,691.8,1185.0,6435.6]},{"nome":"Ferragens","v":[396.0,1270.0,225.0,2957.0]},{"nome":"Papelaria","v":[15.6,267.0,149.23,7.2]},{"nome":"Serviços/Consultoria","v":[1150.0,0.0,0.0,0.0]},{"nome":"Serviços Técnicos","v":[510.0,0.0,2600.0,4250.0]},{"nome":"Informática","v":[4.5,0.0,0.0,0.0]},{"nome":"Combate a Incêndio","v":[0.0,0.0,0.0,30716.0]},{"nome":"Equipamentos/Grades","v":[0.0,0.0,0.0,8276.71]},{"nome":"Artefatos/Indústria","v":[0.0,0.0,0.0,0.0]},{"nome":"Ferragens/Material","v":[0.0,0.0,0.0,0.0]},{"nome":"Agregados/Transporte","v":[0.0,0.0,0.0,104481.03]},{"nome":"Cabos de Aço","v":[0.0,0.0,0.0,0.0]},{"nome":"EPI/Suprimentos","v":[0.0,0.0,0.0,374.4]},{"nome":"Máquinas/Ferramentas","v":[0.0,0.0,0.0,0.0]},{"nome":"Material/Serviços","v":[0.0,0.0,0.0,0.0]},{"nome":"Caixa/Diversos","v":[0.0,0.0,0.0,0.0]}],"mat_serie":[{"mes":"Abril/2026","total":561935.66,"lanc":102},{"mes":"Maio/2026","total":912445.48,"lanc":72},{"mes":"Junho/2026","total":434538.37,"lanc":84},{"mes":"Julho/2026","total":705669.7,"lanc":108},{"mes":"Agosto/2026 (previsto)","total":977071.7299999999,"lanc":132}],"fontes":[{"origem":"SIENGE / STARIAN","objeto":"Analítico de Apropriações por Obra — Obra 754, Conta 2.07.09 (Obras/Materiais) — arquivo \"OBRAS CIVIS- MATERIAIS.pdf\"","params":"Obra 754; Conta 2.07.09; Período 01/08/2026 a 31/08/2026","quando":"04/09/2026 11:38:39 (BRT)","linhas":"127","nota":"PREVISTO — mês não fechado. Total da conta R$ 929.935,93. Substitui a prévia de 28/08/2026 (01 a 26/08). Valor sujeito a ajuste até o fechamento."},{"origem":"SIENGE / STARIAN","objeto":"Analítico de Apropriações por Obra — Obra 754, Conta 2.07.28 (Obras/Serviços) — arquivo \"OBRAS CIVIS-SERVIÇOS.pdf\"","params":"Obra 754; Conta 2.07.28; Período 01/08/2026 a 31/08/2026","quando":"04/09/2026 11:32:51 (BRT)","linhas":"5","nota":"PREVISTO — mês não fechado. Total da conta R$ 47.135,79. Substitui a prévia de 28/08/2026. Valor sujeito a ajuste até o fechamento."}]};
+</script>
+<script>
+/* =====================================================================
+   MOTOR · DRE e Custos da Obra 754 (OCG)
+   Base mestre: aba Consolidado do DRE_754 (conta × mês, 17 meses)
+   ===================================================================== */
+const D = window.DRE, MESES = D.meta.meses, NM = MESES.length;
+const REC = D.receita, ISS = D.iss;
+const LIQ = REC.map((v, k) => v + ISS[k]);
+const CONTAS = D.contas.map((c, i) => ({ ...c, idx: i, tot: c.v.reduce((a, b) => a + b, 0) }));
+const GRUPOS = [];
+for (const c of CONTAS) { let g = GRUPOS.find(x => x.cod === c.gcod); if (!g) { g = { cod: c.gcod, nome: c.grupo, v: new Array(NM).fill(0), n: 0 }; GRUPOS.push(g); } for (let k = 0; k < NM; k++) g.v[k] += c.v[k]; g.n++; }
+GRUPOS.forEach(g => g.tot = g.v.reduce((a, b) => a + b, 0));
+const CUSTO = MESES.map((m, k) => sum(GRUPOS, g => g.v[k]));
+const LUCRO = MESES.map((m, k) => LIQ[k] - CUSTO[k]);
+const T = { rec: sum(REC), iss: sum(ISS), liq: sum(LIQ), custo: sum(CUSTO), lucro: sum(LUCRO) };
+T.margem = T.lucro / T.rec;
+const ATIVOS = MESES.map((m, k) => k).filter(k => CUSTO[k] > 0 || REC[k] > 0);
+const COM_REC = MESES.map((m, k) => k).filter(k => REC[k] > 0);
+const ULT = ATIVOS[ATIVOS.length - 1];
+// série do painel de custos (inclui ago/26 previsto)
+const SER = D.serie || [];
+const GCORES = ['--g1', '--g2', '--g3', '--g4', '--g5'];
+function sum(a, f) { let s = 0; for (const x of a) s += f ? f(x) : x; return s; }
+function uniq(a) { return [...new Set(a.filter(x => x !== undefined && x !== ''))]; }
+/* ---------- formatação ---------- */
+const fR = v => (v < 0 ? '-' : '') + 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fR0 = v => (v < 0 ? '-' : '') + 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+const fK = v => { const a = Math.abs(v), s = v < 0 ? '-' : ''; if (a >= 1e6) return s + (a / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + ' mi'; if (a >= 1e3) return s + (a / 1e3).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + ' mil'; return s + a.toLocaleString('pt-BR', { maximumFractionDigits: 0 }); };
+const fP = (v, d = 1) => (v === null || v === undefined || !isFinite(v)) ? '–' : (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
+const fN = v => v.toLocaleString('pt-BR');
+const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const trunc = (s, n = 90) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+const sinal = v => v >= 0 ? 'var(--ok)' : 'var(--crit)';
+const cor = (v, t) => `<span style="color:${sinal(v)}">${t}</span>`;
+const numCls = v => v < -0.005 ? 'num neg' : 'num';
+const pctBar = (v, cls = '') => `<span class="pct"><i><b style="width:${Math.max(0, Math.min(100, v * 100))}%" class="${cls}"></b></i>${fP(v)}</span>`;
+const gTag = g => { const i = GRUPOS.findIndex(x => x.nome === g); return `<span class="emp"><i style="background:${css(GCORES[i % 5])}"></i>${h(g)}</span>`; };
+/* ---------- tabela ---------- */
+let TID = 0;
+function tabela(cols, rows, opt = {}) {
+  const st = { sort: opt.sort ?? null, dir: opt.dir ?? -1 };
+  const el = document.createElement('div'); el.className = 'tw' + (opt.alto ? ' alto' : '');
+  function val(r, c) { return typeof c.k === 'function' ? c.k(r) : r[c.k]; }
+  function render() {
+    let rs = [...rows];
+    if (st.sort !== null) { const c = cols[st.sort]; rs.sort((a, b) => { const x = val(a, c), y = val(b, c); if (x === y) return 0; if (x == null) return 1; if (y == null) return -1; return (x > y ? 1 : -1) * st.dir; }); }
+    if (opt.limite) rs = rs.slice(0, opt.limite);
+    let html = '<table><thead><tr>' + cols.map((c, i) => `<th class="${c.num ? 'num ' : ''}${opt.semSort ? '' : 'sort'}" data-i="${i}" ${c.w ? `style="min-width:${c.w}px"` : ''}>${h(c.t)}${st.sort === i ? `<span class="seta">${st.dir > 0 ? '▲' : '▼'}</span>` : ''}</th>`).join('') + '</tr></thead><tbody>';
+    if (!rs.length) html += `<tr><td colspan="${cols.length}" style="text-align:center;color:var(--ink3);padding:18px">Nenhuma linha para os filtros atuais.</td></tr>`;
+    for (const r of rs) html += `<tr class="${r._cls || ''}">` + cols.map(c => { const v = val(r, c); return `<td class="${c.num ? (c.neg ? numCls(v) : 'num') : (c.cls || '')}">${c.f ? c.f(v, r) : h(v ?? '')}</td>`; }).join('') + '</tr>';
+    html += '</tbody>';
+    if (opt.total) html += '<tfoot><tr>' + cols.map((c, i) => `<td class="${c.num ? 'num' : ''}">${opt.total(rs, c, i) ?? ''}</td>`).join('') + '</tr></tfoot>';
+    el.innerHTML = html + '</table>';
+    if (!opt.semSort) el.querySelectorAll('th.sort').forEach(th => th.onclick = () => { const i = +th.dataset.i; if (st.sort === i) st.dir *= -1; else { st.sort = i; st.dir = cols[i].num ? -1 : 1; } render(); });
+  }
+  render(); return el;
+}
+/* ---------- charts ---------- */
+const CH = [];
+function chart(canvas, cfg) {
+  const ink2 = css('--ink2'), ink3 = css('--ink3'), grid = css('--linha2');
+  Chart.defaults.font.family = 'Arial, Helvetica, sans-serif'; Chart.defaults.font.size = 11; Chart.defaults.color = ink2;
+  Chart.defaults.plugins.legend.display = false;
+  Chart.defaults.plugins.tooltip.backgroundColor = css('--ink'); Chart.defaults.plugins.tooltip.titleColor = css('--bg'); Chart.defaults.plugins.tooltip.bodyColor = css('--bg');
+  Chart.defaults.plugins.tooltip.padding = 8; Chart.defaults.plugins.tooltip.cornerRadius = 4;
+  const base = { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: 'index', intersect: false },
+    scales: { x: { grid: { display: false }, border: { color: grid }, ticks: { color: ink3 } }, y: { grid: { color: grid, drawTicks: false }, border: { display: false }, ticks: { color: ink3, callback: v => fK(v) } } } };
+  cfg.options = deepMerge(base, cfg.options || {});
+  const c = new Chart(canvas, cfg); CH.push(c); return c;
+}
+function deepMerge(a, b) { const o = { ...a }; for (const k in b) o[k] = (b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) && a[k] && typeof a[k] === 'object') ? deepMerge(a[k], b[k]) : b[k]; return o; }
+function destroyCharts() { CH.forEach(c => c.destroy()); CH.length = 0; }
+const tipR = { callbacks: { label: c => ` ${c.dataset.label ? c.dataset.label + ': ' : ''}${fR0(Math.abs(c.parsed.y ?? c.parsed.x ?? c.parsed))}` } };
+const legHTML = items => `<div class="leg">${items.map(([n, c]) => `<span><i style="background:${c}"></i>${h(n)}</span>`).join('')}</div>`;
+function el(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; }
+function sec(title, sub, ...kids) { const s = el('section', 'sec', `<div class="sec-h"><h2>${h(title)}</h2>${sub ? `<span class="sub">${sub}</span>` : ''}</div>`); kids.forEach(k => k && s.appendChild(typeof k === 'string' ? el('div', '', k) : k)); return s; }
+function kpi(label, val, note, cls = '') { return `<div class="kpi ${cls}"><small>${h(label)}</small><b title="${h(val)}">${h(val)}</b>${note ? `<em>${note}</em>` : ''}</div>`; }
+function selectHTML(id, label, opts, cur, all) { return `<label>${h(label)}<select id="${id}">${all ? `<option value="">${h(all)}</option>` : ''}${opts.map(o => `<option value="${h(o)}" ${o === cur ? 'selected' : ''}>${h(o)}</option>`).join('')}</select></label>`; }
+function seq(v, max) { const s = ['--seq1', '--seq2', '--seq3', '--seq4', '--seq5', '--seq6']; if (v <= 0 || max <= 0) return 'transparent'; const t = Math.min(1, v / max); return css(s[Math.min(5, Math.floor(t * 5.999))]); }
+function fmtData(s) { const [y, m, d] = s.split('-'); return `${d}/${m}/${y}`; }
+/* =====================================================================
+   VIEWS
+   ===================================================================== */
+const VIEWS = [
+  ['resumo', 'Resumo', vResumo], ['dre', 'DRE Mensal', vDRE], ['grupos', 'Custo por Natureza', vGrupos],
+  ['contas', 'Contas', vContas], ['mes', 'Relatório do Mês', vMes],
+  ['material', 'Material e Fornecedores', vMaterial], ['concil', 'Conciliação de Fontes', vConcil],
+];
+const STATE = { view: 'resumo' };
+function nav() {
+  const a = document.getElementById('abas'); a.innerHTML = VIEWS.map(v => `<button data-v="${v[0]}" class="${STATE.view === v[0] ? 'on' : ''}">${h(v[1])}</button>`).join('');
+  a.querySelectorAll('button').forEach(b => b.onclick = () => { STATE.view = b.dataset.v; try { localStorage.setItem('dre.view', STATE.view); } catch (e) { } nav(); show(); });
+}
+function show() {
+  destroyCharts(); const m = document.getElementById('main'); m.innerHTML = '';
+  const v = VIEWS.find(x => x[0] === STATE.view); const root = el('div', 'view on'); m.appendChild(root); v[2](root);
+  root.appendChild(el('footer', 'rodape', `<span>Marka Engenharia Ltda · Coordenação de Obras · TFPM · São Luís, MA</span><span>Fonte: SIENGE/STARIAN · ${h(D.meta.arquivos.join(' + '))} · extraído em ${fmtData(D.meta.extraido_em)}</span>`));
+  window.scrollTo(0, 0);
+}
+
+/* ---------- 1. RESUMO ---------- */
+function vResumo(root) {
+  const mesesRec = COM_REC.length, mediaRec = T.rec / mesesRec, mediaCusto = T.custo / ATIVOS.length;
+  const lucroMes = LUCRO.filter((v, k) => ATIVOS.includes(k));
+  const positivos = lucroMes.filter(v => v > 0).length;
+  root.appendChild(el('div', 'kpis', [
+    kpi('Receita bruta acumulada', fR0(T.rec), `${mesesRec} meses com faturamento`),
+    kpi('Receita líquida', fR0(T.liq), `ISS de ${fR0(-T.iss)}`),
+    kpi('Custo total acumulado', fR0(T.custo), `${fP(T.custo / T.rec)} da receita bruta`, 'ouro'),
+    kpi('Lucro líquido acumulado', fR0(T.lucro), '', T.lucro >= 0 ? 'ok' : 'crit'),
+    kpi('Margem líquida', fP(T.margem), 'sobre a receita bruta', T.margem >= 0 ? 'ok' : 'crit'),
+    kpi('Meses no positivo', `${positivos} de ${ATIVOS.length}`, `média de ${fR0(T.lucro / ATIVOS.length)} por mês`),
+  ].join('')));
+  const g = el('div', 'grid g2');
+  const p1 = el('div', 'painel', `<div class="sec-h"><h2>Receita × custo por mês</h2></div>${legHTML([['Receita bruta', css('--rec')], ['Custo total', css('--cus')]])}<div class="ch"><canvas></canvas></div>`);
+  const p2 = el('div', 'painel', `<div class="sec-h"><h2>Lucro do mês</h2><span class="sub">receita líquida menos custo</span></div><div class="ch"><canvas></canvas></div>`);
+  g.append(p1, p2); root.appendChild(sec('Evolução mensal', `${MESES[0]} a ${MESES[NM - 1]}`, g));
+  chart(p1.querySelector('canvas'), { type: 'bar', data: { labels: MESES, datasets: [{ label: 'Receita bruta', data: REC, backgroundColor: css('--rec'), borderRadius: 4 }, { label: 'Custo total', data: CUSTO, backgroundColor: css('--cus'), borderRadius: 4 }] }, options: { plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .85, categoryPercentage: .72 } } } });
+  chart(p2.querySelector('canvas'), { type: 'bar', data: { labels: MESES, datasets: [{ data: LUCRO, backgroundColor: LUCRO.map(v => v >= 0 ? css('--ok') : css('--crit')), borderRadius: 4, barPercentage: .62 }] }, options: { plugins: { tooltip: { callbacks: { label: c => ` Lucro: ${fR0(c.parsed.y)}` } } } } });
+  const g2 = el('div', 'grid g2');
+  const p3 = el('div', 'painel', `<div class="sec-h"><h2>Margem acumulada</h2><span class="sub">lucro acumulado ÷ receita acumulada</span></div><div class="ch"><canvas></canvas></div>`);
+  const p4 = el('div', 'painel', `<div class="sec-h"><h2>Composição do custo acumulado</h2></div><div class="ch"><canvas></canvas></div>`);
+  g2.append(p3, p4); root.appendChild(sec('Resultado e composição', '', g2));
+  let ar = 0, al = 0; const marg = MESES.map((m, k) => { ar += REC[k]; al += LUCRO[k]; return ar ? al / ar : 0; });
+  chart(p3.querySelector('canvas'), { type: 'line', data: { labels: MESES, datasets: [{ data: marg, borderColor: css('--ouro'), backgroundColor: css('--ouro-tint'), fill: true, borderWidth: 2, pointRadius: 3, pointBackgroundColor: css('--ouro'), tension: .2 }] }, options: { scales: { y: { ticks: { callback: v => fP(v, 0) } } }, plugins: { tooltip: { callbacks: { label: c => ` Margem acumulada: ${fP(c.parsed.y)}` } } } } });
+  chart(p4.querySelector('canvas'), { type: 'doughnut', data: { labels: GRUPOS.map(x => x.nome), datasets: [{ data: GRUPOS.map(x => x.tot), backgroundColor: GRUPOS.map((x, i) => css(GCORES[i % 5])), borderWidth: 2, borderColor: css('--bg') }] },
+    options: { cutout: '62%', scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 10, usePointStyle: true, generateLabels: ch => ch.data.labels.map((l, i) => ({ text: `${trunc(l, 22)}  ${fP(ch.data.datasets[0].data[i] / T.custo)}`, fillStyle: ch.data.datasets[0].backgroundColor[i], strokeStyle: 'transparent', index: i })) } }, tooltip: { callbacks: { label: c => ` ${fR0(c.parsed)} (${fP(c.parsed / T.custo)})` } } } } });
+  const med = D.meta.medicao_qqp;
+  const w = el('div', 'painel');
+  w.innerHTML = `<div class="sec-h"><h2>Contrato × faturamento × custo</h2><span class="sub">medição do painel de Medição OCG contra o DRE</span></div>
+    <dl class="dl" style="grid-template-columns:300px 1fr">
+    <dt>Valor contratual (QQP)</dt><dd>${fR(med.contrato)}</dd>
+    <dt>Medido acumulado até ${h(med.bm)}</dt><dd>${fR(med.medido)} · ${fP(med.medido / med.contrato)} do contrato</dd>
+    <dt>Receita bruta no DRE</dt><dd>${fR(T.rec)} · ${fP(T.rec / med.medido)} do medido</dd>
+    <dt>Diferença medido − receita</dt><dd><b>${fR(med.medido - T.rec)}</b></dd>
+    <dt>Custo acumulado</dt><dd>${fR(T.custo)}</dd>
+    <dt>Margem sobre o medido</dt><dd>${fP((med.medido - T.custo) / med.medido)} se todo o medido virar receita</dd></dl>
+    <div class="nota">A diferença entre medido e receita bruta vem do descompasso entre boletim aprovado e nota faturada, mais os boletins ainda em aprovação. Serve como estimativa do que ainda deve entrar como receita, não como valor a receber conciliado.</div>`;
+  root.appendChild(sec('Leitura contratual', '', w));
+  const pico = CUSTO.indexOf(Math.max(...CUSTO)), pior = LUCRO.indexOf(Math.min(...LUCRO)), melhor = LUCRO.indexOf(Math.max(...LUCRO));
+  root.appendChild(el('div', 'dica', `<b>Leitura rápida.</b> Margem acumulada de ${fP(T.margem)} sobre ${fR0(T.rec)} faturados, com ${positivos} dos ${ATIVOS.length} meses no positivo. O pico de custo foi ${MESES[pico]} (${fK(CUSTO[pico])}), o pior resultado ${MESES[pior]} (${fK(LUCRO[pior])}) e o melhor ${MESES[melhor]} (${fK(LUCRO[melhor])}). Mão de obra e insumos respondem por ${fP((GRUPOS[0].tot + GRUPOS[1].tot) / T.custo)} do custo acumulado.`));
+}
+
+/* ---------- 2. DRE MENSAL ---------- */
+function vDRE(root) {
+  const S = STATE.dre ||= { av: false };
+  const f = el('div', 'filtros', `<label>Exibição<span class="chips"><button class="chip ${!S.av ? 'on' : ''}" data-m="0">Valores em R$</button><button class="chip ${S.av ? 'on' : ''}" data-m="1">AV% sobre a receita</button></span></label><span class="conta">estrutura idêntica à aba Evolução Mensal do DRE</span>`);
+  const out = el('div'); root.append(f, out);
+  f.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { S.av = b.dataset.m === '1'; f.querySelectorAll('[data-m]').forEach(x => x.classList.toggle('on', (x.dataset.m === '1') === S.av)); draw(); });
+  function draw() {
+    destroyCharts(); out.innerHTML = '';
+    const linhas = [
+      { n: '(=) RECEITA BRUTA', v: REC, cls: 'forte' }, { n: '(-) ISS', v: ISS }, { n: '(=) RECEITA LÍQUIDA', v: LIQ, cls: 'forte' },
+      ...GRUPOS.map(g => ({ n: '(-) ' + g.nome, v: g.v.map(x => -x), grupo: g.nome })),
+      { n: '(=) CUSTO TOTAL', v: CUSTO.map(x => -x), cls: 'forte' },
+      { n: '(=) LUCRO LÍQUIDO', v: LUCRO, cls: 'forte lucro' },
+    ];
+    const w = el('div', 'tw');
+    const cel = (v, k) => { if (S.av) { const b = REC[k]; return b ? fP(v / b, 0) : '–'; } return v === 0 ? '<span style="color:var(--ink3)">·</span>' : fK(v); };
+    w.innerHTML = `<table><thead><tr><th style="min-width:230px">Conta</th>${MESES.map(m => `<th class="num">${h(m)}</th>`).join('')}<th class="num">ACUM.</th></tr></thead><tbody>` +
+      linhas.map(l => { const tot = sum(l.v); const st = l.cls && l.cls.includes('forte') ? 'font-weight:700;' : ''; const col = l.cls && l.cls.includes('lucro') ? `color:${sinal(tot)};` : '';
+        return `<tr><td style="${st}${col}white-space:nowrap">${l.grupo ? gTag(l.grupo).replace('<span class="emp">', '<span class="emp" style="font-weight:400">') : h(l.n)}</td>` +
+          l.v.map((v, k) => `<td class="num" style="${st}${l.cls && l.cls.includes('lucro') ? `color:${sinal(v)};` : ''}">${cel(v, k)}</td>`).join('') +
+          `<td class="num" style="font-weight:700;${col}">${S.av ? (T.rec ? fP(tot / T.rec, 0) : '–') : fK(tot)}</td></tr>`; }).join('') +
+      `</tbody><tfoot><tr><td>Margem líquida</td>${MESES.map((m, k) => `<td class="num" style="color:${REC[k] ? sinal(LUCRO[k]) : 'var(--ink3)'}">${REC[k] ? fP(LUCRO[k] / REC[k], 0) : '–'}</td>`).join('')}<td class="num">${fP(T.margem)}</td></tr></tfoot></table>`;
+    out.appendChild(sec('DRE mês a mês', S.av ? 'cada linha em % da receita bruta do mês' : 'valores em R$', w));
+    const p = el('div', 'painel', `${legHTML([['Receita líquida', css('--rec')], ['Custo total', css('--cus')], ['Lucro', css('--ouro')]])}<div class="ch alto"><canvas></canvas></div>`);
+    out.appendChild(sec('Receita líquida, custo e lucro', '', p));
+    chart(p.querySelector('canvas'), { type: 'bar', data: { labels: MESES, datasets: [
+      { label: 'Receita líquida', data: LIQ, backgroundColor: css('--rec'), borderRadius: 4, order: 2 },
+      { label: 'Custo total', data: CUSTO, backgroundColor: css('--cus'), borderRadius: 4, order: 2 },
+      { label: 'Lucro', data: LUCRO, type: 'line', borderColor: css('--ouro'), backgroundColor: css('--ouro'), borderWidth: 2, pointRadius: 3, tension: .2, order: 1 }] },
+      options: { plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .85, categoryPercentage: .72 } } } });
+    out.appendChild(el('div', 'nota', 'Os três meses iniciais (mar/25 a mai/25) e nov/25 aparecem sem receita: são meses de custo mobilizado antes do faturamento ou com boletim não faturado no período, o que explica os prejuízos pontuais da série.'));
+  }
+  draw();
+}
+
+/* ---------- 3. CUSTO POR NATUREZA ---------- */
+function vGrupos(root) {
+  const media = GRUPOS.map(g => g.tot / ATIVOS.length);
+  root.appendChild(el('div', 'kpis', GRUPOS.map((g, i) => kpi(trunc(g.nome, 22), fR0(g.tot), `${fP(g.tot / T.custo)} do custo · ${g.n} contas`, i === 0 ? 'ouro' : '')).join('')));
+  const p = el('div', 'painel', `${legHTML(GRUPOS.map((g, i) => [g.nome, css(GCORES[i % 5])]))}<div class="ch alto"><canvas></canvas></div>`);
+  root.appendChild(sec('Custo por natureza, mês a mês', 'empilhado, em R$', p));
+  chart(p.querySelector('canvas'), { type: 'bar', data: { labels: MESES, datasets: GRUPOS.map((g, i) => ({ label: g.nome, data: g.v, backgroundColor: css(GCORES[i % 5]), borderRadius: 3, borderWidth: 1, borderColor: css('--bg') })) },
+    options: { scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .68 } } } });
+  const w = el('div', 'tw');
+  const max = Math.max(...GRUPOS.flatMap(g => g.v));
+  w.innerHTML = `<table class="heat"><thead><tr><th>Grupo de custo</th>${MESES.map(m => `<th class="num">${h(m)}</th>`).join('')}<th class="num">TOTAL</th><th class="num">% do custo</th><th class="num">Média/mês</th></tr></thead><tbody>` +
+    GRUPOS.map((g, i) => `<tr><td style="white-space:nowrap">${gTag(g.nome)}</td>${g.v.map(v => `<td class="h" style="background:${seq(v, max)};color:${v / max > .6 ? '#fff' : 'var(--ink)'}" title="${fR(v)}">${v ? fK(v) : '<span style="color:var(--ink3)">·</span>'}</td>`).join('')}<td class="num"><b>${fK(g.tot)}</b></td><td class="num">${fP(g.tot / T.custo)}</td><td class="num">${fK(media[i])}</td></tr>`).join('') +
+    `</tbody><tfoot><tr><td>CUSTO TOTAL</td>${CUSTO.map(v => `<td class="num">${fK(v)}</td>`).join('')}<td class="num">${fK(T.custo)}</td><td class="num">${fP(1)}</td><td class="num">${fK(T.custo / ATIVOS.length)}</td></tr></tfoot></table>`;
+  root.appendChild(sec('Matriz grupo × mês', 'a intensidade do azul segue o valor do mês', w));
+  const p2 = el('div', 'painel', `${legHTML(GRUPOS.map((g, i) => [g.nome, css(GCORES[i % 5])]))}<div class="ch"><canvas></canvas></div>`);
+  root.appendChild(sec('Participação de cada grupo no custo do mês', '% do custo total, mês a mês', p2));
+  chart(p2.querySelector('canvas'), { type: 'line', data: { labels: MESES, datasets: GRUPOS.map((g, i) => ({ label: g.nome, data: g.v.map((v, k) => CUSTO[k] ? v / CUSTO[k] : null), borderColor: css(GCORES[i % 5]), backgroundColor: css(GCORES[i % 5]), borderWidth: 2, pointRadius: 2.5, tension: .2, spanGaps: true })) },
+    options: { scales: { y: { min: 0, max: 1, ticks: { callback: v => fP(v, 0) } } }, plugins: { tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fP(c.parsed.y)}` } } } } });
+  root.appendChild(sec('Resumo por grupo', '', tabela([
+    { t: 'Grupo de custo', k: 'nome', f: v => gTag(v) }, { t: 'Contas', k: 'n', num: true, f: fN },
+    { t: 'Total acumulado (R$)', k: 'tot', num: true, f: fR }, { t: '% do custo', k: r => r.tot / T.custo, num: true, f: v => pctBar(v) },
+    { t: 'Média por mês (R$)', k: r => r.tot / ATIVOS.length, num: true, f: fR0 },
+    { t: 'Maior mês', k: r => Math.max(...r.v), num: true, f: (v, r) => `${fR0(v)} <span style="color:var(--ink3)">${h(MESES[r.v.indexOf(v)])}</span>` },
+    { t: 'Último mês', k: r => r.v[ULT], num: true, f: fR0 },
+    { t: 'Últ. vs média', k: r => (r.tot / ATIVOS.length) ? r.v[ULT] / (r.tot / ATIVOS.length) - 1 : null, num: true, f: v => v === null ? '–' : cor(-v, (v >= 0 ? '+' : '') + fP(v, 0)) },
+  ], GRUPOS, { total: (rs, c, i) => ['TOTAL', fN(sum(rs, r => r.n)), fR(T.custo), fP(1), fR0(T.custo / ATIVOS.length), '', fR0(CUSTO[ULT]), ''][i] })));
+}
+/* ---------- 4. CONTAS ---------- */
+function vContas(root) {
+  const S = STATE.contas ||= { q: '', grupo: '', so: true };
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  function bind() {
+    f.innerHTML = `<label>Buscar<input type="search" id="q" value="${h(S.q)}" placeholder="conta ou código contábil"></label>
+      ${selectHTML('grupo', 'Grupo', GRUPOS.map(g => g.nome), S.grupo, 'Todos')}
+      <label>Filtro rápido<span class="chips"><button class="chip ${S.so ? 'on' : ''}" id="so">Só contas com lançamento</button></span></label>
+      <button class="btn" id="limpar">Limpar filtros</button><span class="conta" id="conta"></span>`;
+    f.querySelector('#q').oninput = e => { S.q = e.target.value; draw(); };
+    f.querySelector('#grupo').onchange = e => { S.grupo = e.target.value; draw(); };
+    f.querySelector('#so').onclick = () => { S.so = !S.so; bind(); };
+    f.querySelector('#limpar').onclick = () => { Object.assign(S, { q: '', grupo: '', so: true }); bind(); };
+    draw();
+  }
+  function draw() {
+    destroyCharts(); out.innerHTML = '';
+    const q = S.q.trim().toLowerCase();
+    const rows = CONTAS.filter(c => (!S.grupo || c.grupo === S.grupo) && (!S.so || c.tot > 0) && (!q || c.conta.toLowerCase().includes(q) || c.cod.includes(q)));
+    const tot = sum(rows, r => r.tot);
+    f.querySelector('#conta').textContent = `${fN(rows.length)} de ${fN(CONTAS.length)} contas · ${fK(tot)} acumulados · ${fP(tot / T.custo)} do custo`;
+    const top = [...rows].sort((a, b) => b.tot - a.tot).slice(0, 12);
+    const p = el('div', 'painel', `<div class="sec-h"><h2>Maiores contas do recorte</h2><span class="sub">acumulado do contrato</span></div><div class="ch alto"><canvas></canvas></div>`);
+    out.appendChild(sec('Concentração', '', p));
+    chart(p.querySelector('canvas'), { type: 'bar', data: { labels: top.map(c => trunc(c.conta, 30)), datasets: [{ data: top.map(c => c.tot), backgroundColor: top.map(c => css(GCORES[GRUPOS.findIndex(g => g.nome === c.grupo) % 5])), borderRadius: 4 }] },
+      options: { indexAxis: 'y', scales: { x: { grid: { color: css('--linha2') }, ticks: { callback: v => fK(v) } }, y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 10.5 }, callback: function (v) { return this.getLabelForValue(v); } } } }, plugins: { tooltip: { callbacks: { label: c => ` ${fR0(c.parsed.x)} · ${fP(c.parsed.x / T.custo)} do custo` } } }, datasets: { bar: { barPercentage: .78 } } } });
+    const max = Math.max(...rows.flatMap(c => c.v), 1);
+    const w = el('div', 'tw alto');
+    w.innerHTML = `<table class="heat"><thead><tr><th style="min-width:210px">Conta</th><th>Código</th><th>Grupo</th>${MESES.map(m => `<th class="num">${h(m)}</th>`).join('')}<th class="num">TOTAL</th><th class="num">% custo</th><th class="num">Média/mês</th></tr></thead><tbody>` +
+      [...rows].sort((a, b) => b.tot - a.tot).map(c => { const ativos = c.v.filter(v => v > 0).length;
+        return `<tr><td style="white-space:nowrap" title="${h(c.conta)}">${h(trunc(c.conta, 34))}</td><td class="mono">${h(c.cod)}</td><td>${gTag(c.grupo)}</td>` +
+          c.v.map(v => `<td class="h" style="background:${seq(v, max)};color:${v / max > .6 ? '#fff' : 'var(--ink)'}" title="${fR(v)}">${v ? fK(v) : '<span style="color:var(--ink3)">·</span>'}</td>`).join('') +
+          `<td class="num"><b>${fK(c.tot)}</b></td><td class="num">${fP(c.tot / T.custo)}</td><td class="num">${ativos ? fK(c.tot / ativos) : '–'}</td></tr>`; }).join('') +
+      `</tbody><tfoot><tr><td>TOTAL DO RECORTE</td><td></td><td></td>${MESES.map((m, k) => `<td class="num">${fK(sum(rows, r => r.v[k]))}</td>`).join('')}<td class="num">${fK(tot)}</td><td class="num">${fP(tot / T.custo)}</td><td class="num"></td></tr></tfoot></table>`;
+    out.appendChild(sec('Todas as contas · mês a mês', 'a média por mês considera apenas os meses com lançamento na conta', w));
+    // curva ABC das contas
+    const ord = [...CONTAS].filter(c => c.tot > 0).sort((a, b) => b.tot - a.tot);
+    let acc = 0; const abc = ord.map(c => { acc += c.tot; return { ...c, acum: acc / T.custo }; });
+    const cA = abc.filter(c => c.acum <= 0.8).length, cB = abc.filter(c => c.acum > 0.8 && c.acum <= 0.95).length;
+    out.appendChild(el('div', 'dica', `<b>Concentração.</b> ${cA} contas respondem por 80% do custo acumulado e mais ${cB} chegam a 95%; as demais ${abc.length - cA - cB} somam os últimos 5%. Acompanhar de perto essas ${cA} contas cobre a maior parte do risco de desvio de custo.`));
+  }
+  bind();
+}
+
+/* ---------- 5. RELATÓRIO DO MÊS ---------- */
+function vMes(root) {
+  const S = STATE.mes ||= { k: ULT };
+  const f = el('div', 'filtros', selectHTML('sel', 'Mês de competência', ATIVOS.map(k => MESES[k]), MESES[S.k]) + '<span class="conta">comparação com o mês anterior e com a média dos 3 meses anteriores</span>');
+  const out = el('div'); root.append(f, out);
+  f.querySelector('#sel').onchange = e => { S.k = MESES.indexOf(e.target.value); draw(); };
+  function draw() {
+    destroyCharts(); out.innerHTML = ''; const k = S.k;
+    const ant = ATIVOS.filter(x => x < k); const kp = ant.length ? ant[ant.length - 1] : null;
+    const base3 = ant.slice(-3);
+    const m3 = arr => base3.length ? sum(base3, i => arr[i]) / base3.length : 0;
+    const delta = kp !== null ? CUSTO[k] - CUSTO[kp] : null;
+    out.appendChild(el('div', 'kpis', [
+      kpi('Receita bruta', fR0(REC[k]), kp !== null ? `${REC[k] - REC[kp] >= 0 ? '▲' : '▼'} ${fK(Math.abs(REC[k] - REC[kp]))} vs ${MESES[kp]}` : ''),
+      kpi('Custo total', fR0(CUSTO[k]), delta !== null ? `${delta >= 0 ? '▲' : '▼'} ${fK(Math.abs(delta))} vs ${MESES[kp]}` : '', 'ouro'),
+      kpi('Lucro do mês', fR0(LUCRO[k]), REC[k] ? `margem de ${fP(LUCRO[k] / REC[k])}` : 'mês sem receita', LUCRO[k] >= 0 ? 'ok' : 'crit'),
+      kpi('Custo ÷ receita bruta', REC[k] ? fP(CUSTO[k] / REC[k]) : '–', 'quanto do faturado foi consumido'),
+      kpi('Custo vs média 3M', m3(CUSTO) ? cor(-(CUSTO[k] / m3(CUSTO) - 1), (CUSTO[k] / m3(CUSTO) - 1 >= 0 ? '+' : '') + fP(CUSTO[k] / m3(CUSTO) - 1, 0)).replace(/<[^>]+>/g, '') : '–', `média 3M ${fK(m3(CUSTO))}`),
+      kpi('Contas com lançamento', fN(CONTAS.filter(c => c.v[k] > 0).length), `de ${CONTAS.length} contas`),
+    ].join('')));
+    const linhas = [{ n: '(=) RECEITA BRUTA', v: REC[k], f: true }, { n: '(-) ISS', v: ISS[k] }, { n: '(=) RECEITA LÍQUIDA', v: LIQ[k], f: true },
+      ...GRUPOS.map(g => ({ n: g.nome, v: -g.v[k], grupo: g.nome })), { n: '(=) CUSTO TOTAL', v: -CUSTO[k], f: true }, { n: '(=) LUCRO LÍQUIDO', v: LUCRO[k], f: true, l: true }];
+    const g = el('div', 'grid g2');
+    g.append(sec(`DRE de ${MESES[k]}`, 'AV% sobre a receita bruta do mês', tabela([
+      { t: 'Conta', k: 'n', f: (v, r) => r.grupo ? gTag(r.grupo) : `<b>${h(v)}</b>` },
+      { t: 'Valor (R$)', k: 'v', num: true, f: (v, r) => r.l ? cor(v, fR(v)) : fR(v) },
+      { t: 'AV%', k: r => REC[k] ? r.v / REC[k] : null, num: true, f: v => v === null ? '–' : fP(v) },
+      { t: 'Mês anterior', k: r => kp === null ? null : (r.grupo ? -GRUPOS.find(x => x.nome === r.grupo).v[kp] : r.n.includes('RECEITA BRUTA') ? REC[kp] : r.n.includes('ISS') ? ISS[kp] : r.n.includes('LÍQUIDA') ? LIQ[kp] : r.n.includes('CUSTO TOTAL') ? -CUSTO[kp] : LUCRO[kp]), num: true, f: v => v === null ? '–' : fR0(v) },
+    ], linhas, { semSort: true })),
+      (() => { const p = el('div', 'painel', `<div class="sec-h"><h2>Custo por grupo</h2><span class="sub">${h(MESES[k])} contra a média dos 3 meses anteriores</span></div>${legHTML([[MESES[k], css('--cus')], ['Média 3M', css('--azul-claro')]])}<div class="ch"><canvas></canvas></div>`);
+        setTimeout(() => chart(p.querySelector('canvas'), { type: 'bar', data: { labels: GRUPOS.map(x => trunc(x.nome, 18)), datasets: [{ label: MESES[k], data: GRUPOS.map(x => x.v[k]), backgroundColor: css('--cus'), borderRadius: 4 }, { label: 'Média 3M', data: GRUPOS.map(x => m3(x.v)), backgroundColor: css('--azul-claro'), borderRadius: 4 }] },
+          options: { indexAxis: 'y', scales: { x: { grid: { color: css('--linha2') }, ticks: { callback: v => fK(v) } }, y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 10.5 }, callback: function (v) { return this.getLabelForValue(v); } } } }, plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .82, categoryPercentage: .68 } } } }), 0);
+        return p; })());
+    out.appendChild(g);
+    const doMes = CONTAS.filter(c => c.v[k] > 0).sort((a, b) => b.v[k] - a.v[k]);
+    out.appendChild(sec(`Contas do mês`, `${doMes.length} contas com lançamento em ${MESES[k]}`, tabela([
+      { t: '#', k: r => doMes.indexOf(r) + 1, num: true }, { t: 'Conta', k: 'conta', cls: 'desc', f: v => h(trunc(v, 60)) }, { t: 'Código', k: 'cod', cls: 'mono' },
+      { t: 'Grupo', k: 'grupo', f: gTag }, { t: 'Valor no mês (R$)', k: r => r.v[k], num: true, f: fR },
+      { t: '% do custo do mês', k: r => r.v[k] / CUSTO[k], num: true, f: v => pctBar(v) },
+      { t: 'Mês anterior (R$)', k: r => kp === null ? null : r.v[kp], num: true, f: v => v === null ? '–' : fR0(v) },
+      { t: 'Var vs anterior', k: r => (kp === null || !r.v[kp]) ? null : r.v[k] / r.v[kp] - 1, num: true, f: v => v === null ? '–' : cor(-v, (v >= 0 ? '+' : '') + fP(v, 0)) },
+      { t: 'Média 3M (R$)', k: r => m3(r.v), num: true, f: fR0 },
+    ], doMes, { alto: true, semSort: true, total: (rs, c, i) => ['TOTAL', '', '', '', fR(CUSTO[k]), fP(1), kp === null ? '–' : fR0(CUSTO[kp]), '', fR0(m3(CUSTO))][i] })));
+    const alta = CONTAS.filter(c => c.v[k] > 0 && m3(c.v) > 0).map(c => ({ ...c, d: c.v[k] - m3(c.v) })).sort((a, b) => b.d - a.d).slice(0, 5);
+    const queda = CONTAS.filter(c => m3(c.v) > 0).map(c => ({ ...c, d: c.v[k] - m3(c.v) })).sort((a, b) => a.d - b.d).slice(0, 5);
+    const g2 = el('div', 'grid g2');
+    const tv = (titulo, rows) => sec(titulo, 'contra a média dos 3 meses anteriores', tabela([
+      { t: 'Conta', k: 'conta', cls: 'desc', f: v => h(trunc(v, 46)) }, { t: 'Grupo', k: 'grupo', f: gTag },
+      { t: 'No mês (R$)', k: r => r.v[k], num: true, f: fR0 }, { t: 'Média 3M (R$)', k: r => m3(r.v), num: true, f: fR0 },
+      { t: 'Variação (R$)', k: 'd', num: true, f: v => cor(-v, fR0(v)) },
+    ], rows, { semSort: true }));
+    g2.append(tv('Maiores altas do mês', alta), tv('Maiores quedas do mês', queda));
+    out.appendChild(g2);
+  }
+  draw();
+}
+/* ---------- 6. MATERIAL E FORNECEDORES ---------- */
+function vMaterial(root) {
+  const MM = D.meta.mat_meses, NMM = MM.length;
+  const FOR = (D.fornecedores || []).map((x, i) => ({ ...x, idx: i, tot: x.v.reduce((a, b) => a + b, 0) }));
+  const CAT = (D.categorias || []).map((x, i) => ({ ...x, idx: i, tot: x.v.reduce((a, b) => a + b, 0) }));
+  const MS = D.mat_serie || [];
+  if (!FOR.length) { root.appendChild(el('div', 'painel', 'A planilha de custos não trouxe o detalhe de material.')); return; }
+  const S = STATE.mat ||= { k: NMM - 1, q: '', cat: '' };
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  function bind() {
+    f.innerHTML = selectHTML('sel', 'Mês do detalhe', MM, MM[S.k]) +
+      `<label>Buscar fornecedor<input type="search" id="q" value="${h(S.q)}" placeholder="nome do fornecedor"></label>` +
+      selectHTML('cat', 'Categoria', uniq(FOR.map(x => x.cat)).sort(), S.cat, 'Todas') +
+      `<button class="btn" id="limpar">Limpar</button><span class="conta">detalhe por fornecedor disponível de ${h(MM[0])} a ${h(MM[NMM - 1])}</span>`;
+    f.querySelector('#sel').onchange = e => { S.k = MM.indexOf(e.target.value); draw(); };
+    f.querySelector('#q').oninput = e => { S.q = e.target.value; draw(); };
+    f.querySelector('#cat').onchange = e => { S.cat = e.target.value; draw(); };
+    f.querySelector('#limpar').onclick = () => { Object.assign(S, { q: '', cat: '' }); bind(); };
+    draw();
+  }
+  function draw() {
+    destroyCharts(); out.innerHTML = ''; const k = S.k, kp = k > 0 ? k - 1 : null;
+    const totMes = sum(FOR, x => x.v[k]);
+    const ativos = FOR.filter(x => x.v[k] > 0);
+    const novos = FOR.filter(x => x.v[k] > 0 && (kp === null || x.v.slice(0, k).every(v => v === 0)));
+    const top5 = [...ativos].sort((a, b) => b.v[k] - a.v[k]).slice(0, 5);
+    const matAcum = sum(CONTAS.filter(c => c.conta.toLowerCase().startsWith('obras (material')), c => c.tot);
+    out.appendChild(el('div', 'kpis', [
+      kpi(`Material em ${MM[k]}`, fR0(totMes), kp !== null ? `${totMes - sum(FOR, x => x.v[kp]) >= 0 ? '▲' : '▼'} ${fK(Math.abs(totMes - sum(FOR, x => x.v[kp])))} vs ${MM[kp]}` : '', 'ouro'),
+      kpi('Fornecedores ativos', fN(ativos.length), `de ${FOR.length} na base`),
+      kpi('Fornecedores novos no mês', fN(novos.length), novos.length ? trunc(novos[0].nome, 24) : 'nenhum'),
+      kpi('Concentração top 5', fP(sum(top5, x => x.v[k]) / (totMes || 1)), 'do material do mês'),
+      kpi('Material acumulado no contrato', fR0(matAcum), 'conta Obras (material) no DRE'),
+    ].join('')));
+    const g = el('div', 'grid g2');
+    const p1 = el('div', 'painel', `<div class="sec-h"><h2>Material por mês</h2><span class="sub">com número de lançamentos</span></div><div class="ch"><canvas></canvas></div>`);
+    const p2 = el('div', 'painel', `<div class="sec-h"><h2>Top 10 fornecedores de ${h(MM[k])}</h2></div><div class="ch"><canvas></canvas></div>`);
+    g.append(p1, p2); out.appendChild(sec('Visão do material', '', g));
+    chart(p1.querySelector('canvas'), { type: 'bar', data: { labels: MS.map(x => x.mes.replace('/2026', '/26').replace(' (previsto)', ' *')), datasets: [{ data: MS.map(x => x.total), backgroundColor: MS.map(x => x.mes.includes('previsto') ? css('--azul-claro') : css('--azul')), borderRadius: 4, barPercentage: .6 }] },
+      options: { plugins: { tooltip: { callbacks: { label: c => ` ${fR0(c.parsed.y)} · ${MS[c.dataIndex].lanc} lançamentos` } } } } });
+    const t10 = [...ativos].sort((a, b) => b.v[k] - a.v[k]).slice(0, 10);
+    chart(p2.querySelector('canvas'), { type: 'bar', data: { labels: t10.map(x => trunc(x.nome, 26)), datasets: [{ data: t10.map(x => x.v[k]), backgroundColor: css('--azul'), borderRadius: 4 }] },
+      options: { indexAxis: 'y', scales: { x: { grid: { color: css('--linha2') }, ticks: { callback: v => fK(v) } }, y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 10 }, callback: function (v) { return this.getLabelForValue(v); } } } }, plugins: { tooltip: { callbacks: { label: c => ` ${fR0(c.parsed.x)} · ${fP(c.parsed.x / totMes)} do material` } } }, datasets: { bar: { barPercentage: .78 } } } });
+    const q = S.q.trim().toLowerCase();
+    const rows = FOR.filter(x => (!S.cat || x.cat === S.cat) && (!q || x.nome.toLowerCase().includes(q)));
+    out.appendChild(sec('Fornecedores', `${rows.length} de ${FOR.length} fornecedores · valores por mês`, tabela([
+      { t: 'Fornecedor', k: 'nome', cls: 'desc', f: v => h(trunc(v, 48)) }, { t: 'Categoria', k: 'cat' },
+      ...MM.map((m, i) => ({ t: m, k: r => r.v[i], num: true, f: (v, r) => v ? `<span title="${r.lanc[i]} lançamentos">${fK(v)}</span>` : '<span style="color:var(--ink3)">·</span>' })),
+      { t: 'Total 4 meses (R$)', k: 'tot', num: true, f: fR0 },
+      { t: `% de ${MM[k]}`, k: r => totMes ? r.v[k] / totMes : 0, num: true, f: v => pctBar(v) },
+      { t: 'Var vs mês anterior', k: r => (kp === null || !r.v[kp]) ? null : r.v[k] / r.v[kp] - 1, num: true, f: (v, r) => v === null ? (r.v[k] > 0 ? '<span class="tag A">NOVO</span>' : '–') : cor(-v, (v >= 0 ? '+' : '') + fP(v, 0)) },
+      { t: 'Lanç. no mês', k: r => r.lanc[k], num: true, f: fN },
+    ], rows, { alto: true, sort: 2 + k, total: (rs, c, i) => { if (i === 0) return 'TOTAL'; if (c.k === 'tot') return fR0(sum(rs, r => r.tot)); const j = MM.indexOf(c.t); if (j >= 0) return fK(sum(rs, r => r.v[j])); if (c.t === 'Lanç. no mês') return fN(sum(rs, r => r.lanc[k])); return ''; } })));
+    out.appendChild(sec('Categorias de material', 'os mesmos quatro meses, agrupados', tabela([
+      { t: 'Categoria', k: 'nome' }, ...MM.map((m, i) => ({ t: m, k: r => r.v[i], num: true, f: v => v ? fK(v) : '<span style="color:var(--ink3)">·</span>' })),
+      { t: 'Total (R$)', k: 'tot', num: true, f: fR0 }, { t: `% de ${MM[k]}`, k: r => totMes ? r.v[k] / totMes : 0, num: true, f: v => pctBar(v) },
+    ], CAT.filter(c => c.tot > 0), { sort: 2 + k, total: (rs, c, i) => { if (i === 0) return 'TOTAL'; const j = MM.indexOf(c.t); if (j >= 0) return fK(sum(rs, r => r.v[j])); if (c.k === 'tot') return fR0(sum(rs, r => r.tot)); return ''; } })));
+    const prev = MS.find(x => x.mes.includes('previsto'));
+    if (prev) out.appendChild(el('div', 'nota', `${h(prev.mes)} é mês não fechado: o valor de ${fR0(prev.total)} vem do analítico de apropriações do SIENGE (contas 2.07.09 e 2.07.28), com ${prev.lanc} lançamentos, e ainda não passou pelo fechamento do DRE. Os demais grupos de custo desse mês seguem em aberto.`));
+  }
+  bind();
+}
+
+/* ---------- 7. CONCILIAÇÃO DE FONTES ---------- */
+function vConcil(root) {
+  if (!SER.length) { root.appendChild(el('div', 'painel', 'A planilha de custos não trouxe a série mensal.')); return; }
+  const norm = s => s.toLowerCase().replace('/26', '/26').trim();
+  const linhas = SER.map(s => {
+    const k = MESES.findIndex(m => norm(m) === norm(s.mes));
+    const dre = k >= 0 ? { obra: GRUPOS[0].v[k], pessoal: GRUPOS[1].v[k], veic: GRUPOS[2].v[k], gerais: GRUPOS[3].v[k], adm: GRUPOS[4].v[k], total: CUSTO[k] } : null;
+    return { mes: s.mes, k, pain: s, dre, dif: dre ? s.total - dre.total : null };
+  });
+  const comDif = linhas.filter(l => l.dif !== null && Math.abs(l.dif) > 1);
+  const semDRE = linhas.filter(l => l.k < 0);
+  const totPain = sum(SER, s => s.total), totDRE = T.custo;
+  root.appendChild(el('div', 'kpis', [
+    kpi('Custo total · DRE', fR0(totDRE), `${MESES.length} meses até ${MESES[NM - 1]}`),
+    kpi('Custo total · Painel de Custos', fR0(totPain), `${SER.length} meses até ${SER[SER.length - 1].mes}`, 'ouro'),
+    kpi('Diferença entre as fontes', fR0(totPain - totDRE), 'inclui o mês previsto', Math.abs(totPain - totDRE) > 1000 ? 'warn' : 'ok'),
+    kpi('Meses divergentes', fN(comDif.length), `de ${linhas.length - semDRE.length} meses comparáveis`, comDif.length ? 'warn' : 'ok'),
+    kpi('Meses só no painel', fN(semDRE.length), semDRE.map(l => l.mes).join(', ') || 'nenhum'),
+  ].join('')));
+  const p = el('div', 'painel', `${legHTML([['DRE (Consolidado)', css('--rec')], ['Painel de Custos', css('--cus')]])}<div class="ch alto"><canvas></canvas></div>`);
+  root.appendChild(sec('Custo mensal nas duas fontes', 'mesma competência, bases diferentes', p));
+  chart(p.querySelector('canvas'), { type: 'bar', data: { labels: linhas.map(l => l.mes), datasets: [
+    { label: 'DRE', data: linhas.map(l => l.dre ? l.dre.total : null), backgroundColor: css('--rec'), borderRadius: 4 },
+    { label: 'Painel', data: linhas.map(l => l.pain.total), backgroundColor: css('--cus'), borderRadius: 4 }] },
+    options: { plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .85, categoryPercentage: .72 } } } });
+  root.appendChild(sec('Comparativo mês a mês', 'diferença = painel menos DRE', tabela([
+    { t: 'Mês', k: 'mes' },
+    { t: 'Custo DRE (R$)', k: r => r.dre ? r.dre.total : null, num: true, f: v => v === null ? '<span style="color:var(--ink3)">sem DRE</span>' : fR(v) },
+    { t: 'Custo Painel (R$)', k: r => r.pain.total, num: true, f: fR },
+    { t: 'Diferença (R$)', k: 'dif', num: true, f: v => v === null ? '–' : (Math.abs(v) < 1 ? '<span style="color:var(--ok)">alinhado</span>' : `<span style="color:var(--warn);font-weight:700">${fR(v)}</span>`) },
+    { t: 'Diferença (%)', k: r => (r.dre && r.dre.total) ? r.dif / r.dre.total : null, num: true, f: v => v === null ? '–' : fP(v) },
+    { t: 'Onde está a diferença', k: r => { if (!r.dre || Math.abs(r.dif) < 1) return ''; const ds = [['Custo em Obra', r.pain.obra - r.dre.obra], ['Pessoal', r.pain.pessoal - r.dre.pessoal], ['Veículos/Máquinas', r.pain.veic - r.dre.veic], ['Gastos Gerais', r.pain.gerais - r.dre.gerais]].filter(d => Math.abs(d[1]) > 1).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1])); return ds.map(d => `${d[0]} ${d[1] >= 0 ? '+' : ''}${fK(d[1])}`).join(' · '); } },
+  ], linhas, { semSort: true, total: (rs, c, i) => ['TOTAL', fR(totDRE), fR(totPain), fR(totPain - totDRE), '', ''][i] })));
+  const w = el('div', 'painel');
+  w.innerHTML = `<div class="sec-h"><h2>Como ler as duas fontes</h2></div><dl class="dl" style="grid-template-columns:230px 1fr">
+    <dt>DRE_754 · Consolidado</dt><dd>Fechamento contábil por competência, conta a conta, de ${h(MESES[0])} a ${h(MESES[NM - 1])}. É a base do resultado e da margem.</dd>
+    <dt>Painel de Custos</dt><dd>Série de custo por grupo com um mês a mais, alimentada pelo analítico de apropriações do SIENGE. Serve para antecipar o mês que ainda não fechou.</dd>
+    <dt>Quando divergem</dt><dd>Meses já fechados devem bater. Divergência em mês fechado indica lançamento reclassificado depois da extração do painel, e quem vale para o resultado é o DRE.</dd></dl>
+    <div class="nota">${h(D.meta.nota_serie || '')}</div>`;
+  root.appendChild(sec('Procedência', '', w));
+  if ((D.fontes || []).length) root.appendChild(sec('Extrações registradas', 'aba Data Sources da planilha de custos', tabela([
+    { t: 'Origem', k: 'origem' }, { t: 'Objeto', k: 'objeto', cls: 'desc', f: v => h(trunc(v, 70)) }, { t: 'Parâmetros', k: 'params', cls: 'desc', f: v => h(trunc(v, 60)) },
+    { t: 'Extraído em', k: 'quando' }, { t: 'Linhas', k: 'linhas', num: true }, { t: 'Observação', k: 'nota', cls: 'desc', f: v => h(trunc(v, 60)) },
+  ], D.fontes, { semSort: true })));
+  if (comDif.length) root.appendChild(el('div', 'dica', `<b>Atenção na conciliação.</b> ${comDif.length} ${comDif.length === 1 ? 'mês diverge' : 'meses divergem'} entre as duas fontes (${comDif.map(l => l.mes).join(', ')}), somando ${fR0(sum(comDif, l => Math.abs(l.dif)))} em valor absoluto. Antes de levar qualquer número de custo para a diretoria, vale reconciliar esses meses: o DRE é a fonte do resultado, o painel é a fonte da antecipação.`));
+}
+
+/* ---------- init ---------- */
+(function () {
+  const m = document.getElementById('meta');
+  m.innerHTML = `<div><small>Competência</small><b>${h(MESES[NM - 1])}</b></div><div><small>Meses</small><b>${fN(ATIVOS.length)}</b></div><div><small>Margem acum.</small><b>${fP(T.margem)}</b></div><div><small>Extraído em</small><b>${fmtData(D.meta.extraido_em)}</b></div>`;
+  try { const v = localStorage.getItem('dre.view'); if (v && VIEWS.some(x => x[0] === v)) STATE.view = v; } catch (e) { }
+  nav(); show();
+})();
+
+</script>

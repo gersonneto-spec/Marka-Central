@@ -1,0 +1,595 @@
+<title>DRE e Custos 754</title>
+<style>
+:root{
+  color-scheme:light;
+  --azul:#3871C1; --azul-esc:#2B5A9B; --azul-claro:#8FB2DE; --azul-tint:#E8F0FA; --azul-tint2:#D3E1F3;
+  --cinza:#656263; --ouro:#C9A84C; --ouro-tint:#F7F1DF;
+  --bg:#FFFFFF; --bg2:#F4F6F9; --bg3:#EBEFF5; --linha:#D0D7E3; --linha2:#E4E9F0;
+  --ink:#1F2933; --ink2:#656263; --ink3:#8A8F98;
+  --ok:#2E7D32; --ok-tint:#E6F2E7; --warn:#B25E00; --warn-tint:#FDF1E1; --crit:#C62828; --crit-tint:#FBE9E9;
+  --s-marka:#3871C1; --s-klog:#E07B39; --s-vca:#8C6BB1; --g1:#3871C1; --g2:#E07B39; --g3:#8C6BB1; --g4:#1BA39C; --g5:#B5A03A; --rec:#3871C1; --cus:#E07B39;
+  --s-ct:#3871C1; --s-tac1:#8C6BB1; --s-tac2:#E07B39;
+  --seq1:#E8F0FA; --seq2:#BFD3EE; --seq3:#8FB2DE; --seq4:#5A8ED0; --seq5:#3871C1; --seq6:#264F87;
+  --sombra:0 1px 2px rgba(31,41,51,.06),0 4px 12px rgba(31,41,51,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --azul:#5B93D9; --azul-esc:#3871C1; --azul-claro:#7FA6D6; --azul-tint:#1C2A3D; --azul-tint2:#25385A;
+    --cinza:#B4B7BC; --ouro:#D6B75F; --ouro-tint:#2E2A1C;
+    --bg:#15181D; --bg2:#1C2026; --bg3:#242930; --linha:#353B45; --linha2:#2A3038;
+    --ink:#EEF1F5; --ink2:#B4B7BC; --ink3:#848A94;
+    --ok:#66BB6A; --ok-tint:#1B2E1D; --warn:#F5A623; --warn-tint:#33270F; --crit:#EF5350; --crit-tint:#3A1C1C;
+    --s-marka:#5B93D9; --s-klog:#E88A4D; --s-vca:#A98BD0; --g1:#5B93D9; --g2:#D95926; --g3:#9878C0; --g4:#17A093; --g5:#9A8A28; --rec:#5B93D9; --cus:#D95926;
+    --s-ct:#5B93D9; --s-tac1:#A98BD0; --s-tac2:#E88A4D;
+    --seq1:#1C2A3D; --seq2:#25385A; --seq3:#2F4C7C; --seq4:#3D66A5; --seq5:#5B93D9; --seq6:#8FB2DE;
+    --sombra:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --azul:#5B93D9; --azul-esc:#3871C1; --azul-claro:#7FA6D6; --azul-tint:#1C2A3D; --azul-tint2:#25385A;
+  --cinza:#B4B7BC; --ouro:#D6B75F; --ouro-tint:#2E2A1C;
+  --bg:#15181D; --bg2:#1C2026; --bg3:#242930; --linha:#353B45; --linha2:#2A3038;
+  --ink:#EEF1F5; --ink2:#B4B7BC; --ink3:#848A94;
+  --ok:#66BB6A; --ok-tint:#1B2E1D; --warn:#F5A623; --warn-tint:#33270F; --crit:#EF5350; --crit-tint:#3A1C1C;
+  --s-marka:#5B93D9; --s-klog:#E88A4D; --s-vca:#A98BD0; --g1:#5B93D9; --g2:#D95926; --g3:#9878C0; --g4:#17A093; --g5:#9A8A28; --rec:#5B93D9; --cus:#D95926;
+  --s-ct:#5B93D9; --s-tac1:#A98BD0; --s-tac2:#E88A4D;
+  --seq1:#1C2A3D; --seq2:#25385A; --seq3:#2F4C7C; --seq4:#3D66A5; --seq5:#5B93D9; --seq6:#8FB2DE;
+  --sombra:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg2);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.45;font-variant-numeric:tabular-nums}
+a{color:var(--azul)}
+button,select,input{font:inherit;color:inherit}
+h1,h2,h3{margin:0;text-wrap:balance}
+/* ---------- topo ---------- */
+.topo{background:#3871C1;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.marca{display:flex;flex-direction:column;line-height:1;padding-right:22px;border-right:1px solid rgba(255,255,255,.35)}
+.marca b{font-size:26px;letter-spacing:.12em;font-weight:900}
+.marca span{font-size:9px;letter-spacing:.34em;margin-top:5px;opacity:.9}
+.titulo h1{font-size:20px;font-weight:700;letter-spacing:.01em}
+.titulo p{margin:3px 0 0;font-size:12px;opacity:.9}
+.meta{margin-left:auto;display:flex;gap:18px;font-size:12px}
+.meta div{display:flex;flex-direction:column;gap:2px}
+.meta small{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.meta b{font-size:14px}
+/* ---------- abas ---------- */
+.abas{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--linha);display:flex;gap:2px;padding:0 16px;overflow-x:auto;scrollbar-width:thin}
+.abas button{background:none;border:0;border-bottom:3px solid transparent;padding:11px 12px 9px;color:var(--ink2);cursor:pointer;white-space:nowrap;font-size:12.5px;font-weight:700;letter-spacing:.01em}
+.abas button:hover{color:var(--ink);background:var(--bg2)}
+.abas button.on{color:var(--azul);border-bottom-color:var(--azul)}
+.abas button:focus-visible{outline:2px solid var(--azul);outline-offset:-2px}
+main{padding:18px 24px 48px;max-width:1600px;margin:0 auto}
+.view{display:none}.view.on{display:block}
+/* ---------- blocos ---------- */
+.sec{margin-top:22px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.sec-h h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--azul);font-weight:700}
+.sec-h .sub{font-size:12px;color:var(--ink3)}
+.painel{background:var(--bg);border:1px solid var(--linha);border-radius:6px;padding:14px 16px;box-shadow:var(--sombra)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--linha);border-top:4px solid var(--azul);border-radius:6px;padding:12px 14px 12px;box-shadow:var(--sombra);min-width:0}
+.kpi.ouro{border-top-color:var(--ouro)}
+.kpi.crit{border-top-color:var(--crit)}.kpi.warn{border-top-color:var(--warn)}.kpi.ok{border-top-color:var(--ok)}
+.kpi small{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px}
+.kpi b{display:block;font-size:22px;font-weight:700;color:var(--azul);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi.ouro b{color:var(--ouro)}.kpi.crit b{color:var(--crit)}.kpi.warn b{color:var(--warn)}.kpi.ok b{color:var(--ok)}
+.kpi em{display:block;font-style:normal;font-size:11.5px;color:var(--ink3);margin-top:4px}
+/* ---------- filtros ---------- */
+.filtros{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-end;padding:12px 14px;background:var(--bg);border:1px solid var(--linha);border-radius:6px;margin-bottom:14px}
+.filtros label{display:flex;flex-direction:column;gap:3px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.filtros select,.filtros input{border:1px solid var(--linha);background:var(--bg);border-radius:4px;padding:6px 8px;font-size:12.5px;min-width:130px;max-width:290px}
+.filtros input[type=text],.filtros input[type=search]{min-width:220px}
+.filtros input[type=number]{min-width:110px;max-width:140px}
+.filtros .chips{display:flex;gap:4px;flex-wrap:wrap}
+.chip{border:1px solid var(--linha);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer;color:var(--ink2)}
+.chip.on{background:var(--azul);border-color:var(--azul);color:#fff}
+.btn{border:1px solid var(--linha);background:var(--bg);border-radius:4px;padding:6px 10px;font-size:12px;cursor:pointer;color:var(--ink)}
+.btn:hover{background:var(--bg2)}
+.btn.pri{background:var(--azul);border-color:var(--azul);color:#fff}
+.conta{font-size:12px;color:var(--ink3);margin-left:auto;align-self:center}
+/* ---------- tabelas ---------- */
+.tw{overflow-x:auto;border:1px solid var(--linha);border-radius:6px;background:var(--bg)}
+.tw.alto{max-height:70vh;overflow-y:auto}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.3px}
+thead th{position:sticky;top:0;z-index:2;background:var(--azul-esc);color:#fff;font-weight:700;text-align:left;padding:8px 9px;white-space:nowrap;font-size:11px;letter-spacing:.04em;border-bottom:1px solid var(--linha)}
+:root[data-theme="dark"] thead th{background:#2B4E80}
+thead th.num{text-align:right}
+thead th.sort{cursor:pointer;user-select:none}
+thead th.sort:hover{background:var(--azul)}
+thead th .seta{opacity:.6;font-size:9px;margin-left:3px}
+tbody td{padding:6px 9px;border-bottom:1px solid var(--linha2);vertical-align:top}
+tbody tr:nth-child(even) td{background:var(--bg2)}
+tbody tr:hover td{background:var(--azul-tint)}
+tbody tr.clk{cursor:pointer}
+td.num,th.num{text-align:right;white-space:nowrap}
+td.neg{color:var(--crit)}
+td.pos{color:var(--ok)}
+tfoot td,tr.total td{background:var(--ouro-tint)!important;color:var(--ink);font-weight:700;border-top:2px solid var(--ouro);padding:7px 9px;white-space:nowrap}
+tr.grp td{background:var(--azul-tint)!important;font-weight:700;color:var(--azul-esc);cursor:pointer}
+tr.grp.n2 td{background:var(--bg3)!important;color:var(--ink);font-weight:700}
+tr.grp td .tri{display:inline-block;width:14px;color:var(--ink3);transition:transform .15s}
+tr.grp.fechado td .tri{transform:rotate(-90deg)}
+td.desc{min-width:280px;max-width:520px;white-space:normal}
+td.mono{font-family:Consolas,Menlo,monospace;font-size:11.5px;white-space:nowrap}
+.barra{display:inline-block;height:8px;border-radius:2px;background:var(--azul);vertical-align:middle;margin-right:6px}
+.barra.ouro{background:var(--ouro)}.barra.crit{background:var(--crit)}.barra.warn{background:var(--warn)}.barra.ok{background:var(--ok)}
+.pct{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pct i{display:inline-block;width:70px;height:7px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.pct i b{display:block;height:100%;background:var(--azul);border-radius:2px}
+.tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10.5px;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+.tag.A{background:var(--azul);color:#fff}.tag.B{background:var(--azul-tint2);color:var(--azul-esc)}.tag.C{background:var(--bg3);color:var(--ink2)}
+.tag.ok{background:var(--ok-tint);color:var(--ok)}.tag.warn{background:var(--warn-tint);color:var(--warn)}.tag.crit{background:var(--crit-tint);color:var(--crit)}.tag.neu{background:var(--bg3);color:var(--ink2)}
+.emp{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.emp i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.emp.MARKA i{background:var(--s-marka)}.emp.KLOG i{background:var(--s-klog)}.emp.VCA i{background:var(--s-vca)}.emp.x i{background:var(--ink3)}
+/* heatmap */
+.heat td.h{text-align:right;padding:5px 7px;font-size:11.5px}
+/* charts */
+.ch{position:relative;height:280px}
+.ch.baixo{height:220px}.ch.alto{height:360px}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink2);margin-bottom:6px}
+.leg span{display:inline-flex;align-items:center;gap:5px}.leg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+/* dica */
+.dica{border-left:3px solid var(--ouro);background:var(--ouro-tint);padding:9px 12px;border-radius:0 4px 4px 0;font-size:12.3px;color:var(--ink);margin-top:10px}
+.dica b{color:var(--ink)}
+.nota{font-size:11.5px;color:var(--ink3);margin-top:8px}
+/* drawer */
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(560px,100%);background:var(--bg);border-left:1px solid var(--linha);box-shadow:-8px 0 24px rgba(0,0,0,.15);z-index:40;transform:translateX(100%);transition:transform .2s;overflow-y:auto;padding:18px 20px}
+.drawer.on{transform:none}
+.drawer h3{font-size:15px;color:var(--azul);margin-bottom:4px}
+.drawer .fech{position:absolute;top:10px;right:12px}
+.dl{display:grid;grid-template-columns:150px 1fr;gap:4px 10px;font-size:12.3px;margin:12px 0}
+.dl dt{color:var(--ink3);text-transform:uppercase;font-size:10.5px;letter-spacing:.08em;padding-top:2px}
+.dl dd{margin:0}
+.rodape{margin-top:32px;padding-top:12px;border-top:2px solid var(--azul);font-size:11.5px;color:var(--ink3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media (max-width:760px){.topo{padding:12px 14px}.meta{margin-left:0}main{padding:12px 12px 40px}.kpi b{font-size:18px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="topo">
+  <div class="marca"><b>MARKA</b><span>ENGENHARIA</span></div>
+  <div class="titulo">
+    <h1>DRE e Custos · Obra 754</h1>
+    <p>Obras Civis Gerais · Contrato RT-2180KF-G-17251 · Vale S.A. · TFPM · São Luís, MA</p>
+  </div>
+  <div class="meta" id="meta"></div>
+</header>
+<nav class="abas" id="abas"></nav>
+<main id="main"></main>
+<aside class="drawer" id="drawer"></aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+window.DRE = /*__DATA__*/;
+</script>
+<script>
+/* =====================================================================
+   MOTOR · DRE e Custos da Obra 754 (OCG)
+   Base mestre: aba Consolidado do DRE_754 (conta × mês, 17 meses)
+   ===================================================================== */
+const D = window.DRE, MESES = D.meta.meses, NM = MESES.length;
+const REC = D.receita, ISS = D.iss;
+const LIQ = REC.map((v, k) => v + ISS[k]);
+const CONTAS = D.contas.map((c, i) => ({ ...c, idx: i, tot: c.v.reduce((a, b) => a + b, 0) }));
+const GRUPOS = [];
+for (const c of CONTAS) { let g = GRUPOS.find(x => x.cod === c.gcod); if (!g) { g = { cod: c.gcod, nome: c.grupo, v: new Array(NM).fill(0), n: 0 }; GRUPOS.push(g); } for (let k = 0; k < NM; k++) g.v[k] += c.v[k]; g.n++; }
+GRUPOS.forEach(g => g.tot = g.v.reduce((a, b) => a + b, 0));
+const CUSTO = MESES.map((m, k) => sum(GRUPOS, g => g.v[k]));
+const LUCRO = MESES.map((m, k) => LIQ[k] - CUSTO[k]);
+const T = { rec: sum(REC), iss: sum(ISS), liq: sum(LIQ), custo: sum(CUSTO), lucro: sum(LUCRO) };
+T.margem = T.lucro / T.rec;
+const ATIVOS = MESES.map((m, k) => k).filter(k => CUSTO[k] > 0 || REC[k] > 0);
+const COM_REC = MESES.map((m, k) => k).filter(k => REC[k] > 0);
+const ULT = ATIVOS[ATIVOS.length - 1];
+// série do painel de custos (inclui ago/26 previsto)
+const SER = D.serie || [];
+const GCORES = ['--g1', '--g2', '--g3', '--g4', '--g5'];
+function sum(a, f) { let s = 0; for (const x of a) s += f ? f(x) : x; return s; }
+function uniq(a) { return [...new Set(a.filter(x => x !== undefined && x !== ''))]; }
+/* ---------- formatação ---------- */
+const fR = v => (v < 0 ? '-' : '') + 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fR0 = v => (v < 0 ? '-' : '') + 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+const fK = v => { const a = Math.abs(v), s = v < 0 ? '-' : ''; if (a >= 1e6) return s + (a / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + ' mi'; if (a >= 1e3) return s + (a / 1e3).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + ' mil'; return s + a.toLocaleString('pt-BR', { maximumFractionDigits: 0 }); };
+const fP = (v, d = 1) => (v === null || v === undefined || !isFinite(v)) ? '–' : (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
+const fN = v => v.toLocaleString('pt-BR');
+const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const trunc = (s, n = 90) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+const sinal = v => v >= 0 ? 'var(--ok)' : 'var(--crit)';
+const cor = (v, t) => `<span style="color:${sinal(v)}">${t}</span>`;
+const numCls = v => v < -0.005 ? 'num neg' : 'num';
+const pctBar = (v, cls = '') => `<span class="pct"><i><b style="width:${Math.max(0, Math.min(100, v * 100))}%" class="${cls}"></b></i>${fP(v)}</span>`;
+const gTag = g => { const i = GRUPOS.findIndex(x => x.nome === g); return `<span class="emp"><i style="background:${css(GCORES[i % 5])}"></i>${h(g)}</span>`; };
+/* ---------- tabela ---------- */
+let TID = 0;
+function tabela(cols, rows, opt = {}) {
+  const st = { sort: opt.sort ?? null, dir: opt.dir ?? -1 };
+  const el = document.createElement('div'); el.className = 'tw' + (opt.alto ? ' alto' : '');
+  function val(r, c) { return typeof c.k === 'function' ? c.k(r) : r[c.k]; }
+  function render() {
+    let rs = [...rows];
+    if (st.sort !== null) { const c = cols[st.sort]; rs.sort((a, b) => { const x = val(a, c), y = val(b, c); if (x === y) return 0; if (x == null) return 1; if (y == null) return -1; return (x > y ? 1 : -1) * st.dir; }); }
+    if (opt.limite) rs = rs.slice(0, opt.limite);
+    let html = '<table><thead><tr>' + cols.map((c, i) => `<th class="${c.num ? 'num ' : ''}${opt.semSort ? '' : 'sort'}" data-i="${i}" ${c.w ? `style="min-width:${c.w}px"` : ''}>${h(c.t)}${st.sort === i ? `<span class="seta">${st.dir > 0 ? '▲' : '▼'}</span>` : ''}</th>`).join('') + '</tr></thead><tbody>';
+    if (!rs.length) html += `<tr><td colspan="${cols.length}" style="text-align:center;color:var(--ink3);padding:18px">Nenhuma linha para os filtros atuais.</td></tr>`;
+    for (const r of rs) html += `<tr class="${r._cls || ''}">` + cols.map(c => { const v = val(r, c); return `<td class="${c.num ? (c.neg ? numCls(v) : 'num') : (c.cls || '')}">${c.f ? c.f(v, r) : h(v ?? '')}</td>`; }).join('') + '</tr>';
+    html += '</tbody>';
+    if (opt.total) html += '<tfoot><tr>' + cols.map((c, i) => `<td class="${c.num ? 'num' : ''}">${opt.total(rs, c, i) ?? ''}</td>`).join('') + '</tr></tfoot>';
+    el.innerHTML = html + '</table>';
+    if (!opt.semSort) el.querySelectorAll('th.sort').forEach(th => th.onclick = () => { const i = +th.dataset.i; if (st.sort === i) st.dir *= -1; else { st.sort = i; st.dir = cols[i].num ? -1 : 1; } render(); });
+  }
+  render(); return el;
+}
+/* ---------- charts ---------- */
+const CH = [];
+function chart(canvas, cfg) {
+  const ink2 = css('--ink2'), ink3 = css('--ink3'), grid = css('--linha2');
+  Chart.defaults.font.family = 'Arial, Helvetica, sans-serif'; Chart.defaults.font.size = 11; Chart.defaults.color = ink2;
+  Chart.defaults.plugins.legend.display = false;
+  Chart.defaults.plugins.tooltip.backgroundColor = css('--ink'); Chart.defaults.plugins.tooltip.titleColor = css('--bg'); Chart.defaults.plugins.tooltip.bodyColor = css('--bg');
+  Chart.defaults.plugins.tooltip.padding = 8; Chart.defaults.plugins.tooltip.cornerRadius = 4;
+  const base = { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: 'index', intersect: false },
+    scales: { x: { grid: { display: false }, border: { color: grid }, ticks: { color: ink3 } }, y: { grid: { color: grid, drawTicks: false }, border: { display: false }, ticks: { color: ink3, callback: v => fK(v) } } } };
+  cfg.options = deepMerge(base, cfg.options || {});
+  const c = new Chart(canvas, cfg); CH.push(c); return c;
+}
+function deepMerge(a, b) { const o = { ...a }; for (const k in b) o[k] = (b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) && a[k] && typeof a[k] === 'object') ? deepMerge(a[k], b[k]) : b[k]; return o; }
+function destroyCharts() { CH.forEach(c => c.destroy()); CH.length = 0; }
+const tipR = { callbacks: { label: c => ` ${c.dataset.label ? c.dataset.label + ': ' : ''}${fR0(Math.abs(c.parsed.y ?? c.parsed.x ?? c.parsed))}` } };
+const legHTML = items => `<div class="leg">${items.map(([n, c]) => `<span><i style="background:${c}"></i>${h(n)}</span>`).join('')}</div>`;
+function el(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; }
+function sec(title, sub, ...kids) { const s = el('section', 'sec', `<div class="sec-h"><h2>${h(title)}</h2>${sub ? `<span class="sub">${sub}</span>` : ''}</div>`); kids.forEach(k => k && s.appendChild(typeof k === 'string' ? el('div', '', k) : k)); return s; }
+function kpi(label, val, note, cls = '') { return `<div class="kpi ${cls}"><small>${h(label)}</small><b title="${h(val)}">${h(val)}</b>${note ? `<em>${note}</em>` : ''}</div>`; }
+function selectHTML(id, label, opts, cur, all) { return `<label>${h(label)}<select id="${id}">${all ? `<option value="">${h(all)}</option>` : ''}${opts.map(o => `<option value="${h(o)}" ${o === cur ? 'selected' : ''}>${h(o)}</option>`).join('')}</select></label>`; }
+function seq(v, max) { const s = ['--seq1', '--seq2', '--seq3', '--seq4', '--seq5', '--seq6']; if (v <= 0 || max <= 0) return 'transparent'; const t = Math.min(1, v / max); return css(s[Math.min(5, Math.floor(t * 5.999))]); }
+function fmtData(s) { const [y, m, d] = s.split('-'); return `${d}/${m}/${y}`; }
+/* =====================================================================
+   VIEWS
+   ===================================================================== */
+const VIEWS = [
+  ['resumo', 'Resumo', vResumo], ['dre', 'DRE Mensal', vDRE], ['grupos', 'Custo por Natureza', vGrupos],
+  ['contas', 'Contas', vContas], ['mes', 'Relatório do Mês', vMes],
+  ['material', 'Material e Fornecedores', vMaterial], ['concil', 'Conciliação de Fontes', vConcil],
+];
+const STATE = { view: 'resumo' };
+function nav() {
+  const a = document.getElementById('abas'); a.innerHTML = VIEWS.map(v => `<button data-v="${v[0]}" class="${STATE.view === v[0] ? 'on' : ''}">${h(v[1])}</button>`).join('');
+  a.querySelectorAll('button').forEach(b => b.onclick = () => { STATE.view = b.dataset.v; try { localStorage.setItem('dre.view', STATE.view); } catch (e) { } nav(); show(); });
+}
+function show() {
+  destroyCharts(); const m = document.getElementById('main'); m.innerHTML = '';
+  const v = VIEWS.find(x => x[0] === STATE.view); const root = el('div', 'view on'); m.appendChild(root); v[2](root);
+  root.appendChild(el('footer', 'rodape', `<span>Marka Engenharia Ltda · Coordenação de Obras · TFPM · São Luís, MA</span><span>Fonte: SIENGE/STARIAN · ${h(D.meta.arquivos.join(' + '))} · extraído em ${fmtData(D.meta.extraido_em)}</span>`));
+  window.scrollTo(0, 0);
+}
+
+/* ---------- 1. RESUMO ---------- */
+function vResumo(root) {
+  const mesesRec = COM_REC.length, mediaRec = T.rec / mesesRec, mediaCusto = T.custo / ATIVOS.length;
+  const lucroMes = LUCRO.filter((v, k) => ATIVOS.includes(k));
+  const positivos = lucroMes.filter(v => v > 0).length;
+  root.appendChild(el('div', 'kpis', [
+    kpi('Receita bruta acumulada', fR0(T.rec), `${mesesRec} meses com faturamento`),
+    kpi('Receita líquida', fR0(T.liq), `ISS de ${fR0(-T.iss)}`),
+    kpi('Custo total acumulado', fR0(T.custo), `${fP(T.custo / T.rec)} da receita bruta`, 'ouro'),
+    kpi('Lucro líquido acumulado', fR0(T.lucro), '', T.lucro >= 0 ? 'ok' : 'crit'),
+    kpi('Margem líquida', fP(T.margem), 'sobre a receita bruta', T.margem >= 0 ? 'ok' : 'crit'),
+    kpi('Meses no positivo', `${positivos} de ${ATIVOS.length}`, `média de ${fR0(T.lucro / ATIVOS.length)} por mês`),
+  ].join('')));
+  const g = el('div', 'grid g2');
+  const p1 = el('div', 'painel', `<div class="sec-h"><h2>Receita × custo por mês</h2></div>${legHTML([['Receita bruta', css('--rec')], ['Custo total', css('--cus')]])}<div class="ch"><canvas></canvas></div>`);
+  const p2 = el('div', 'painel', `<div class="sec-h"><h2>Lucro do mês</h2><span class="sub">receita líquida menos custo</span></div><div class="ch"><canvas></canvas></div>`);
+  g.append(p1, p2); root.appendChild(sec('Evolução mensal', `${MESES[0]} a ${MESES[NM - 1]}`, g));
+  chart(p1.querySelector('canvas'), { type: 'bar', data: { labels: MESES, datasets: [{ label: 'Receita bruta', data: REC, backgroundColor: css('--rec'), borderRadius: 4 }, { label: 'Custo total', data: CUSTO, backgroundColor: css('--cus'), borderRadius: 4 }] }, options: { plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .85, categoryPercentage: .72 } } } });
+  chart(p2.querySelector('canvas'), { type: 'bar', data: { labels: MESES, datasets: [{ data: LUCRO, backgroundColor: LUCRO.map(v => v >= 0 ? css('--ok') : css('--crit')), borderRadius: 4, barPercentage: .62 }] }, options: { plugins: { tooltip: { callbacks: { label: c => ` Lucro: ${fR0(c.parsed.y)}` } } } } });
+  const g2 = el('div', 'grid g2');
+  const p3 = el('div', 'painel', `<div class="sec-h"><h2>Margem acumulada</h2><span class="sub">lucro acumulado ÷ receita acumulada</span></div><div class="ch"><canvas></canvas></div>`);
+  const p4 = el('div', 'painel', `<div class="sec-h"><h2>Composição do custo acumulado</h2></div><div class="ch"><canvas></canvas></div>`);
+  g2.append(p3, p4); root.appendChild(sec('Resultado e composição', '', g2));
+  let ar = 0, al = 0; const marg = MESES.map((m, k) => { ar += REC[k]; al += LUCRO[k]; return ar ? al / ar : 0; });
+  chart(p3.querySelector('canvas'), { type: 'line', data: { labels: MESES, datasets: [{ data: marg, borderColor: css('--ouro'), backgroundColor: css('--ouro-tint'), fill: true, borderWidth: 2, pointRadius: 3, pointBackgroundColor: css('--ouro'), tension: .2 }] }, options: { scales: { y: { ticks: { callback: v => fP(v, 0) } } }, plugins: { tooltip: { callbacks: { label: c => ` Margem acumulada: ${fP(c.parsed.y)}` } } } } });
+  chart(p4.querySelector('canvas'), { type: 'doughnut', data: { labels: GRUPOS.map(x => x.nome), datasets: [{ data: GRUPOS.map(x => x.tot), backgroundColor: GRUPOS.map((x, i) => css(GCORES[i % 5])), borderWidth: 2, borderColor: css('--bg') }] },
+    options: { cutout: '62%', scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 10, usePointStyle: true, generateLabels: ch => ch.data.labels.map((l, i) => ({ text: `${trunc(l, 22)}  ${fP(ch.data.datasets[0].data[i] / T.custo)}`, fillStyle: ch.data.datasets[0].backgroundColor[i], strokeStyle: 'transparent', index: i })) } }, tooltip: { callbacks: { label: c => ` ${fR0(c.parsed)} (${fP(c.parsed / T.custo)})` } } } } });
+  const med = D.meta.medicao_qqp;
+  const w = el('div', 'painel');
+  w.innerHTML = `<div class="sec-h"><h2>Contrato × faturamento × custo</h2><span class="sub">medição do painel de Medição OCG contra o DRE</span></div>
+    <dl class="dl" style="grid-template-columns:300px 1fr">
+    <dt>Valor contratual (QQP)</dt><dd>${fR(med.contrato)}</dd>
+    <dt>Medido acumulado até ${h(med.bm)}</dt><dd>${fR(med.medido)} · ${fP(med.medido / med.contrato)} do contrato</dd>
+    <dt>Receita bruta no DRE</dt><dd>${fR(T.rec)} · ${fP(T.rec / med.medido)} do medido</dd>
+    <dt>Diferença medido − receita</dt><dd><b>${fR(med.medido - T.rec)}</b></dd>
+    <dt>Custo acumulado</dt><dd>${fR(T.custo)}</dd>
+    <dt>Margem sobre o medido</dt><dd>${fP((med.medido - T.custo) / med.medido)} se todo o medido virar receita</dd></dl>
+    <div class="nota">A diferença entre medido e receita bruta vem do descompasso entre boletim aprovado e nota faturada, mais os boletins ainda em aprovação. Serve como estimativa do que ainda deve entrar como receita, não como valor a receber conciliado.</div>`;
+  root.appendChild(sec('Leitura contratual', '', w));
+  const pico = CUSTO.indexOf(Math.max(...CUSTO)), pior = LUCRO.indexOf(Math.min(...LUCRO)), melhor = LUCRO.indexOf(Math.max(...LUCRO));
+  root.appendChild(el('div', 'dica', `<b>Leitura rápida.</b> Margem acumulada de ${fP(T.margem)} sobre ${fR0(T.rec)} faturados, com ${positivos} dos ${ATIVOS.length} meses no positivo. O pico de custo foi ${MESES[pico]} (${fK(CUSTO[pico])}), o pior resultado ${MESES[pior]} (${fK(LUCRO[pior])}) e o melhor ${MESES[melhor]} (${fK(LUCRO[melhor])}). Mão de obra e insumos respondem por ${fP((GRUPOS[0].tot + GRUPOS[1].tot) / T.custo)} do custo acumulado.`));
+}
+
+/* ---------- 2. DRE MENSAL ---------- */
+function vDRE(root) {
+  const S = STATE.dre ||= { av: false };
+  const f = el('div', 'filtros', `<label>Exibição<span class="chips"><button class="chip ${!S.av ? 'on' : ''}" data-m="0">Valores em R$</button><button class="chip ${S.av ? 'on' : ''}" data-m="1">AV% sobre a receita</button></span></label><span class="conta">estrutura idêntica à aba Evolução Mensal do DRE</span>`);
+  const out = el('div'); root.append(f, out);
+  f.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { S.av = b.dataset.m === '1'; f.querySelectorAll('[data-m]').forEach(x => x.classList.toggle('on', (x.dataset.m === '1') === S.av)); draw(); });
+  function draw() {
+    destroyCharts(); out.innerHTML = '';
+    const linhas = [
+      { n: '(=) RECEITA BRUTA', v: REC, cls: 'forte' }, { n: '(-) ISS', v: ISS }, { n: '(=) RECEITA LÍQUIDA', v: LIQ, cls: 'forte' },
+      ...GRUPOS.map(g => ({ n: '(-) ' + g.nome, v: g.v.map(x => -x), grupo: g.nome })),
+      { n: '(=) CUSTO TOTAL', v: CUSTO.map(x => -x), cls: 'forte' },
+      { n: '(=) LUCRO LÍQUIDO', v: LUCRO, cls: 'forte lucro' },
+    ];
+    const w = el('div', 'tw');
+    const cel = (v, k) => { if (S.av) { const b = REC[k]; return b ? fP(v / b, 0) : '–'; } return v === 0 ? '<span style="color:var(--ink3)">·</span>' : fK(v); };
+    w.innerHTML = `<table><thead><tr><th style="min-width:230px">Conta</th>${MESES.map(m => `<th class="num">${h(m)}</th>`).join('')}<th class="num">ACUM.</th></tr></thead><tbody>` +
+      linhas.map(l => { const tot = sum(l.v); const st = l.cls && l.cls.includes('forte') ? 'font-weight:700;' : ''; const col = l.cls && l.cls.includes('lucro') ? `color:${sinal(tot)};` : '';
+        return `<tr><td style="${st}${col}white-space:nowrap">${l.grupo ? gTag(l.grupo).replace('<span class="emp">', '<span class="emp" style="font-weight:400">') : h(l.n)}</td>` +
+          l.v.map((v, k) => `<td class="num" style="${st}${l.cls && l.cls.includes('lucro') ? `color:${sinal(v)};` : ''}">${cel(v, k)}</td>`).join('') +
+          `<td class="num" style="font-weight:700;${col}">${S.av ? (T.rec ? fP(tot / T.rec, 0) : '–') : fK(tot)}</td></tr>`; }).join('') +
+      `</tbody><tfoot><tr><td>Margem líquida</td>${MESES.map((m, k) => `<td class="num" style="color:${REC[k] ? sinal(LUCRO[k]) : 'var(--ink3)'}">${REC[k] ? fP(LUCRO[k] / REC[k], 0) : '–'}</td>`).join('')}<td class="num">${fP(T.margem)}</td></tr></tfoot></table>`;
+    out.appendChild(sec('DRE mês a mês', S.av ? 'cada linha em % da receita bruta do mês' : 'valores em R$', w));
+    const p = el('div', 'painel', `${legHTML([['Receita líquida', css('--rec')], ['Custo total', css('--cus')], ['Lucro', css('--ouro')]])}<div class="ch alto"><canvas></canvas></div>`);
+    out.appendChild(sec('Receita líquida, custo e lucro', '', p));
+    chart(p.querySelector('canvas'), { type: 'bar', data: { labels: MESES, datasets: [
+      { label: 'Receita líquida', data: LIQ, backgroundColor: css('--rec'), borderRadius: 4, order: 2 },
+      { label: 'Custo total', data: CUSTO, backgroundColor: css('--cus'), borderRadius: 4, order: 2 },
+      { label: 'Lucro', data: LUCRO, type: 'line', borderColor: css('--ouro'), backgroundColor: css('--ouro'), borderWidth: 2, pointRadius: 3, tension: .2, order: 1 }] },
+      options: { plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .85, categoryPercentage: .72 } } } });
+    out.appendChild(el('div', 'nota', 'Os três meses iniciais (mar/25 a mai/25) e nov/25 aparecem sem receita: são meses de custo mobilizado antes do faturamento ou com boletim não faturado no período, o que explica os prejuízos pontuais da série.'));
+  }
+  draw();
+}
+
+/* ---------- 3. CUSTO POR NATUREZA ---------- */
+function vGrupos(root) {
+  const media = GRUPOS.map(g => g.tot / ATIVOS.length);
+  root.appendChild(el('div', 'kpis', GRUPOS.map((g, i) => kpi(trunc(g.nome, 22), fR0(g.tot), `${fP(g.tot / T.custo)} do custo · ${g.n} contas`, i === 0 ? 'ouro' : '')).join('')));
+  const p = el('div', 'painel', `${legHTML(GRUPOS.map((g, i) => [g.nome, css(GCORES[i % 5])]))}<div class="ch alto"><canvas></canvas></div>`);
+  root.appendChild(sec('Custo por natureza, mês a mês', 'empilhado, em R$', p));
+  chart(p.querySelector('canvas'), { type: 'bar', data: { labels: MESES, datasets: GRUPOS.map((g, i) => ({ label: g.nome, data: g.v, backgroundColor: css(GCORES[i % 5]), borderRadius: 3, borderWidth: 1, borderColor: css('--bg') })) },
+    options: { scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .68 } } } });
+  const w = el('div', 'tw');
+  const max = Math.max(...GRUPOS.flatMap(g => g.v));
+  w.innerHTML = `<table class="heat"><thead><tr><th>Grupo de custo</th>${MESES.map(m => `<th class="num">${h(m)}</th>`).join('')}<th class="num">TOTAL</th><th class="num">% do custo</th><th class="num">Média/mês</th></tr></thead><tbody>` +
+    GRUPOS.map((g, i) => `<tr><td style="white-space:nowrap">${gTag(g.nome)}</td>${g.v.map(v => `<td class="h" style="background:${seq(v, max)};color:${v / max > .6 ? '#fff' : 'var(--ink)'}" title="${fR(v)}">${v ? fK(v) : '<span style="color:var(--ink3)">·</span>'}</td>`).join('')}<td class="num"><b>${fK(g.tot)}</b></td><td class="num">${fP(g.tot / T.custo)}</td><td class="num">${fK(media[i])}</td></tr>`).join('') +
+    `</tbody><tfoot><tr><td>CUSTO TOTAL</td>${CUSTO.map(v => `<td class="num">${fK(v)}</td>`).join('')}<td class="num">${fK(T.custo)}</td><td class="num">${fP(1)}</td><td class="num">${fK(T.custo / ATIVOS.length)}</td></tr></tfoot></table>`;
+  root.appendChild(sec('Matriz grupo × mês', 'a intensidade do azul segue o valor do mês', w));
+  const p2 = el('div', 'painel', `${legHTML(GRUPOS.map((g, i) => [g.nome, css(GCORES[i % 5])]))}<div class="ch"><canvas></canvas></div>`);
+  root.appendChild(sec('Participação de cada grupo no custo do mês', '% do custo total, mês a mês', p2));
+  chart(p2.querySelector('canvas'), { type: 'line', data: { labels: MESES, datasets: GRUPOS.map((g, i) => ({ label: g.nome, data: g.v.map((v, k) => CUSTO[k] ? v / CUSTO[k] : null), borderColor: css(GCORES[i % 5]), backgroundColor: css(GCORES[i % 5]), borderWidth: 2, pointRadius: 2.5, tension: .2, spanGaps: true })) },
+    options: { scales: { y: { min: 0, max: 1, ticks: { callback: v => fP(v, 0) } } }, plugins: { tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fP(c.parsed.y)}` } } } } });
+  root.appendChild(sec('Resumo por grupo', '', tabela([
+    { t: 'Grupo de custo', k: 'nome', f: v => gTag(v) }, { t: 'Contas', k: 'n', num: true, f: fN },
+    { t: 'Total acumulado (R$)', k: 'tot', num: true, f: fR }, { t: '% do custo', k: r => r.tot / T.custo, num: true, f: v => pctBar(v) },
+    { t: 'Média por mês (R$)', k: r => r.tot / ATIVOS.length, num: true, f: fR0 },
+    { t: 'Maior mês', k: r => Math.max(...r.v), num: true, f: (v, r) => `${fR0(v)} <span style="color:var(--ink3)">${h(MESES[r.v.indexOf(v)])}</span>` },
+    { t: 'Último mês', k: r => r.v[ULT], num: true, f: fR0 },
+    { t: 'Últ. vs média', k: r => (r.tot / ATIVOS.length) ? r.v[ULT] / (r.tot / ATIVOS.length) - 1 : null, num: true, f: v => v === null ? '–' : cor(-v, (v >= 0 ? '+' : '') + fP(v, 0)) },
+  ], GRUPOS, { total: (rs, c, i) => ['TOTAL', fN(sum(rs, r => r.n)), fR(T.custo), fP(1), fR0(T.custo / ATIVOS.length), '', fR0(CUSTO[ULT]), ''][i] })));
+}
+/* ---------- 4. CONTAS ---------- */
+function vContas(root) {
+  const S = STATE.contas ||= { q: '', grupo: '', so: true };
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  function bind() {
+    f.innerHTML = `<label>Buscar<input type="search" id="q" value="${h(S.q)}" placeholder="conta ou código contábil"></label>
+      ${selectHTML('grupo', 'Grupo', GRUPOS.map(g => g.nome), S.grupo, 'Todos')}
+      <label>Filtro rápido<span class="chips"><button class="chip ${S.so ? 'on' : ''}" id="so">Só contas com lançamento</button></span></label>
+      <button class="btn" id="limpar">Limpar filtros</button><span class="conta" id="conta"></span>`;
+    f.querySelector('#q').oninput = e => { S.q = e.target.value; draw(); };
+    f.querySelector('#grupo').onchange = e => { S.grupo = e.target.value; draw(); };
+    f.querySelector('#so').onclick = () => { S.so = !S.so; bind(); };
+    f.querySelector('#limpar').onclick = () => { Object.assign(S, { q: '', grupo: '', so: true }); bind(); };
+    draw();
+  }
+  function draw() {
+    destroyCharts(); out.innerHTML = '';
+    const q = S.q.trim().toLowerCase();
+    const rows = CONTAS.filter(c => (!S.grupo || c.grupo === S.grupo) && (!S.so || c.tot > 0) && (!q || c.conta.toLowerCase().includes(q) || c.cod.includes(q)));
+    const tot = sum(rows, r => r.tot);
+    f.querySelector('#conta').textContent = `${fN(rows.length)} de ${fN(CONTAS.length)} contas · ${fK(tot)} acumulados · ${fP(tot / T.custo)} do custo`;
+    const top = [...rows].sort((a, b) => b.tot - a.tot).slice(0, 12);
+    const p = el('div', 'painel', `<div class="sec-h"><h2>Maiores contas do recorte</h2><span class="sub">acumulado do contrato</span></div><div class="ch alto"><canvas></canvas></div>`);
+    out.appendChild(sec('Concentração', '', p));
+    chart(p.querySelector('canvas'), { type: 'bar', data: { labels: top.map(c => trunc(c.conta, 30)), datasets: [{ data: top.map(c => c.tot), backgroundColor: top.map(c => css(GCORES[GRUPOS.findIndex(g => g.nome === c.grupo) % 5])), borderRadius: 4 }] },
+      options: { indexAxis: 'y', scales: { x: { grid: { color: css('--linha2') }, ticks: { callback: v => fK(v) } }, y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 10.5 }, callback: function (v) { return this.getLabelForValue(v); } } } }, plugins: { tooltip: { callbacks: { label: c => ` ${fR0(c.parsed.x)} · ${fP(c.parsed.x / T.custo)} do custo` } } }, datasets: { bar: { barPercentage: .78 } } } });
+    const max = Math.max(...rows.flatMap(c => c.v), 1);
+    const w = el('div', 'tw alto');
+    w.innerHTML = `<table class="heat"><thead><tr><th style="min-width:210px">Conta</th><th>Código</th><th>Grupo</th>${MESES.map(m => `<th class="num">${h(m)}</th>`).join('')}<th class="num">TOTAL</th><th class="num">% custo</th><th class="num">Média/mês</th></tr></thead><tbody>` +
+      [...rows].sort((a, b) => b.tot - a.tot).map(c => { const ativos = c.v.filter(v => v > 0).length;
+        return `<tr><td style="white-space:nowrap" title="${h(c.conta)}">${h(trunc(c.conta, 34))}</td><td class="mono">${h(c.cod)}</td><td>${gTag(c.grupo)}</td>` +
+          c.v.map(v => `<td class="h" style="background:${seq(v, max)};color:${v / max > .6 ? '#fff' : 'var(--ink)'}" title="${fR(v)}">${v ? fK(v) : '<span style="color:var(--ink3)">·</span>'}</td>`).join('') +
+          `<td class="num"><b>${fK(c.tot)}</b></td><td class="num">${fP(c.tot / T.custo)}</td><td class="num">${ativos ? fK(c.tot / ativos) : '–'}</td></tr>`; }).join('') +
+      `</tbody><tfoot><tr><td>TOTAL DO RECORTE</td><td></td><td></td>${MESES.map((m, k) => `<td class="num">${fK(sum(rows, r => r.v[k]))}</td>`).join('')}<td class="num">${fK(tot)}</td><td class="num">${fP(tot / T.custo)}</td><td class="num"></td></tr></tfoot></table>`;
+    out.appendChild(sec('Todas as contas · mês a mês', 'a média por mês considera apenas os meses com lançamento na conta', w));
+    // curva ABC das contas
+    const ord = [...CONTAS].filter(c => c.tot > 0).sort((a, b) => b.tot - a.tot);
+    let acc = 0; const abc = ord.map(c => { acc += c.tot; return { ...c, acum: acc / T.custo }; });
+    const cA = abc.filter(c => c.acum <= 0.8).length, cB = abc.filter(c => c.acum > 0.8 && c.acum <= 0.95).length;
+    out.appendChild(el('div', 'dica', `<b>Concentração.</b> ${cA} contas respondem por 80% do custo acumulado e mais ${cB} chegam a 95%; as demais ${abc.length - cA - cB} somam os últimos 5%. Acompanhar de perto essas ${cA} contas cobre a maior parte do risco de desvio de custo.`));
+  }
+  bind();
+}
+
+/* ---------- 5. RELATÓRIO DO MÊS ---------- */
+function vMes(root) {
+  const S = STATE.mes ||= { k: ULT };
+  const f = el('div', 'filtros', selectHTML('sel', 'Mês de competência', ATIVOS.map(k => MESES[k]), MESES[S.k]) + '<span class="conta">comparação com o mês anterior e com a média dos 3 meses anteriores</span>');
+  const out = el('div'); root.append(f, out);
+  f.querySelector('#sel').onchange = e => { S.k = MESES.indexOf(e.target.value); draw(); };
+  function draw() {
+    destroyCharts(); out.innerHTML = ''; const k = S.k;
+    const ant = ATIVOS.filter(x => x < k); const kp = ant.length ? ant[ant.length - 1] : null;
+    const base3 = ant.slice(-3);
+    const m3 = arr => base3.length ? sum(base3, i => arr[i]) / base3.length : 0;
+    const delta = kp !== null ? CUSTO[k] - CUSTO[kp] : null;
+    out.appendChild(el('div', 'kpis', [
+      kpi('Receita bruta', fR0(REC[k]), kp !== null ? `${REC[k] - REC[kp] >= 0 ? '▲' : '▼'} ${fK(Math.abs(REC[k] - REC[kp]))} vs ${MESES[kp]}` : ''),
+      kpi('Custo total', fR0(CUSTO[k]), delta !== null ? `${delta >= 0 ? '▲' : '▼'} ${fK(Math.abs(delta))} vs ${MESES[kp]}` : '', 'ouro'),
+      kpi('Lucro do mês', fR0(LUCRO[k]), REC[k] ? `margem de ${fP(LUCRO[k] / REC[k])}` : 'mês sem receita', LUCRO[k] >= 0 ? 'ok' : 'crit'),
+      kpi('Custo ÷ receita bruta', REC[k] ? fP(CUSTO[k] / REC[k]) : '–', 'quanto do faturado foi consumido'),
+      kpi('Custo vs média 3M', m3(CUSTO) ? cor(-(CUSTO[k] / m3(CUSTO) - 1), (CUSTO[k] / m3(CUSTO) - 1 >= 0 ? '+' : '') + fP(CUSTO[k] / m3(CUSTO) - 1, 0)).replace(/<[^>]+>/g, '') : '–', `média 3M ${fK(m3(CUSTO))}`),
+      kpi('Contas com lançamento', fN(CONTAS.filter(c => c.v[k] > 0).length), `de ${CONTAS.length} contas`),
+    ].join('')));
+    const linhas = [{ n: '(=) RECEITA BRUTA', v: REC[k], f: true }, { n: '(-) ISS', v: ISS[k] }, { n: '(=) RECEITA LÍQUIDA', v: LIQ[k], f: true },
+      ...GRUPOS.map(g => ({ n: g.nome, v: -g.v[k], grupo: g.nome })), { n: '(=) CUSTO TOTAL', v: -CUSTO[k], f: true }, { n: '(=) LUCRO LÍQUIDO', v: LUCRO[k], f: true, l: true }];
+    const g = el('div', 'grid g2');
+    g.append(sec(`DRE de ${MESES[k]}`, 'AV% sobre a receita bruta do mês', tabela([
+      { t: 'Conta', k: 'n', f: (v, r) => r.grupo ? gTag(r.grupo) : `<b>${h(v)}</b>` },
+      { t: 'Valor (R$)', k: 'v', num: true, f: (v, r) => r.l ? cor(v, fR(v)) : fR(v) },
+      { t: 'AV%', k: r => REC[k] ? r.v / REC[k] : null, num: true, f: v => v === null ? '–' : fP(v) },
+      { t: 'Mês anterior', k: r => kp === null ? null : (r.grupo ? -GRUPOS.find(x => x.nome === r.grupo).v[kp] : r.n.includes('RECEITA BRUTA') ? REC[kp] : r.n.includes('ISS') ? ISS[kp] : r.n.includes('LÍQUIDA') ? LIQ[kp] : r.n.includes('CUSTO TOTAL') ? -CUSTO[kp] : LUCRO[kp]), num: true, f: v => v === null ? '–' : fR0(v) },
+    ], linhas, { semSort: true })),
+      (() => { const p = el('div', 'painel', `<div class="sec-h"><h2>Custo por grupo</h2><span class="sub">${h(MESES[k])} contra a média dos 3 meses anteriores</span></div>${legHTML([[MESES[k], css('--cus')], ['Média 3M', css('--azul-claro')]])}<div class="ch"><canvas></canvas></div>`);
+        setTimeout(() => chart(p.querySelector('canvas'), { type: 'bar', data: { labels: GRUPOS.map(x => trunc(x.nome, 18)), datasets: [{ label: MESES[k], data: GRUPOS.map(x => x.v[k]), backgroundColor: css('--cus'), borderRadius: 4 }, { label: 'Média 3M', data: GRUPOS.map(x => m3(x.v)), backgroundColor: css('--azul-claro'), borderRadius: 4 }] },
+          options: { indexAxis: 'y', scales: { x: { grid: { color: css('--linha2') }, ticks: { callback: v => fK(v) } }, y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 10.5 }, callback: function (v) { return this.getLabelForValue(v); } } } }, plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .82, categoryPercentage: .68 } } } }), 0);
+        return p; })());
+    out.appendChild(g);
+    const doMes = CONTAS.filter(c => c.v[k] > 0).sort((a, b) => b.v[k] - a.v[k]);
+    out.appendChild(sec(`Contas do mês`, `${doMes.length} contas com lançamento em ${MESES[k]}`, tabela([
+      { t: '#', k: r => doMes.indexOf(r) + 1, num: true }, { t: 'Conta', k: 'conta', cls: 'desc', f: v => h(trunc(v, 60)) }, { t: 'Código', k: 'cod', cls: 'mono' },
+      { t: 'Grupo', k: 'grupo', f: gTag }, { t: 'Valor no mês (R$)', k: r => r.v[k], num: true, f: fR },
+      { t: '% do custo do mês', k: r => r.v[k] / CUSTO[k], num: true, f: v => pctBar(v) },
+      { t: 'Mês anterior (R$)', k: r => kp === null ? null : r.v[kp], num: true, f: v => v === null ? '–' : fR0(v) },
+      { t: 'Var vs anterior', k: r => (kp === null || !r.v[kp]) ? null : r.v[k] / r.v[kp] - 1, num: true, f: v => v === null ? '–' : cor(-v, (v >= 0 ? '+' : '') + fP(v, 0)) },
+      { t: 'Média 3M (R$)', k: r => m3(r.v), num: true, f: fR0 },
+    ], doMes, { alto: true, semSort: true, total: (rs, c, i) => ['TOTAL', '', '', '', fR(CUSTO[k]), fP(1), kp === null ? '–' : fR0(CUSTO[kp]), '', fR0(m3(CUSTO))][i] })));
+    const alta = CONTAS.filter(c => c.v[k] > 0 && m3(c.v) > 0).map(c => ({ ...c, d: c.v[k] - m3(c.v) })).sort((a, b) => b.d - a.d).slice(0, 5);
+    const queda = CONTAS.filter(c => m3(c.v) > 0).map(c => ({ ...c, d: c.v[k] - m3(c.v) })).sort((a, b) => a.d - b.d).slice(0, 5);
+    const g2 = el('div', 'grid g2');
+    const tv = (titulo, rows) => sec(titulo, 'contra a média dos 3 meses anteriores', tabela([
+      { t: 'Conta', k: 'conta', cls: 'desc', f: v => h(trunc(v, 46)) }, { t: 'Grupo', k: 'grupo', f: gTag },
+      { t: 'No mês (R$)', k: r => r.v[k], num: true, f: fR0 }, { t: 'Média 3M (R$)', k: r => m3(r.v), num: true, f: fR0 },
+      { t: 'Variação (R$)', k: 'd', num: true, f: v => cor(-v, fR0(v)) },
+    ], rows, { semSort: true }));
+    g2.append(tv('Maiores altas do mês', alta), tv('Maiores quedas do mês', queda));
+    out.appendChild(g2);
+  }
+  draw();
+}
+/* ---------- 6. MATERIAL E FORNECEDORES ---------- */
+function vMaterial(root) {
+  const MM = D.meta.mat_meses, NMM = MM.length;
+  const FOR = (D.fornecedores || []).map((x, i) => ({ ...x, idx: i, tot: x.v.reduce((a, b) => a + b, 0) }));
+  const CAT = (D.categorias || []).map((x, i) => ({ ...x, idx: i, tot: x.v.reduce((a, b) => a + b, 0) }));
+  const MS = D.mat_serie || [];
+  if (!FOR.length) { root.appendChild(el('div', 'painel', 'A planilha de custos não trouxe o detalhe de material.')); return; }
+  const S = STATE.mat ||= { k: NMM - 1, q: '', cat: '' };
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  function bind() {
+    f.innerHTML = selectHTML('sel', 'Mês do detalhe', MM, MM[S.k]) +
+      `<label>Buscar fornecedor<input type="search" id="q" value="${h(S.q)}" placeholder="nome do fornecedor"></label>` +
+      selectHTML('cat', 'Categoria', uniq(FOR.map(x => x.cat)).sort(), S.cat, 'Todas') +
+      `<button class="btn" id="limpar">Limpar</button><span class="conta">detalhe por fornecedor disponível de ${h(MM[0])} a ${h(MM[NMM - 1])}</span>`;
+    f.querySelector('#sel').onchange = e => { S.k = MM.indexOf(e.target.value); draw(); };
+    f.querySelector('#q').oninput = e => { S.q = e.target.value; draw(); };
+    f.querySelector('#cat').onchange = e => { S.cat = e.target.value; draw(); };
+    f.querySelector('#limpar').onclick = () => { Object.assign(S, { q: '', cat: '' }); bind(); };
+    draw();
+  }
+  function draw() {
+    destroyCharts(); out.innerHTML = ''; const k = S.k, kp = k > 0 ? k - 1 : null;
+    const totMes = sum(FOR, x => x.v[k]);
+    const ativos = FOR.filter(x => x.v[k] > 0);
+    const novos = FOR.filter(x => x.v[k] > 0 && (kp === null || x.v.slice(0, k).every(v => v === 0)));
+    const top5 = [...ativos].sort((a, b) => b.v[k] - a.v[k]).slice(0, 5);
+    const matAcum = sum(CONTAS.filter(c => c.conta.toLowerCase().startsWith('obras (material')), c => c.tot);
+    out.appendChild(el('div', 'kpis', [
+      kpi(`Material em ${MM[k]}`, fR0(totMes), kp !== null ? `${totMes - sum(FOR, x => x.v[kp]) >= 0 ? '▲' : '▼'} ${fK(Math.abs(totMes - sum(FOR, x => x.v[kp])))} vs ${MM[kp]}` : '', 'ouro'),
+      kpi('Fornecedores ativos', fN(ativos.length), `de ${FOR.length} na base`),
+      kpi('Fornecedores novos no mês', fN(novos.length), novos.length ? trunc(novos[0].nome, 24) : 'nenhum'),
+      kpi('Concentração top 5', fP(sum(top5, x => x.v[k]) / (totMes || 1)), 'do material do mês'),
+      kpi('Material acumulado no contrato', fR0(matAcum), 'conta Obras (material) no DRE'),
+    ].join('')));
+    const g = el('div', 'grid g2');
+    const p1 = el('div', 'painel', `<div class="sec-h"><h2>Material por mês</h2><span class="sub">com número de lançamentos</span></div><div class="ch"><canvas></canvas></div>`);
+    const p2 = el('div', 'painel', `<div class="sec-h"><h2>Top 10 fornecedores de ${h(MM[k])}</h2></div><div class="ch"><canvas></canvas></div>`);
+    g.append(p1, p2); out.appendChild(sec('Visão do material', '', g));
+    chart(p1.querySelector('canvas'), { type: 'bar', data: { labels: MS.map(x => x.mes.replace('/2026', '/26').replace(' (previsto)', ' *')), datasets: [{ data: MS.map(x => x.total), backgroundColor: MS.map(x => x.mes.includes('previsto') ? css('--azul-claro') : css('--azul')), borderRadius: 4, barPercentage: .6 }] },
+      options: { plugins: { tooltip: { callbacks: { label: c => ` ${fR0(c.parsed.y)} · ${MS[c.dataIndex].lanc} lançamentos` } } } } });
+    const t10 = [...ativos].sort((a, b) => b.v[k] - a.v[k]).slice(0, 10);
+    chart(p2.querySelector('canvas'), { type: 'bar', data: { labels: t10.map(x => trunc(x.nome, 26)), datasets: [{ data: t10.map(x => x.v[k]), backgroundColor: css('--azul'), borderRadius: 4 }] },
+      options: { indexAxis: 'y', scales: { x: { grid: { color: css('--linha2') }, ticks: { callback: v => fK(v) } }, y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 10 }, callback: function (v) { return this.getLabelForValue(v); } } } }, plugins: { tooltip: { callbacks: { label: c => ` ${fR0(c.parsed.x)} · ${fP(c.parsed.x / totMes)} do material` } } }, datasets: { bar: { barPercentage: .78 } } } });
+    const q = S.q.trim().toLowerCase();
+    const rows = FOR.filter(x => (!S.cat || x.cat === S.cat) && (!q || x.nome.toLowerCase().includes(q)));
+    out.appendChild(sec('Fornecedores', `${rows.length} de ${FOR.length} fornecedores · valores por mês`, tabela([
+      { t: 'Fornecedor', k: 'nome', cls: 'desc', f: v => h(trunc(v, 48)) }, { t: 'Categoria', k: 'cat' },
+      ...MM.map((m, i) => ({ t: m, k: r => r.v[i], num: true, f: (v, r) => v ? `<span title="${r.lanc[i]} lançamentos">${fK(v)}</span>` : '<span style="color:var(--ink3)">·</span>' })),
+      { t: 'Total 4 meses (R$)', k: 'tot', num: true, f: fR0 },
+      { t: `% de ${MM[k]}`, k: r => totMes ? r.v[k] / totMes : 0, num: true, f: v => pctBar(v) },
+      { t: 'Var vs mês anterior', k: r => (kp === null || !r.v[kp]) ? null : r.v[k] / r.v[kp] - 1, num: true, f: (v, r) => v === null ? (r.v[k] > 0 ? '<span class="tag A">NOVO</span>' : '–') : cor(-v, (v >= 0 ? '+' : '') + fP(v, 0)) },
+      { t: 'Lanç. no mês', k: r => r.lanc[k], num: true, f: fN },
+    ], rows, { alto: true, sort: 2 + k, total: (rs, c, i) => { if (i === 0) return 'TOTAL'; if (c.k === 'tot') return fR0(sum(rs, r => r.tot)); const j = MM.indexOf(c.t); if (j >= 0) return fK(sum(rs, r => r.v[j])); if (c.t === 'Lanç. no mês') return fN(sum(rs, r => r.lanc[k])); return ''; } })));
+    out.appendChild(sec('Categorias de material', 'os mesmos quatro meses, agrupados', tabela([
+      { t: 'Categoria', k: 'nome' }, ...MM.map((m, i) => ({ t: m, k: r => r.v[i], num: true, f: v => v ? fK(v) : '<span style="color:var(--ink3)">·</span>' })),
+      { t: 'Total (R$)', k: 'tot', num: true, f: fR0 }, { t: `% de ${MM[k]}`, k: r => totMes ? r.v[k] / totMes : 0, num: true, f: v => pctBar(v) },
+    ], CAT.filter(c => c.tot > 0), { sort: 2 + k, total: (rs, c, i) => { if (i === 0) return 'TOTAL'; const j = MM.indexOf(c.t); if (j >= 0) return fK(sum(rs, r => r.v[j])); if (c.k === 'tot') return fR0(sum(rs, r => r.tot)); return ''; } })));
+    const prev = MS.find(x => x.mes.includes('previsto'));
+    if (prev) out.appendChild(el('div', 'nota', `${h(prev.mes)} é mês não fechado: o valor de ${fR0(prev.total)} vem do analítico de apropriações do SIENGE (contas 2.07.09 e 2.07.28), com ${prev.lanc} lançamentos, e ainda não passou pelo fechamento do DRE. Os demais grupos de custo desse mês seguem em aberto.`));
+  }
+  bind();
+}
+
+/* ---------- 7. CONCILIAÇÃO DE FONTES ---------- */
+function vConcil(root) {
+  if (!SER.length) { root.appendChild(el('div', 'painel', 'A planilha de custos não trouxe a série mensal.')); return; }
+  const norm = s => s.toLowerCase().replace('/26', '/26').trim();
+  const linhas = SER.map(s => {
+    const k = MESES.findIndex(m => norm(m) === norm(s.mes));
+    const dre = k >= 0 ? { obra: GRUPOS[0].v[k], pessoal: GRUPOS[1].v[k], veic: GRUPOS[2].v[k], gerais: GRUPOS[3].v[k], adm: GRUPOS[4].v[k], total: CUSTO[k] } : null;
+    return { mes: s.mes, k, pain: s, dre, dif: dre ? s.total - dre.total : null };
+  });
+  const comDif = linhas.filter(l => l.dif !== null && Math.abs(l.dif) > 1);
+  const semDRE = linhas.filter(l => l.k < 0);
+  const totPain = sum(SER, s => s.total), totDRE = T.custo;
+  root.appendChild(el('div', 'kpis', [
+    kpi('Custo total · DRE', fR0(totDRE), `${MESES.length} meses até ${MESES[NM - 1]}`),
+    kpi('Custo total · Painel de Custos', fR0(totPain), `${SER.length} meses até ${SER[SER.length - 1].mes}`, 'ouro'),
+    kpi('Diferença entre as fontes', fR0(totPain - totDRE), 'inclui o mês previsto', Math.abs(totPain - totDRE) > 1000 ? 'warn' : 'ok'),
+    kpi('Meses divergentes', fN(comDif.length), `de ${linhas.length - semDRE.length} meses comparáveis`, comDif.length ? 'warn' : 'ok'),
+    kpi('Meses só no painel', fN(semDRE.length), semDRE.map(l => l.mes).join(', ') || 'nenhum'),
+  ].join('')));
+  const p = el('div', 'painel', `${legHTML([['DRE (Consolidado)', css('--rec')], ['Painel de Custos', css('--cus')]])}<div class="ch alto"><canvas></canvas></div>`);
+  root.appendChild(sec('Custo mensal nas duas fontes', 'mesma competência, bases diferentes', p));
+  chart(p.querySelector('canvas'), { type: 'bar', data: { labels: linhas.map(l => l.mes), datasets: [
+    { label: 'DRE', data: linhas.map(l => l.dre ? l.dre.total : null), backgroundColor: css('--rec'), borderRadius: 4 },
+    { label: 'Painel', data: linhas.map(l => l.pain.total), backgroundColor: css('--cus'), borderRadius: 4 }] },
+    options: { plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .85, categoryPercentage: .72 } } } });
+  root.appendChild(sec('Comparativo mês a mês', 'diferença = painel menos DRE', tabela([
+    { t: 'Mês', k: 'mes' },
+    { t: 'Custo DRE (R$)', k: r => r.dre ? r.dre.total : null, num: true, f: v => v === null ? '<span style="color:var(--ink3)">sem DRE</span>' : fR(v) },
+    { t: 'Custo Painel (R$)', k: r => r.pain.total, num: true, f: fR },
+    { t: 'Diferença (R$)', k: 'dif', num: true, f: v => v === null ? '–' : (Math.abs(v) < 1 ? '<span style="color:var(--ok)">alinhado</span>' : `<span style="color:var(--warn);font-weight:700">${fR(v)}</span>`) },
+    { t: 'Diferença (%)', k: r => (r.dre && r.dre.total) ? r.dif / r.dre.total : null, num: true, f: v => v === null ? '–' : fP(v) },
+    { t: 'Onde está a diferença', k: r => { if (!r.dre || Math.abs(r.dif) < 1) return ''; const ds = [['Custo em Obra', r.pain.obra - r.dre.obra], ['Pessoal', r.pain.pessoal - r.dre.pessoal], ['Veículos/Máquinas', r.pain.veic - r.dre.veic], ['Gastos Gerais', r.pain.gerais - r.dre.gerais]].filter(d => Math.abs(d[1]) > 1).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1])); return ds.map(d => `${d[0]} ${d[1] >= 0 ? '+' : ''}${fK(d[1])}`).join(' · '); } },
+  ], linhas, { semSort: true, total: (rs, c, i) => ['TOTAL', fR(totDRE), fR(totPain), fR(totPain - totDRE), '', ''][i] })));
+  const w = el('div', 'painel');
+  w.innerHTML = `<div class="sec-h"><h2>Como ler as duas fontes</h2></div><dl class="dl" style="grid-template-columns:230px 1fr">
+    <dt>DRE_754 · Consolidado</dt><dd>Fechamento contábil por competência, conta a conta, de ${h(MESES[0])} a ${h(MESES[NM - 1])}. É a base do resultado e da margem.</dd>
+    <dt>Painel de Custos</dt><dd>Série de custo por grupo com um mês a mais, alimentada pelo analítico de apropriações do SIENGE. Serve para antecipar o mês que ainda não fechou.</dd>
+    <dt>Quando divergem</dt><dd>Meses já fechados devem bater. Divergência em mês fechado indica lançamento reclassificado depois da extração do painel, e quem vale para o resultado é o DRE.</dd></dl>
+    <div class="nota">${h(D.meta.nota_serie || '')}</div>`;
+  root.appendChild(sec('Procedência', '', w));
+  if ((D.fontes || []).length) root.appendChild(sec('Extrações registradas', 'aba Data Sources da planilha de custos', tabela([
+    { t: 'Origem', k: 'origem' }, { t: 'Objeto', k: 'objeto', cls: 'desc', f: v => h(trunc(v, 70)) }, { t: 'Parâmetros', k: 'params', cls: 'desc', f: v => h(trunc(v, 60)) },
+    { t: 'Extraído em', k: 'quando' }, { t: 'Linhas', k: 'linhas', num: true }, { t: 'Observação', k: 'nota', cls: 'desc', f: v => h(trunc(v, 60)) },
+  ], D.fontes, { semSort: true })));
+  if (comDif.length) root.appendChild(el('div', 'dica', `<b>Atenção na conciliação.</b> ${comDif.length} ${comDif.length === 1 ? 'mês diverge' : 'meses divergem'} entre as duas fontes (${comDif.map(l => l.mes).join(', ')}), somando ${fR0(sum(comDif, l => Math.abs(l.dif)))} em valor absoluto. Antes de levar qualquer número de custo para a diretoria, vale reconciliar esses meses: o DRE é a fonte do resultado, o painel é a fonte da antecipação.`));
+}
+
+/* ---------- init ---------- */
+(function () {
+  const m = document.getElementById('meta');
+  m.innerHTML = `<div><small>Competência</small><b>${h(MESES[NM - 1])}</b></div><div><small>Meses</small><b>${fN(ATIVOS.length)}</b></div><div><small>Margem acum.</small><b>${fP(T.margem)}</b></div><div><small>Extraído em</small><b>${fmtData(D.meta.extraido_em)}</b></div>`;
+  try { const v = localStorage.getItem('dre.view'); if (v && VIEWS.some(x => x[0] === v)) STATE.view = v; } catch (e) { }
+  nav(); show();
+})();
+
+</script>
