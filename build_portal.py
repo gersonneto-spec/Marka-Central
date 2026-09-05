@@ -1,0 +1,251 @@
+# -*- coding: utf-8 -*-
+"""Gera as páginas do portal Marka-Central (index, seções e páginas em preparação).
+Uso: python3 build_portal.py
+"""
+import json, datetime, os
+
+HOJE = datetime.date.today().strftime("%d/%m/%Y")
+
+CSS = """
+:root{color-scheme:light;
+ --azul:#3871C1;--azul-esc:#2B5A9B;--azul-claro:#8FB2DE;--azul-tint:#E8F0FA;--azul-tint2:#D3E1F3;
+ --cinza:#656263;--ouro:#C9A84C;--ouro-tint:#F7F1DF;
+ --bg:#FFFFFF;--bg2:#F4F6F9;--bg3:#EBEFF5;--linha:#D0D7E3;--linha2:#E4E9F0;
+ --ink:#1F2933;--ink2:#656263;--ink3:#8A8F98;
+ --ok:#2E7D32;--warn:#B25E00;--crit:#C62828;
+ --sombra:0 1px 2px rgba(31,41,51,.06),0 4px 14px rgba(31,41,51,.06);}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+ --azul:#5B93D9;--azul-esc:#3871C1;--azul-claro:#7FA6D6;--azul-tint:#1C2A3D;--azul-tint2:#25385A;
+ --cinza:#B4B7BC;--ouro:#D6B75F;--ouro-tint:#2E2A1C;
+ --bg:#15181D;--bg2:#1C2026;--bg3:#242930;--linha:#353B45;--linha2:#2A3038;
+ --ink:#EEF1F5;--ink2:#B4B7BC;--ink3:#848A94;
+ --ok:#66BB6A;--warn:#F5A623;--crit:#EF5350;--sombra:0 1px 2px rgba(0,0,0,.4);}}
+:root[data-theme="dark"]{color-scheme:dark;
+ --azul:#5B93D9;--azul-esc:#3871C1;--azul-claro:#7FA6D6;--azul-tint:#1C2A3D;--azul-tint2:#25385A;
+ --cinza:#B4B7BC;--ouro:#D6B75F;--ouro-tint:#2E2A1C;
+ --bg:#15181D;--bg2:#1C2026;--bg3:#242930;--linha:#353B45;--linha2:#2A3038;
+ --ink:#EEF1F5;--ink2:#B4B7BC;--ink3:#848A94;
+ --ok:#66BB6A;--warn:#F5A623;--crit:#EF5350;--sombra:0 1px 2px rgba(0,0,0,.4);}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:var(--bg2);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;font-variant-numeric:tabular-nums}
+a{color:var(--azul);text-decoration:none}a:hover{text-decoration:underline}
+h1,h2,h3{margin:0;text-wrap:balance}
+.topo{background:#3871C1;color:#fff;padding:16px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.marca{display:flex;flex-direction:column;line-height:1;padding-right:22px;border-right:1px solid rgba(255,255,255,.35)}
+.marca b{font-size:26px;letter-spacing:.12em;font-weight:900}
+.marca span{font-size:9px;letter-spacing:.34em;margin-top:5px;opacity:.9}
+.titulo h1{font-size:20px;font-weight:700}
+.titulo p{margin:3px 0 0;font-size:12.5px;opacity:.92}
+.topo .volta{margin-left:auto;font-size:12.5px;color:#fff;border:1px solid rgba(255,255,255,.5);padding:6px 12px;border-radius:4px}
+.topo .volta:hover{background:rgba(255,255,255,.12);text-decoration:none}
+main{max-width:1180px;margin:0 auto;padding:26px 24px 56px}
+.intro{font-size:14.5px;color:var(--ink2);max-width:70ch;margin-bottom:24px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin:30px 0 12px}
+.sec-h h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--azul);font-weight:700}
+.sec-h .sub{font-size:12.5px;color:var(--ink3)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.cards.g2{grid-template-columns:repeat(auto-fit,minmax(430px,1fr))}
+.card{background:var(--bg);border:1px solid var(--linha);border-top:4px solid var(--azul);border-radius:6px;padding:18px 20px 20px;box-shadow:var(--sombra);display:flex;flex-direction:column;gap:10px}
+.card.prep{border-top-color:var(--linha)}
+.card h3{font-size:16px;color:var(--ink)}
+.card .desc{font-size:13px;color:var(--ink2);flex:1}
+.card .kpis{display:flex;gap:18px;flex-wrap:wrap;padding-top:4px;border-top:1px solid var(--linha2)}
+.kpis div{display:flex;flex-direction:column;gap:2px}
+.kpis small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);line-height:1.3}
+.kpis b{font-size:15px;color:var(--azul);line-height:1.2}
+.kpis b.ouro{color:var(--ouro)}
+.acao{display:inline-block;background:var(--azul);color:#fff;padding:8px 14px;border-radius:4px;font-size:13px;font-weight:700;align-self:flex-start}
+.acao:hover{background:var(--azul-esc);text-decoration:none}
+.acao.sec{background:transparent;color:var(--azul);border:1px solid var(--azul)}
+.tag{display:inline-block;padding:3px 9px;border-radius:3px;font-size:10.5px;font-weight:700;letter-spacing:.06em}
+.tag.ativo{background:var(--azul-tint);color:var(--azul-esc)}
+.tag.prep{background:var(--bg3);color:var(--ink2)}
+.lista{background:var(--bg);border:1px solid var(--linha);border-radius:6px;padding:4px 0;box-shadow:var(--sombra)}
+.lista .li{display:flex;gap:14px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--linha2);flex-wrap:wrap}
+.lista .li:last-child{border-bottom:0}
+.lista .li .txt{flex:1;min-width:240px}
+.lista .li .txt b{display:block;font-size:14.5px}
+.lista .li .txt span{font-size:12.5px;color:var(--ink2)}
+.passos{counter-reset:p;padding:0;margin:0;list-style:none}
+.passos li{counter-increment:p;position:relative;padding:0 0 14px 34px;font-size:13.5px;color:var(--ink2)}
+.passos li::before{content:counter(p);position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:var(--azul-tint);color:var(--azul-esc);font-weight:700;font-size:11.5px;display:flex;align-items:center;justify-content:center}
+.passos li b{color:var(--ink)}
+.nota{font-size:12.5px;color:var(--ink3);margin-top:14px}
+code{background:var(--bg3);padding:2px 6px;border-radius:3px;font-size:12.5px}
+.rodape{max-width:1180px;margin:0 auto;padding:14px 24px 40px;border-top:2px solid var(--azul);font-size:12px;color:var(--ink3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media (max-width:700px){.topo{padding:14px 16px}main{padding:18px 14px 40px}}
+"""
+
+def pagina(titulo, subtitulo, corpo, volta=None, tit_tag="Marka Central"):
+    v = f'<a class="volta" href="{volta[0]}">{volta[1]}</a>' if volta else ""
+    return f"""<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{tit_tag}</title>
+<style>{CSS}</style>
+</head>
+<body>
+<header class="topo">
+  <div class="marca"><b>MARKA</b><span>ENGENHARIA</span></div>
+  <div class="titulo"><h1>{titulo}</h1><p>{subtitulo}</p></div>
+  {v}
+</header>
+<main>
+{corpo}
+</main>
+<footer class="rodape"><span>Marka Engenharia Ltda · Coordenação de Obras · TFPM · São Luís, MA</span><span>Atualizado em {HOJE}</span></footer>
+</body>
+</html>"""
+
+RODAPE_OBRA = "Vale S.A. · Terminal Ferroviário da Ponta da Madeira · São Luís, MA"
+
+# ---------------------------------------------------------------- portal
+portal_corpo = """
+<p class="intro">Central de painéis gerenciais das obras da Marka Engenharia no TFPM. Cada área reúne os painéis interativos gerados a partir das planilhas de controle, atualizados a cada boletim de medição.</p>
+
+<div class="sec-h"><h2>Áreas</h2><span class="sub">três frentes de acompanhamento</span></div>
+<div class="cards">
+
+  <div class="card">
+    <span class="tag ativo">2 painéis no ar</span>
+    <h3>Medição</h3>
+    <p class="desc">Boletins de medição por contrato: quadro de quantidades e preços, avanço financeiro, saldo, alertas de estouro e projeção de esgotamento.</p>
+    <div class="kpis">
+      <div><small>Contratos</small><b>2</b></div>
+      <div><small>Valor somado</small><b>R$ 126,2 mi</b></div>
+      <div><small>Medido</small><b class="ouro">R$ 48,6 mi</b></div>
+    </div>
+    <a class="acao" href="medicao/">Abrir Medição</a>
+  </div>
+
+  <div class="card prep">
+    <span class="tag prep">estrutura pronta</span>
+    <h3>Cronogramas</h3>
+    <p class="desc">Análises de prazo: linha de base contra tendência, caminho crítico, marcos contratuais, curva de avanço e look ahead das frentes.</p>
+    <div class="kpis">
+      <div><small>Painéis</small><b>0</b></div>
+      <div><small>Aguardando</small><b style="color:var(--ink2);font-size:13px">cronograma da obra</b></div>
+    </div>
+    <a class="acao sec" href="cronogramas/">Ver o que entra aqui</a>
+  </div>
+
+  <div class="card prep">
+    <span class="tag prep">estrutura pronta</span>
+    <h3>DRE e Custos</h3>
+    <p class="desc">Resultado por contrato: receita medida contra custo incorrido, margem por frente, mão de obra, equipamentos e materiais.</p>
+    <div class="kpis">
+      <div><small>Painéis</small><b>0</b></div>
+      <div><small>Aguardando</small><b style="color:var(--ink2);font-size:13px">base de custos</b></div>
+    </div>
+    <a class="acao sec" href="dre/">Ver o que entra aqui</a>
+  </div>
+
+</div>
+
+<div class="sec-h"><h2>Como atualizar</h2><span class="sub">o mesmo caminho para qualquer painel</span></div>
+<ol class="passos">
+  <li><b>Envie a planilha atualizada.</b> A base de cada painel continua sendo a planilha de controle da obra, sem mudança no seu fluxo de trabalho.</li>
+  <li><b>O painel é regerado.</b> Os scripts de extração leem as abas e recalculam tudo pelas mesmas fórmulas da planilha.</li>
+  <li><b>O arquivo entra nesta central.</b> O endereço do painel não muda, então o link que você já divulgou continua valendo.</li>
+</ol>
+"""
+
+# ---------------------------------------------------------------- medição
+medicao_corpo = """
+<p class="intro">Painéis de boletim de medição por contrato. Cada painel lê a aba QQP da planilha da obra como base mestre e reproduz as demais abas de análise em formato interativo, com filtros, ordenação e histórico por boletim.</p>
+
+<div class="sec-h"><h2>Painéis publicados</h2></div>
+<div class="lista">
+
+  <div class="li">
+    <div class="txt">
+      <b>Medição OCG · Obras Civis Gerais</b>
+      <span>Contrato RT-2180KF-G-17251 · Obra 754 · 644 itens · BM01 a BM16</span>
+    </div>
+    <div class="kpis" style="border:0;gap:22px">
+      <div><small>Contrato</small><b>R$ 88.714.693</b></div>
+      <div><small>Medido</small><b class="ouro">50,2%</b></div>
+    </div>
+    <a class="acao" href="ocg/">Abrir painel</a>
+  </div>
+
+  <div class="li">
+    <div class="txt">
+      <b>Medição TP · Oficina de Carros de Passageiros</b>
+      <span>PQ-2180KF-G-10017 · L9057 · 346 itens · 1ª a 3ª medição</span>
+    </div>
+    <div class="kpis" style="border:0;gap:22px">
+      <div><small>Contrato</small><b>R$ 37.476.724</b></div>
+      <div><small>Medido</small><b class="ouro">10,9%</b></div>
+    </div>
+    <a class="acao" href="trem/">Abrir painel</a>
+  </div>
+
+</div>
+
+<div class="sec-h"><h2>O que cada painel traz</h2></div>
+<div class="cards g2">
+  <div class="card"><h3>Base contratual</h3><p class="desc">QQP completa com busca, filtros por frente, contrato, empresa, classe ABC e situação, agrupamento hierárquico e histórico de medição item a item.</p></div>
+  <div class="card"><h3>Acompanhamento</h3><p class="desc">Avanço financeiro por boletim, comparativo previsto contra medido por frente e por empresa, relatório fechado de cada boletim.</p></div>
+  <div class="card"><h3>Alertas</h3><p class="desc">Itens estourados acima do contratado, itens parados com saldo preso, itens não iniciados e curva ABC de concentração do valor medido.</p></div>
+  <div class="card"><h3>Projeção</h3><p class="desc">Estudo de esgotamento de saldo por item, com ritmo ajustável e cálculo do aditivo necessário para manter o ritmo até o fim do contrato.</p></div>
+</div>
+
+<p class="nota">Os scripts de extração e o modelo de cada painel ficam nas pastas <code>ocg/</code> e <code>trem/</code> deste repositório, junto com o passo a passo de atualização.</p>
+"""
+
+# ---------------------------------------------------- cronogramas (preparação)
+cron_corpo = """
+<p class="intro">Área reservada para as análises de prazo das obras. A estrutura está publicada e recebe os painéis assim que o cronograma for enviado, sem alterar o endereço desta página nem o restante da central.</p>
+
+<div class="sec-h"><h2>O que entra aqui</h2><span class="sub">a partir do cronograma da obra em .xlsx, .mpp exportado ou PDF</span></div>
+<div class="cards">
+  <div class="card prep"><h3>Linha de base × tendência</h3><p class="desc">Comparação entre a revisão aprovada e a data projetada de cada atividade, com o desvio em dias e o impacto nos marcos contratuais.</p></div>
+  <div class="card prep"><h3>Caminho crítico</h3><p class="desc">Atividades que determinam a data de conclusão, folga de cada frente e as amarrações que travam o avanço.</p></div>
+  <div class="card prep"><h3>Curva de avanço</h3><p class="desc">Avanço físico previsto contra realizado por semana e por mês, com a projeção de conclusão no ritmo atual.</p></div>
+  <div class="card prep"><h3>Look ahead</h3><p class="desc">Programação das próximas semanas por frente, com pendências de liberação de área, projeto e material.</p></div>
+</div>
+
+<div class="sec-h"><h2>Para publicar o primeiro painel</h2></div>
+<ol class="passos">
+  <li><b>Envie o cronograma</b> da obra, na revisão vigente. Cronograma com linha de base e percentual realizado permite montar as quatro análises acima; sem linha de base, saem apenas as duas primeiras.</li>
+  <li><b>Confirme os marcos contratuais</b> que precisam aparecer em destaque, como entrega de frente, liberação de área e datas de medição.</li>
+  <li><b>O painel entra nesta página</b> com o mesmo padrão dos painéis de medição, e o link desta seção já pode ser divulgado desde agora.</li>
+</ol>
+"""
+
+# ------------------------------------------------------ DRE (preparação)
+dre_corpo = """
+<p class="intro">Área reservada para o resultado por contrato. A estrutura está publicada e recebe os painéis assim que a base de custos for enviada, sem alterar o endereço desta página nem o restante da central.</p>
+
+<div class="sec-h"><h2>O que entra aqui</h2><span class="sub">a partir da base de custos e do faturamento por contrato</span></div>
+<div class="cards">
+  <div class="card prep"><h3>DRE por contrato</h3><p class="desc">Receita medida contra custo incorrido mês a mês, com margem bruta, margem acumulada e desvio contra o orçamento.</p></div>
+  <div class="card prep"><h3>Custo por natureza</h3><p class="desc">Mão de obra direta e indireta, equipamentos, materiais, subcontratados e administração local, com a participação de cada um no custo total.</p></div>
+  <div class="card prep"><h3>Margem por frente</h3><p class="desc">Resultado de cada frente de obra, para identificar onde a margem é ganha e onde é consumida.</p></div>
+  <div class="card prep"><h3>Realizado × orçado</h3><p class="desc">Custo unitário praticado contra o custo previsto na composição, item a item, com os desvios ordenados por impacto em reais.</p></div>
+</div>
+
+<div class="sec-h"><h2>Para publicar o primeiro painel</h2></div>
+<ol class="passos">
+  <li><b>Envie a base de custos</b> do contrato, mesmo que parcial. Serve o razão contábil por centro de custo, o relatório do ERP ou a planilha de apropriação que a obra já mantém.</li>
+  <li><b>Envie o faturamento por período</b>, que nos contratos com a Vale já sai dos boletins de medição publicados na área de Medição.</li>
+  <li><b>Defina o nível de rateio</b> da administração local e dos custos indiretos entre as frentes, que é o que muda a leitura da margem por frente.</li>
+</ol>
+
+<p class="nota">Confidencialidade: esta central está publicada em repositório público. Antes de subir dados de custo e margem, vale decidir se essa área fica aqui ou em repositório privado com acesso restrito.</p>
+"""
+
+PAGS = [
+    ("index.html", pagina("Marka Central", "Painéis gerenciais de obra · " + RODAPE_OBRA, portal_corpo, tit_tag="Marka Central")),
+    ("medicao/index.html", pagina("Medição", "Boletins de medição por contrato · " + RODAPE_OBRA, medicao_corpo, volta=("../", "← Marka Central"), tit_tag="Medição · Marka Central")),
+    ("cronogramas/index.html", pagina("Cronogramas", "Análises de prazo · " + RODAPE_OBRA, cron_corpo, volta=("../", "← Marka Central"), tit_tag="Cronogramas · Marka Central")),
+    ("dre/index.html", pagina("DRE e Custos", "Resultado dos contratos · " + RODAPE_OBRA, dre_corpo, volta=("../", "← Marka Central"), tit_tag="DRE e Custos · Marka Central")),
+]
+
+for caminho, html in PAGS:
+    os.makedirs(os.path.dirname(caminho), exist_ok=True) if os.path.dirname(caminho) else None
+    open(caminho, "w", encoding="utf-8").write(html)
+    print("gerado", caminho, len(html), "bytes")
