@@ -82,24 +82,42 @@ code{background:var(--bg3);padding:2px 6px;border-radius:3px;font-size:12.5px}
 </header>
 <main>
 
-<p class="intro">Área reservada para o resultado por contrato. A estrutura está publicada e recebe os painéis assim que a base de custos for enviada, sem alterar o endereço desta página nem o restante da central.</p>
+<p class="intro">Resultado e custo por contrato, a partir do fechamento contábil por competência e do analítico de apropriações do SIENGE. Cada painel cruza receita, custo por natureza e detalhe de fornecedor no mesmo lugar.</p>
 
-<div class="sec-h"><h2>O que entra aqui</h2><span class="sub">a partir da base de custos e do faturamento por contrato</span></div>
-<div class="cards">
-  <div class="card prep"><h3>DRE por contrato</h3><p class="desc">Receita medida contra custo incorrido mês a mês, com margem bruta, margem acumulada e desvio contra o orçamento.</p></div>
-  <div class="card prep"><h3>Custo por natureza</h3><p class="desc">Mão de obra direta e indireta, equipamentos, materiais, subcontratados e administração local, com a participação de cada um no custo total.</p></div>
-  <div class="card prep"><h3>Margem por frente</h3><p class="desc">Resultado de cada frente de obra, para identificar onde a margem é ganha e onde é consumida.</p></div>
-  <div class="card prep"><h3>Realizado × orçado</h3><p class="desc">Custo unitário praticado contra o custo previsto na composição, item a item, com os desvios ordenados por impacto em reais.</p></div>
+<div class="sec-h"><h2>Painéis publicados</h2></div>
+<div class="lista">
+  <div class="li">
+    <div class="txt">
+      <b>DRE e Custos · Obra 754</b>
+      <span>Obras Civis Gerais · RT-2180KF-G-17251 · mar/25 a jul/26 · 58 contas contábeis</span>
+    </div>
+    <div class="kpis" style="border:0;gap:22px">
+      <div><small>Receita</small><b>R$ 34.561.049</b></div>
+      <div><small>Custo</small><b>R$ 29.374.986</b></div>
+      <div><small>Margem</small><b class="ouro">10,9%</b></div>
+    </div>
+    <a class="acao" href="754/">Abrir painel</a>
+  </div>
 </div>
 
-<div class="sec-h"><h2>Para publicar o primeiro painel</h2></div>
+<div class="sec-h"><h2>O que o painel traz</h2></div>
+<div class="cards g2">
+  <div class="card"><h3>Resultado</h3><p class="desc">Receita bruta e líquida contra custo total mês a mês, lucro por mês, margem acumulada e comparação com o valor já medido no contrato.</p></div>
+  <div class="card"><h3>Custo por natureza</h3><p class="desc">Custo em obra, pessoal, veículos e máquinas, gastos gerais e administração, com a participação de cada grupo no custo de cada mês.</p></div>
+  <div class="card"><h3>Conta a conta</h3><p class="desc">As 58 contas contábeis do contrato mês a mês, com busca, filtro por grupo e a concentração das contas que formam 80% do custo.</p></div>
+  <div class="card"><h3>Relatório do mês</h3><p class="desc">DRE fechado de qualquer competência, com AV%, comparação contra o mês anterior e contra a média dos três meses anteriores, conta a conta.</p></div>
+  <div class="card"><h3>Material e fornecedores</h3><p class="desc">Detalhe do material por fornecedor e por categoria, com lançamentos por mês, fornecedores novos e concentração dos cinco maiores.</p></div>
+  <div class="card"><h3>Conciliação de fontes</h3><p class="desc">DRE contábil contra o painel de apropriações, mês a mês, apontando onde as duas bases divergem e qual grupo de custo explica a diferença.</p></div>
+</div>
+
+<div class="sec-h"><h2>Ainda não coberto</h2><span class="sub">o que falta para fechar a área</span></div>
 <ol class="passos">
-  <li><b>Envie a base de custos</b> do contrato, mesmo que parcial. Serve o razão contábil por centro de custo, o relatório do ERP ou a planilha de apropriação que a obra já mantém.</li>
-  <li><b>Envie o faturamento por período</b>, que nos contratos com a Vale já sai dos boletins de medição publicados na área de Medição.</li>
-  <li><b>Defina o nível de rateio</b> da administração local e dos custos indiretos entre as frentes, que é o que muda a leitura da margem por frente.</li>
+  <li><b>Margem por frente de obra.</b> O DRE fecha por contrato; para abrir o resultado por frente é preciso a apropriação de custo por centro de custo ou por frente, além do critério de rateio da administração local.</li>
+  <li><b>Realizado contra orçado.</b> Falta a composição de custo unitário orçada para comparar com o custo praticado item a item.</li>
+  <li><b>Obra do Trem de Passageiros.</b> A área cobre hoje só a Obra 754; o mesmo painel pode ser gerado para o contrato PQ-2180KF-G-10017 quando a base de custos dessa obra for enviada.</li>
 </ol>
 
-<p class="nota">Confidencialidade: esta central está publicada em repositório público. Antes de subir dados de custo e margem, vale decidir se essa área fica aqui ou em repositório privado com acesso restrito.</p>
+<p class="nota">Confidencialidade: esta central está publicada em repositório público, e custo e margem são dados mais sensíveis que medição. Se o acesso precisar ser restrito, esta área pode ser movida para repositório privado sem alterar as demais.</p>
 
 </main>
 <footer class="rodape"><span>Marka Engenharia Ltda · Coordenação de Obras · TFPM · São Luís, MA</span><span>Atualizado em 05/09/2026</span></footer>
