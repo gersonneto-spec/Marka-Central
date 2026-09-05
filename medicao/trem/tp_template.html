@@ -1,0 +1,800 @@
+<title>Medição TP</title>
+<style>
+:root{
+  color-scheme:light;
+  --azul:#3871C1; --azul-esc:#2B5A9B; --azul-claro:#8FB2DE; --azul-tint:#E8F0FA; --azul-tint2:#D3E1F3;
+  --cinza:#656263; --ouro:#C9A84C; --ouro-tint:#F7F1DF;
+  --bg:#FFFFFF; --bg2:#F4F6F9; --bg3:#EBEFF5; --linha:#D0D7E3; --linha2:#E4E9F0;
+  --ink:#1F2933; --ink2:#656263; --ink3:#8A8F98;
+  --ok:#2E7D32; --ok-tint:#E6F2E7; --warn:#B25E00; --warn-tint:#FDF1E1; --crit:#C62828; --crit-tint:#FBE9E9;
+  --s-marka:#3871C1; --s-klog:#E07B39; --s-vca:#8C6BB1;
+  --s-ct:#3871C1; --s-tac1:#8C6BB1; --s-tac2:#E07B39;
+  --seq1:#E8F0FA; --seq2:#BFD3EE; --seq3:#8FB2DE; --seq4:#5A8ED0; --seq5:#3871C1; --seq6:#264F87;
+  --sombra:0 1px 2px rgba(31,41,51,.06),0 4px 12px rgba(31,41,51,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --azul:#5B93D9; --azul-esc:#3871C1; --azul-claro:#7FA6D6; --azul-tint:#1C2A3D; --azul-tint2:#25385A;
+    --cinza:#B4B7BC; --ouro:#D6B75F; --ouro-tint:#2E2A1C;
+    --bg:#15181D; --bg2:#1C2026; --bg3:#242930; --linha:#353B45; --linha2:#2A3038;
+    --ink:#EEF1F5; --ink2:#B4B7BC; --ink3:#848A94;
+    --ok:#66BB6A; --ok-tint:#1B2E1D; --warn:#F5A623; --warn-tint:#33270F; --crit:#EF5350; --crit-tint:#3A1C1C;
+    --s-marka:#5B93D9; --s-klog:#E88A4D; --s-vca:#A98BD0;
+    --s-ct:#5B93D9; --s-tac1:#A98BD0; --s-tac2:#E88A4D;
+    --seq1:#1C2A3D; --seq2:#25385A; --seq3:#2F4C7C; --seq4:#3D66A5; --seq5:#5B93D9; --seq6:#8FB2DE;
+    --sombra:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --azul:#5B93D9; --azul-esc:#3871C1; --azul-claro:#7FA6D6; --azul-tint:#1C2A3D; --azul-tint2:#25385A;
+  --cinza:#B4B7BC; --ouro:#D6B75F; --ouro-tint:#2E2A1C;
+  --bg:#15181D; --bg2:#1C2026; --bg3:#242930; --linha:#353B45; --linha2:#2A3038;
+  --ink:#EEF1F5; --ink2:#B4B7BC; --ink3:#848A94;
+  --ok:#66BB6A; --ok-tint:#1B2E1D; --warn:#F5A623; --warn-tint:#33270F; --crit:#EF5350; --crit-tint:#3A1C1C;
+  --s-marka:#5B93D9; --s-klog:#E88A4D; --s-vca:#A98BD0;
+  --s-ct:#5B93D9; --s-tac1:#A98BD0; --s-tac2:#E88A4D;
+  --seq1:#1C2A3D; --seq2:#25385A; --seq3:#2F4C7C; --seq4:#3D66A5; --seq5:#5B93D9; --seq6:#8FB2DE;
+  --sombra:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg2);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.45;font-variant-numeric:tabular-nums}
+a{color:var(--azul)}
+button,select,input{font:inherit;color:inherit}
+h1,h2,h3{margin:0;text-wrap:balance}
+/* ---------- topo ---------- */
+.topo{background:#3871C1;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.marca{display:flex;flex-direction:column;line-height:1;padding-right:22px;border-right:1px solid rgba(255,255,255,.35)}
+.marca b{font-size:26px;letter-spacing:.12em;font-weight:900}
+.marca span{font-size:9px;letter-spacing:.34em;margin-top:5px;opacity:.9}
+.titulo h1{font-size:20px;font-weight:700;letter-spacing:.01em}
+.titulo p{margin:3px 0 0;font-size:12px;opacity:.9}
+.meta{margin-left:auto;display:flex;gap:18px;font-size:12px}
+.meta div{display:flex;flex-direction:column;gap:2px}
+.meta small{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.meta b{font-size:14px}
+/* ---------- abas ---------- */
+.abas{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--linha);display:flex;gap:2px;padding:0 16px;overflow-x:auto;scrollbar-width:thin}
+.abas button{background:none;border:0;border-bottom:3px solid transparent;padding:11px 12px 9px;color:var(--ink2);cursor:pointer;white-space:nowrap;font-size:12.5px;font-weight:700;letter-spacing:.01em}
+.abas button:hover{color:var(--ink);background:var(--bg2)}
+.abas button.on{color:var(--azul);border-bottom-color:var(--azul)}
+.abas button:focus-visible{outline:2px solid var(--azul);outline-offset:-2px}
+main{padding:18px 24px 48px;max-width:1600px;margin:0 auto}
+.view{display:none}.view.on{display:block}
+/* ---------- blocos ---------- */
+.sec{margin-top:22px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.sec-h h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--azul);font-weight:700}
+.sec-h .sub{font-size:12px;color:var(--ink3)}
+.painel{background:var(--bg);border:1px solid var(--linha);border-radius:6px;padding:14px 16px;box-shadow:var(--sombra)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--linha);border-top:4px solid var(--azul);border-radius:6px;padding:12px 14px 12px;box-shadow:var(--sombra);min-width:0}
+.kpi.ouro{border-top-color:var(--ouro)}
+.kpi.crit{border-top-color:var(--crit)}.kpi.warn{border-top-color:var(--warn)}.kpi.ok{border-top-color:var(--ok)}
+.kpi small{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px}
+.kpi b{display:block;font-size:22px;font-weight:700;color:var(--azul);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi.ouro b{color:var(--ouro)}.kpi.crit b{color:var(--crit)}.kpi.warn b{color:var(--warn)}.kpi.ok b{color:var(--ok)}
+.kpi em{display:block;font-style:normal;font-size:11.5px;color:var(--ink3);margin-top:4px}
+/* ---------- filtros ---------- */
+.filtros{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-end;padding:12px 14px;background:var(--bg);border:1px solid var(--linha);border-radius:6px;margin-bottom:14px}
+.filtros label{display:flex;flex-direction:column;gap:3px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.filtros select,.filtros input{border:1px solid var(--linha);background:var(--bg);border-radius:4px;padding:6px 8px;font-size:12.5px;min-width:130px;max-width:290px}
+.filtros input[type=text],.filtros input[type=search]{min-width:220px}
+.filtros input[type=number]{min-width:110px;max-width:140px}
+.filtros .chips{display:flex;gap:4px;flex-wrap:wrap}
+.chip{border:1px solid var(--linha);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer;color:var(--ink2)}
+.chip.on{background:var(--azul);border-color:var(--azul);color:#fff}
+.btn{border:1px solid var(--linha);background:var(--bg);border-radius:4px;padding:6px 10px;font-size:12px;cursor:pointer;color:var(--ink)}
+.btn:hover{background:var(--bg2)}
+.btn.pri{background:var(--azul);border-color:var(--azul);color:#fff}
+.conta{font-size:12px;color:var(--ink3);margin-left:auto;align-self:center}
+/* ---------- tabelas ---------- */
+.tw{overflow-x:auto;border:1px solid var(--linha);border-radius:6px;background:var(--bg)}
+.tw.alto{max-height:70vh;overflow-y:auto}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.3px}
+thead th{position:sticky;top:0;z-index:2;background:var(--azul-esc);color:#fff;font-weight:700;text-align:left;padding:8px 9px;white-space:nowrap;font-size:11px;letter-spacing:.04em;border-bottom:1px solid var(--linha)}
+:root[data-theme="dark"] thead th{background:#2B4E80}
+thead th.num{text-align:right}
+thead th.sort{cursor:pointer;user-select:none}
+thead th.sort:hover{background:var(--azul)}
+thead th .seta{opacity:.6;font-size:9px;margin-left:3px}
+tbody td{padding:6px 9px;border-bottom:1px solid var(--linha2);vertical-align:top}
+tbody tr:nth-child(even) td{background:var(--bg2)}
+tbody tr:hover td{background:var(--azul-tint)}
+tbody tr.clk{cursor:pointer}
+td.num,th.num{text-align:right;white-space:nowrap}
+td.neg{color:var(--crit)}
+td.pos{color:var(--ok)}
+tfoot td,tr.total td{background:var(--ouro-tint)!important;color:var(--ink);font-weight:700;border-top:2px solid var(--ouro);padding:7px 9px;white-space:nowrap}
+tr.grp td{background:var(--azul-tint)!important;font-weight:700;color:var(--azul-esc);cursor:pointer}
+tr.grp.n2 td{background:var(--bg3)!important;color:var(--ink);font-weight:700}
+tr.grp td .tri{display:inline-block;width:14px;color:var(--ink3);transition:transform .15s}
+tr.grp.fechado td .tri{transform:rotate(-90deg)}
+td.desc{min-width:280px;max-width:520px;white-space:normal}
+td.mono{font-family:Consolas,Menlo,monospace;font-size:11.5px;white-space:nowrap}
+.barra{display:inline-block;height:8px;border-radius:2px;background:var(--azul);vertical-align:middle;margin-right:6px}
+.barra.ouro{background:var(--ouro)}.barra.crit{background:var(--crit)}.barra.warn{background:var(--warn)}.barra.ok{background:var(--ok)}
+.pct{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pct i{display:inline-block;width:70px;height:7px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.pct i b{display:block;height:100%;background:var(--azul);border-radius:2px}
+.tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10.5px;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+.tag.A{background:var(--azul);color:#fff}.tag.B{background:var(--azul-tint2);color:var(--azul-esc)}.tag.C{background:var(--bg3);color:var(--ink2)}
+.tag.ok{background:var(--ok-tint);color:var(--ok)}.tag.warn{background:var(--warn-tint);color:var(--warn)}.tag.crit{background:var(--crit-tint);color:var(--crit)}.tag.neu{background:var(--bg3);color:var(--ink2)}
+.emp{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.emp i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.emp.MARKA i{background:var(--s-marka)}.emp.KLOG i{background:var(--s-klog)}.emp.VCA i{background:var(--s-vca)}.emp.x i{background:var(--ink3)}
+/* heatmap */
+.heat td.h{text-align:right;padding:5px 7px;font-size:11.5px}
+/* charts */
+.ch{position:relative;height:280px}
+.ch.baixo{height:220px}.ch.alto{height:360px}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink2);margin-bottom:6px}
+.leg span{display:inline-flex;align-items:center;gap:5px}.leg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+/* dica */
+.dica{border-left:3px solid var(--ouro);background:var(--ouro-tint);padding:9px 12px;border-radius:0 4px 4px 0;font-size:12.3px;color:var(--ink);margin-top:10px}
+.dica b{color:var(--ink)}
+.nota{font-size:11.5px;color:var(--ink3);margin-top:8px}
+/* drawer */
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(560px,100%);background:var(--bg);border-left:1px solid var(--linha);box-shadow:-8px 0 24px rgba(0,0,0,.15);z-index:40;transform:translateX(100%);transition:transform .2s;overflow-y:auto;padding:18px 20px}
+.drawer.on{transform:none}
+.drawer h3{font-size:15px;color:var(--azul);margin-bottom:4px}
+.drawer .fech{position:absolute;top:10px;right:12px}
+.dl{display:grid;grid-template-columns:150px 1fr;gap:4px 10px;font-size:12.3px;margin:12px 0}
+.dl dt{color:var(--ink3);text-transform:uppercase;font-size:10.5px;letter-spacing:.08em;padding-top:2px}
+.dl dd{margin:0}
+.rodape{margin-top:32px;padding-top:12px;border-top:2px solid var(--azul);font-size:11.5px;color:var(--ink3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media (max-width:760px){.topo{padding:12px 14px}.meta{margin-left:0}main{padding:12px 12px 40px}.kpi b{font-size:18px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="topo">
+  <div class="marca"><b>MARKA</b><span>ENGENHARIA</span></div>
+  <div class="titulo">
+    <h1>Medição TP</h1>
+    <p>Oficina de Manutenção de Carros de Passageiros · PQ-2180KF-G-10017 · L9057 · Vale S.A. · TFPM · São Luís, MA</p>
+  </div>
+  <div class="meta" id="meta"></div>
+</header>
+<nav class="abas" id="abas"></nav>
+<main id="main"></main>
+<aside class="drawer" id="drawer"></aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+window.TP = /*__DATA__*/;
+</script>
+<script>
+/* =====================================================================
+   MOTOR DE CÁLCULO · reproduz as fórmulas da tabela TREM_QQP3 (aba QQP)
+   ===================================================================== */
+const D = window.TP, BMS = D.meta.bms, NB = BMS.length, MESES = D.meta.meses || {};
+const IT = D.items.map((x, i) => {
+  const qtd = Object.values(x.base).reduce((a, b) => a + b, 0);
+  const qm = x.bm.reduce((a, b) => a + b, 0);
+  const bmv = x.bm.map(q => q * x.pu);
+  return { ...x, idx: i, qtd, pt: qtd * x.pu, qm, vm: qm * x.pu, qs: qtd - qm, vs: (qtd - qm) * x.pu, bmv,
+    emp: x.emp || 'MARKA', contrato: x.contrato || '(não classificado)' };
+});
+const TOT = { ct: sum(IT, i => i.pt), vm: sum(IT, i => i.vm) };
+TOT.vs = TOT.ct - TOT.vm; TOT.pct = TOT.vm / TOT.ct;
+TOT.porBM = BMS.map((b, k) => sum(IT, i => i.bmv[k]));
+// medições já realizadas = as que têm valor lançado
+const ULT = TOT.porBM.reduce((acc, v, k) => (v !== 0 ? k : acc), 0);
+const BMS_OK = BMS.slice(0, ULT + 1);
+const NR = BMS_OK.length;
+TOT.media = TOT.vm / NR; TOT.bmsRest = TOT.vs / TOT.media;
+IT.forEach(i => { i.ultimo = i.bmv[ULT]; });
+// Curva ABC (mesma regra da planilha OCG: soma do medido >= valor do item / medido total)
+{ const ord = [...IT].sort((a, b) => b.vm - a.vm); let acc = 0, k = 0;
+  while (k < ord.length) { let j = k, v = ord[k].vm, s = 0; while (j < ord.length && ord[j].vm === v) { s += ord[j].vm; j++; }
+    acc += s; const c = acc / TOT.vm; const cls = c <= 0.8 ? 'A' : c <= 0.95 ? 'B' : 'C'; for (let t = k; t < j; t++) ord[t].abc = cls; k = j; } }
+IT.forEach(i => {
+  i.parado = i.vm > 0 && i.vs > 1 && i.ultimo === 0;
+  i.naoIniciado = i.vm === 0 && i.vs > 1;
+  i.estouro = i.vs < -0.01 && i.pt >= 0;
+  i.concluido = !i.estouro && i.qm !== 0 && i.vs <= 1 && i.vs >= -0.01;
+  i.status = i.estouro ? 'estourado' : i.concluido ? 'concluído' : i.parado ? 'parado' : i.naoIniciado ? 'não iniciado' : i.qm === 0 ? 'sem saldo' : 'em andamento';
+});
+const CATS = uniq(IT.map(i => i.n1)), CONTR = uniq(IT.map(i => i.contrato)), EMPS = uniq(IT.map(i => i.emp));
+// insumos
+const INS = (D.insumos || []).map((x, i) => {
+  const qAcum = x.q.reduce((a, b) => a + b, 0), vAcum = x.v.reduce((a, b) => a + b, 0);
+  return { ...x, idx: i, qAcum, vAcum, qSaldo: x.qOrc - qAcum, vSaldo: x.vOrc - vAcum };
+});
+const INS_TOT = { orc: sum(INS, x => x.vOrc), acum: sum(INS, x => x.vAcum) };
+INS_TOT.saldo = INS_TOT.orc - INS_TOT.acum; INS_TOT.pct = INS_TOT.acum / INS_TOT.orc;
+INS_TOT.porBM = BMS.map((b, k) => sum(INS, x => x.v[k]));
+const IMP = (D.impacto || []).map((x, i) => ({ ...x, idx: i }));
+function sum(a, f) { let s = 0; for (const x of a) s += f ? f(x) : x; return s; }
+function uniq(a) { return [...new Set(a.filter(x => x !== undefined && x !== ''))]; }
+function agg(list, key) {
+  const m = new Map();
+  for (const i of list) { const k = key(i); let o = m.get(k); if (!o) { o = { k, pt: 0, vm: 0, vs: 0, n: 0, nMed: 0, bm: new Array(NB).fill(0) }; m.set(k, o); }
+    o.pt += i.pt; o.vm += i.vm; o.vs += i.vs; o.n++; if (i.qm !== 0) o.nMed++; for (let t = 0; t < NB; t++) o.bm[t] += i.bmv[t]; }
+  return [...m.values()];
+}
+/* ---------- formatação ---------- */
+const fR = v => (v < 0 ? '-' : '') + 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fR0 = v => (v < 0 ? '-' : '') + 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+const fK = v => { const a = Math.abs(v), s = v < 0 ? '-' : ''; if (a >= 1e6) return s + (a / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + ' mi'; if (a >= 1e3) return s + (a / 1e3).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + ' mil'; return s + a.toLocaleString('pt-BR', { maximumFractionDigits: 0 }); };
+const fP = (v, d = 1) => (v === null || v === undefined || !isFinite(v)) ? '–' : (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
+const fQ = v => v.toLocaleString('pt-BR', { maximumFractionDigits: Math.abs(v) < 10 ? 3 : 2 });
+const fN = v => v.toLocaleString('pt-BR');
+const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const bmOrd = b => `${parseInt(b.slice(2), 10)}ª Med.`;
+const bmLabel = b => `${bmOrd(b)}${MESES[b] ? ' · ' + MESES[b] : ''} (${b})`;
+const abcTag = c => c ? `<span class="tag ${c}">${c}</span>` : '';
+const stTag = s => { const m = { 'estourado': 'crit', 'parado': 'warn', 'não iniciado': 'neu', 'concluído': 'ok', 'em andamento': 'A', 'sem saldo': 'neu' }; return `<span class="tag ${m[s] || 'neu'}">${h(s)}</span>`; };
+const pctBar = (v, cls = '') => `<span class="pct"><i><b style="width:${Math.max(0, Math.min(100, v * 100))}%" class="${cls}"></b></i>${fP(v)}</span>`;
+const numCls = v => v < -0.005 ? 'num neg' : 'num';
+const trunc = (s, n = 90) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+const ctTag = c => `<span class="emp ${c === 'CT INICIAL' ? 'MARKA' : c === 'OP. COMPRA' ? 'KLOG' : 'x'}"><i></i>${h(c)}</span>`;
+/* ---------- tabela genérica com ordenação ---------- */
+let TID = 0;
+function tabela(cols, rows, opt = {}) {
+  const id = 't' + (++TID); const st = { sort: opt.sort ?? null, dir: opt.dir ?? -1 };
+  const el = document.createElement('div'); el.className = 'tw' + (opt.alto ? ' alto' : '');
+  function val(r, c) { return typeof c.k === 'function' ? c.k(r) : r[c.k]; }
+  function render() {
+    let rs = [...rows];
+    if (st.sort !== null) { const c = cols[st.sort]; rs.sort((a, b) => { const x = val(a, c), y = val(b, c); if (x === y) return 0; if (x === undefined || x === null) return 1; if (y === undefined || y === null) return -1; return (x > y ? 1 : -1) * st.dir; }); }
+    if (opt.limite) rs = rs.slice(0, opt.limite);
+    let html = '<table><thead><tr>' + cols.map((c, i) => `<th class="${c.num ? 'num ' : ''}${opt.semSort ? '' : 'sort'}" data-i="${i}" ${c.w ? `style="min-width:${c.w}px"` : ''}>${h(c.t)}${st.sort === i ? `<span class="seta">${st.dir > 0 ? '▲' : '▼'}</span>` : ''}</th>`).join('') + '</tr></thead><tbody>';
+    if (!rs.length) html += `<tr><td colspan="${cols.length}" style="text-align:center;color:var(--ink3);padding:18px">Nenhum item para os filtros atuais.</td></tr>`;
+    for (const r of rs) {
+      html += `<tr class="${opt.clique ? 'clk' : ''}" data-idx="${r.idx ?? ''}">` + cols.map(c => { const v = val(r, c); const cl = (c.num ? (c.neg ? numCls(v) : 'num') : (c.cls || '')); return `<td class="${cl}">${c.f ? c.f(v, r) : h(v ?? '')}</td>`; }).join('') + '</tr>';
+    }
+    html += '</tbody>';
+    if (opt.total) html += '<tfoot><tr>' + cols.map((c, i) => `<td class="${c.num ? 'num' : ''}">${opt.total(rs, c, i) ?? ''}</td>`).join('') + '</tr></tfoot>';
+    el.innerHTML = html + '</table>';
+    if (!opt.semSort) el.querySelectorAll('th.sort').forEach(th => th.onclick = () => { const i = +th.dataset.i; if (st.sort === i) st.dir *= -1; else { st.sort = i; st.dir = cols[i].num ? -1 : 1; } render(); });
+    if (opt.clique) el.querySelectorAll('tr.clk').forEach(tr => tr.onclick = () => opt.clique(rows.find(r => String(r.idx) === tr.dataset.idx)));
+  }
+  render(); return el;
+}
+const COL = {
+  item: { t: 'Item', k: 'item', cls: 'mono', w: 74 },
+  descT: { t: 'Descrição', k: 'desc', cls: 'desc', f: v => `<span title="${h(v)}">${h(trunc(v, 95))}</span>` },
+  desc: { t: 'Descrição', k: 'desc', cls: 'desc', f: v => h(v) },
+  cat: { t: 'Categoria', k: 'n1', f: v => h(trunc(v, 30)) },
+  contrato: { t: 'Contrato', k: 'contrato', f: ctTag },
+  un: { t: 'Un', k: 'un' }, pu: { t: 'Preço Unit. (R$)', k: 'pu', num: true, f: fR },
+  qtd: { t: 'Qtd Contrat.', k: 'qtd', num: true, f: fQ }, pt: { t: 'Preço Total (R$)', k: 'pt', num: true, neg: true, f: fR },
+  qm: { t: 'Qtd Medida', k: 'qm', num: true, f: fQ }, vm: { t: 'Valor Medido (R$)', k: 'vm', num: true, neg: true, f: fR },
+  qs: { t: 'Qtd Saldo', k: 'qs', num: true, f: fQ }, vs: { t: 'Valor Saldo (R$)', k: 'vs', num: true, neg: true, f: fR },
+  pct: { t: '% Medido', k: r => r.pt ? r.vm / r.pt : null, num: true, f: v => v === null ? '–' : pctBar(Math.max(0, v), v > 1.0001 ? 'crit' : '') },
+  abc: { t: 'ABC', k: 'abc', f: abcTag }, status: { t: 'Situação', k: 'status', f: stTag },
+};
+/* ---------- charts ---------- */
+const CH = [];
+function chart(canvas, cfg) {
+  const ink2 = css('--ink2'), ink3 = css('--ink3'), grid = css('--linha2');
+  Chart.defaults.font.family = 'Arial, Helvetica, sans-serif'; Chart.defaults.font.size = 11; Chart.defaults.color = ink2;
+  Chart.defaults.plugins.legend.display = false;
+  Chart.defaults.plugins.tooltip.backgroundColor = css('--ink'); Chart.defaults.plugins.tooltip.titleColor = css('--bg'); Chart.defaults.plugins.tooltip.bodyColor = css('--bg');
+  Chart.defaults.plugins.tooltip.padding = 8; Chart.defaults.plugins.tooltip.cornerRadius = 4;
+  const base = { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: 'index', intersect: false },
+    scales: { x: { grid: { display: false }, border: { color: grid }, ticks: { color: ink3 } }, y: { grid: { color: grid, drawTicks: false }, border: { display: false }, ticks: { color: ink3, callback: v => fK(v) } } } };
+  cfg.options = deepMerge(base, cfg.options || {});
+  const c = new Chart(canvas, cfg); CH.push(c); return c;
+}
+function deepMerge(a, b) { const o = { ...a }; for (const k in b) o[k] = (b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) && a[k] && typeof a[k] === 'object') ? deepMerge(a[k], b[k]) : b[k]; return o; }
+function destroyCharts() { CH.forEach(c => c.destroy()); CH.length = 0; }
+const tipR = { callbacks: { label: c => ` ${c.dataset.label ? c.dataset.label + ': ' : ''}${fR0(c.parsed.y ?? c.parsed.x ?? c.parsed)}` } };
+const legHTML = items => `<div class="leg">${items.map(([n, c]) => `<span><i style="background:${c}"></i>${h(n)}</span>`).join('')}</div>`;
+function el(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; }
+function sec(title, sub, ...kids) { const s = el('section', 'sec', `<div class="sec-h"><h2>${h(title)}</h2>${sub ? `<span class="sub">${sub}</span>` : ''}</div>`); kids.forEach(k => k && s.appendChild(typeof k === 'string' ? el('div', '', k) : k)); return s; }
+function kpi(label, val, note, cls = '') { return `<div class="kpi ${cls}"><small>${h(label)}</small><b title="${h(val)}">${h(val)}</b>${note ? `<em>${note}</em>` : ''}</div>`; }
+function selectHTML(id, label, opts, cur, all) { return `<label>${h(label)}<select id="${id}">${all ? `<option value="">${h(all)}</option>` : ''}${opts.map(o => `<option value="${h(o)}" ${o === cur ? 'selected' : ''}>${h(o)}</option>`).join('')}</select></label>`; }
+function seq(v, max) { const s = ['--seq1', '--seq2', '--seq3', '--seq4', '--seq5', '--seq6']; if (v <= 0 || max <= 0) return 'transparent'; const t = Math.min(1, v / max); return css(s[Math.min(5, Math.floor(t * 5.999))]); }
+function tot(list) { return { pt: sum(list, i => i.pt), vm: sum(list, i => i.vm), vs: sum(list, i => i.vs) }; }
+function fmtData(s) { const [y, m, d] = s.split('-'); return `${d}/${m}/${y}`; }
+/* =====================================================================
+   VIEWS
+   ===================================================================== */
+const VIEWS = [
+  ['dash', 'Dashboard', vDash], ['qqp', 'QQP', vQQP], ['kpi', 'Base KPI', vKPI], ['cat', 'Análise por Categoria', vCat],
+  ['saldo', 'Saldo & Alertas', vSaldo], ['bm', 'Relatório da Medição', vBM], ['insumos', 'Insumos por Medição', vInsumos],
+  ['impacto', 'Impacto por Medição', vImpacto], ['supressao', 'Comparativo Supressão', vSupressao],
+  ['onibus', 'Linha do Tempo Ônibus', vOnibus], ['estudo', 'Estudos de Projeção', vEstudo],
+];
+const STATE = { view: 'dash' };
+function nav() {
+  const a = document.getElementById('abas'); a.innerHTML = VIEWS.map(v => `<button data-v="${v[0]}" class="${STATE.view === v[0] ? 'on' : ''}">${h(v[1])}</button>`).join('');
+  a.querySelectorAll('button').forEach(b => b.onclick = () => { STATE.view = b.dataset.v; try { localStorage.setItem('tp.view', STATE.view); } catch (e) { } nav(); show(); });
+}
+function show() {
+  destroyCharts(); const m = document.getElementById('main'); m.innerHTML = '';
+  const v = VIEWS.find(x => x[0] === STATE.view); const root = el('div', 'view on'); m.appendChild(root); v[2](root);
+  root.appendChild(el('footer', 'rodape', `<span>Marka Engenharia Ltda · Coordenação de Obras · TFPM · São Luís, MA</span><span>Fonte: ${h(D.meta.arquivo)} · abas QQP, Insumos por Medição e OBRAS TP - MED · extraído em ${fmtData(D.meta.extraido_em)}</span>`));
+  window.scrollTo(0, 0);
+}
+
+/* ---------- 1. DASHBOARD ---------- */
+function vDash(root) {
+  const est = IT.filter(i => i.estouro), par = IT.filter(i => i.parado), clsA = IT.filter(i => i.abc === 'A');
+  root.appendChild(el('div', 'kpis', [
+    kpi('Valor contratual', fR0(TOT.ct), 'CT inicial + opção de compra'), kpi('Medido acumulado', fR0(TOT.vm), `${NR} medições realizadas`, 'ouro'),
+    kpi('Saldo contratual', fR0(TOT.vs)), kpi('% Avanço financeiro', fP(TOT.pct)),
+    kpi('Média por medição', fR0(TOT.media)), kpi('Medições p/ consumir saldo', fN(+TOT.bmsRest.toFixed(1)), 'no ritmo médio'),
+  ].join('')));
+  root.appendChild(el('div', 'kpis', [
+    kpi('Itens com medição', `${fN(IT.filter(i => i.qm !== 0).length)} de ${fN(IT.length)}`, `${fP(IT.filter(i => i.qm !== 0).length / IT.length)} da planilha`),
+    kpi('Itens não iniciados', fN(IT.filter(i => i.naoIniciado).length), fR0(sum(IT.filter(i => i.naoIniciado), i => i.vs)) + ' de saldo'),
+    kpi('Itens parados', fN(par.length), `sem medição no ${BMS[ULT]}`, par.length ? 'warn' : ''),
+    kpi('Itens estourados', fN(est.length), est.length ? fR0(sum(est, i => -i.vs)) + ' acima do contratado' : 'nenhum item acima do contrato', est.length ? 'crit' : 'ok'),
+    kpi('Itens classe A', fN(clsA.length), '≈ 80% do valor medido'),
+  ].join('')));
+  const g = el('div', 'grid g2');
+  const p1 = el('div', 'painel', `<div class="sec-h"><h2>Medido por medição</h2><span class="sub">R$ no período</span></div><div class="ch"><canvas></canvas></div>`);
+  const p2 = el('div', 'painel', `<div class="sec-h"><h2>Avanço financeiro acumulado</h2><span class="sub">% do valor contratual</span></div><div class="ch"><canvas></canvas></div>`);
+  g.append(p1, p2); root.appendChild(sec('Evolução mês a mês', `${bmLabel(BMS_OK[0])} a ${BMS_OK[NR - 1]}`, g));
+  const acc = []; let a = 0; BMS_OK.forEach((b, k) => { a += TOT.porBM[k]; acc.push(a / TOT.ct); });
+  chart(p1.querySelector('canvas'), { type: 'bar', data: { labels: BMS_OK.map(bmOrd), datasets: [{ data: TOT.porBM.slice(0, NR), backgroundColor: css('--azul'), borderRadius: 4, barPercentage: .5 }] }, options: { plugins: { tooltip: tipR } } });
+  chart(p2.querySelector('canvas'), { type: 'line', data: { labels: BMS_OK.map(bmOrd), datasets: [{ data: acc, borderColor: css('--azul'), backgroundColor: css('--azul-tint'), fill: true, borderWidth: 2, pointRadius: 4, pointBackgroundColor: css('--azul'), pointHoverRadius: 6, tension: .2 }] },
+    options: { scales: { y: { min: 0, max: Math.max(.2, Math.ceil(TOT.pct * 10) / 10), ticks: { callback: v => fP(v, 0) } } }, plugins: { tooltip: { callbacks: { label: c => ` Acumulado: ${fP(c.parsed.y)}` } } } } });
+  const porCat = agg(IT, i => i.n1).sort((x, y) => y.pt - x.pt);
+  const g2 = el('div', 'grid g2');
+  const p3 = el('div', 'painel', `<div class="sec-h"><h2>Previsto × Medido por categoria</h2></div>${legHTML([['Previsto em contrato', css('--azul-claro')], ['Medido', css('--azul')]])}<div class="ch alto"><canvas></canvas></div>`);
+  const p4 = el('div', 'painel', `<div class="sec-h"><h2>Medido por contrato</h2><span class="sub">participação no acumulado</span></div><div class="ch alto"><canvas></canvas></div>`);
+  g2.append(p3, p4); root.appendChild(sec('Comparativo contratual', '', g2));
+  chart(p3.querySelector('canvas'), { type: 'bar', data: { labels: porCat.map(x => trunc(x.k, 26)), datasets: [{ label: 'Previsto', data: porCat.map(x => x.pt), backgroundColor: css('--azul-claro'), borderRadius: 4 }, { label: 'Medido', data: porCat.map(x => x.vm), backgroundColor: css('--azul'), borderRadius: 4 }] },
+    options: { indexAxis: 'y', scales: { x: { grid: { color: css('--linha2') }, ticks: { callback: v => fK(v) } }, y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 10.5 }, callback: function (v) { return this.getLabelForValue(v); } } } }, plugins: { tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fR0(c.parsed.x)}` } } }, datasets: { bar: { barPercentage: .8, categoryPercentage: .7 } } } });
+  const porCt = agg(IT, i => i.contrato).sort((x, y) => y.vm - x.vm);
+  const cc = { 'CT INICIAL': css('--s-ct'), 'OP. COMPRA': css('--s-tac2') };
+  chart(p4.querySelector('canvas'), { type: 'doughnut', data: { labels: porCt.map(x => x.k), datasets: [{ data: porCt.map(x => x.vm), backgroundColor: porCt.map(x => cc[x.k] || css('--ink3')), borderWidth: 2, borderColor: css('--bg') }] },
+    options: { cutout: '62%', scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 10, usePointStyle: true, generateLabels: ch => ch.data.labels.map((l, i) => ({ text: `${l}  ${fP(ch.data.datasets[0].data[i] / TOT.vm)}`, fillStyle: ch.data.datasets[0].backgroundColor[i], strokeStyle: 'transparent', index: i })) } }, tooltip: { callbacks: { label: c => ` ${fR0(c.parsed)} (${fP(c.parsed / TOT.vm)})` } } } } });
+  root.appendChild(sec('Por categoria', 'valores em R$', tabela([
+    { t: 'Categoria (Nível 01)', k: 'k' }, { t: 'Itens', k: 'n', num: true, f: fN }, { t: 'Com medição', k: 'nMed', num: true, f: fN },
+    { t: 'Previsto (R$)', k: 'pt', num: true, f: fR }, { t: 'Medido (R$)', k: 'vm', num: true, f: fR }, { t: 'Saldo (R$)', k: 'vs', num: true, neg: true, f: fR },
+    { t: '% Avanço', k: r => r.pt ? r.vm / r.pt : null, num: true, f: v => v === null ? '–' : pctBar(v, v > 1 ? 'crit' : '') }, { t: 'Part. contrato', k: r => r.pt / TOT.ct, num: true, f: v => fP(v) },
+  ], porCat, { total: (rs, c, i) => ['TOTAL', fN(sum(rs, r => r.n)), fN(sum(rs, r => r.nMed)), fR(sum(rs, r => r.pt)), fR(sum(rs, r => r.vm)), fR(sum(rs, r => r.vs)), fP(sum(rs, r => r.vm) / sum(rs, r => r.pt)), fP(1)][i] })));
+  const maior = porCat[0], top3 = porCat.slice(0, 3);
+  root.appendChild(el('div', 'dica', `<b>Leitura rápida.</b> ${fP(TOT.pct)} do contrato medido em ${NR} medições, ritmo médio de ${fK(TOT.media)} por medição. Mantido esse ritmo, o saldo de ${fK(TOT.vs)} consome mais ${fN(Math.ceil(TOT.bmsRest))} medições. As três maiores categorias (${top3.map(x => trunc(x.k, 18)).join(', ')}) concentram ${fP(sum(top3, x => x.pt) / TOT.ct)} do contrato e estão com ${fP(sum(top3, x => x.vm) / sum(top3, x => x.pt))} de avanço.`));
+}
+
+/* ---------- 2. QQP ---------- */
+function vQQP(root) {
+  const F = STATE.qqp ||= { q: '', n1: '', n2: '', contrato: '', emp: '', abc: '', st: '', un: '', cols: 'resumo', grp: true };
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  function filtrosHTML() {
+    const n2s = uniq(IT.filter(i => !F.n1 || i.n1 === F.n1).map(i => i.n2));
+    const uns = uniq(IT.map(i => i.un)).sort();
+    return `<label>Buscar<input type="search" id="q" value="${h(F.q)}" placeholder="descrição, item, código SGC, CM"></label>
+    ${selectHTML('n1', 'Categoria (Nível 01)', CATS, F.n1, 'Todas')}${selectHTML('n2', 'Nível 02', n2s, F.n2, 'Todos')}
+    ${selectHTML('contrato', 'Contrato', CONTR, F.contrato, 'Todos')}${selectHTML('emp', 'Contratada', EMPS, F.emp, 'Todas')}
+    ${selectHTML('un', 'Unidade', uns, F.un, 'Todas')}${selectHTML('abc', 'Classe ABC', ['A', 'B', 'C'], F.abc, 'Todas')}
+    ${selectHTML('st', 'Situação', ['em andamento', 'parado', 'não iniciado', 'estourado', 'concluído', 'sem saldo'], F.st, 'Todas')}
+    <label>Colunas<span class="chips">${[['resumo', 'Resumo'], ['bm', 'Medição por BM'], ['base', 'Base contratual']].map(c => `<button class="chip ${F.cols === c[0] ? 'on' : ''}" data-c="${c[0]}">${c[1]}</button>`).join('')}</span></label>
+    <label>Agrupar<span class="chips"><button class="chip ${F.grp ? 'on' : ''}" id="grp">Nível 01 › 02 › 03</button></span></label>
+    <button class="btn" id="limpar">Limpar filtros</button><span class="conta" id="conta"></span>`;
+  }
+  function bind() {
+    f.innerHTML = filtrosHTML();
+    f.querySelector('#q').oninput = e => { F.q = e.target.value; draw(); };
+    ['n1', 'n2', 'contrato', 'emp', 'un', 'abc', 'st'].forEach(k => f.querySelector('#' + k).onchange = e => { F[k] = e.target.value; if (k === 'n1') F.n2 = ''; bind(); });
+    f.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { F.cols = b.dataset.c; bind(); });
+    f.querySelector('#grp').onclick = () => { F.grp = !F.grp; bind(); };
+    f.querySelector('#limpar').onclick = () => { Object.assign(F, { q: '', n1: '', n2: '', contrato: '', emp: '', un: '', abc: '', st: '' }); bind(); };
+    draw();
+  }
+  function filtrar() {
+    const q = F.q.trim().toLowerCase();
+    return IT.filter(i => (!F.n1 || i.n1 === F.n1) && (!F.n2 || i.n2 === F.n2) && (!F.contrato || i.contrato === F.contrato) && (!F.emp || i.emp === F.emp) && (!F.un || i.un === F.un) && (!F.abc || i.abc === F.abc) && (!F.st || i.status === F.st)
+      && (!q || i.desc.toLowerCase().includes(q) || i.item.toLowerCase().includes(q) || i.sgc.toLowerCase().includes(q) || i.cm.toLowerCase().includes(q) || i.n3.toLowerCase().includes(q)));
+  }
+  function cols() {
+    const base = [COL.item, COL.descT, COL.un, COL.pu];
+    if (F.cols === 'resumo') return [...base, COL.qtd, COL.pt, COL.qm, COL.vm, COL.qs, COL.vs, COL.pct, { t: `Últ. med. (${BMS[ULT]})`, k: 'ultimo', num: true, f: fR0 }, COL.abc, COL.status];
+    if (F.cols === 'base') return [...base, COL.contrato, { t: 'Contratada', k: 'emp' }, { t: 'CT inicial', k: r => r.base.ct, num: true, f: fQ }, { t: 'OIN', k: r => r.base.oin, num: true, f: fQ }, { t: 'TAC 1', k: r => r.base.tac1, num: true, f: fQ }, { t: 'TAC 2', k: r => r.base.tac2, num: true, f: fQ }, COL.qtd, COL.pt, { t: 'CM unificado', k: 'cm' }, { t: 'SGC', k: 'sgc' }];
+    return [...base, COL.qtd, ...BMS_OK.map((b, k) => ({ t: bmOrd(b), k: r => r.bm[k], num: true, f: (v, r) => v ? `<span title="${fR(r.bmv[k])}">${fQ(v)}</span>` : '<span style="color:var(--ink3)">·</span>' })), COL.qm, COL.vm];
+  }
+  function draw() {
+    const rows = filtrar(); const cs = cols(); const t = tot(rows);
+    f.querySelector('#conta').textContent = `${fN(rows.length)} de ${fN(IT.length)} itens · previsto ${fK(t.pt)} · medido ${fK(t.vm)} · saldo ${fK(t.vs)}`;
+    out.innerHTML = '';
+    const total = (rs, c, i) => { if (i === 0) return 'TOTAL'; if (c === COL.pt) return fR(sum(rs, r => r.pt)); if (c === COL.vm) return fR(sum(rs, r => r.vm)); if (c === COL.vs) return fR(sum(rs, r => r.vs)); if (c === COL.pct) { const p = sum(rs, r => r.pt); return p ? fP(sum(rs, r => r.vm) / p) : '–'; } if (c.k === 'ultimo') return fR0(sum(rs, r => r.ultimo)); if (F.cols === 'bm' && typeof c.k === 'function' && c.t.endsWith('Med.')) { const k = BMS_OK.findIndex(b => bmOrd(b) === c.t); return k >= 0 ? fK(sum(rs, r => r.bmv[k])) : ''; } return ''; };
+    if (!F.grp) { out.appendChild(tabela(cs, rows, { alto: true, total, clique: abrirItem })); return; }
+    const w = el('div', 'tw alto'); const grupos = new Map();
+    for (const r of rows) { const k1 = r.n1 || '(sem categoria)', k2 = r.n2 || '(sem nível 02)', k3 = r.n3 || '(sem nível 03)'; if (!grupos.has(k1)) grupos.set(k1, new Map()); const g1 = grupos.get(k1); if (!g1.has(k2)) g1.set(k2, new Map()); const g2 = g1.get(k2); if (!g2.has(k3)) g2.set(k3, []); g2.get(k3).push(r); }
+    const sub = (list, cls, nome, id) => { const t2 = tot(list); return `<tr class="grp ${cls}" data-g="${id}"><td colspan="4"><span class="tri">▼</span>${h(nome)} <span style="color:var(--ink3);font-weight:400">· ${list.length} itens</span></td>${cs.slice(4).map(c => `<td class="num">${c === COL.pt ? fR0(t2.pt) : c === COL.vm ? fR0(t2.vm) : c === COL.vs ? fR0(t2.vs) : c === COL.pct ? (t2.pt ? fP(t2.vm / t2.pt) : '–') : ''}</td>`).join('')}</tr>`; };
+    let html = '<table><thead><tr>' + cs.map(c => `<th class="${c.num ? 'num' : ''}">${h(c.t)}</th>`).join('') + '</tr></thead><tbody>'; let gid = 0;
+    for (const [k1, g1] of grupos) { const l1 = [...g1.values()].flatMap(m => [...m.values()].flat()); const id1 = 'g' + (++gid); html += sub(l1, 'n1', k1, id1);
+      for (const [k2, g2] of g1) { const l2 = [...g2.values()].flat(); const id2 = 'g' + (++gid); html += sub(l2, 'n2', k2, id2).replace('data-g=', `data-p="${id1}" data-g=`);
+        for (const [k3, l3] of g2) { const id3 = 'g' + (++gid); html += `<tr class="grp n3" data-p="${id1} ${id2}" data-g="${id3}"><td colspan="${cs.length}" style="background:var(--bg)!important;color:var(--ink2);font-weight:700;padding-left:22px"><span class="tri">▼</span>${h(k3)} <span style="color:var(--ink3);font-weight:400">· ${l3.length} itens · medido ${fK(sum(l3, r => r.vm))}</span></td></tr>`;
+          for (const r of l3) html += `<tr class="clk" data-p="${id1} ${id2} ${id3}" data-idx="${r.idx}">` + cs.map(c => { const v = typeof c.k === 'function' ? c.k(r) : r[c.k]; return `<td class="${c.num ? (c.neg ? numCls(v) : 'num') : (c.cls || '')}">${c.f ? c.f(v, r) : h(v ?? '')}</td>`; }).join('') + '</tr>'; } } }
+    html += '</tbody><tfoot><tr>' + cs.map((c, i) => `<td class="${c.num ? 'num' : ''}">${total(rows, c, i) ?? ''}</td>`).join('') + '</tr></tfoot></table>';
+    w.innerHTML = html; out.appendChild(w);
+    const fechados = new Set();
+    w.querySelectorAll('tr.grp').forEach(tr => tr.onclick = () => { const g = tr.dataset.g; if (fechados.has(g)) fechados.delete(g); else fechados.add(g); tr.classList.toggle('fechado', fechados.has(g)); aplicar(); });
+    function aplicar() { w.querySelectorAll('tr[data-p]').forEach(tr => { const ps = tr.dataset.p.split(' '); tr.style.display = ps.some(p => fechados.has(p)) ? 'none' : ''; }); }
+    w.querySelectorAll('tr.clk').forEach(tr => tr.onclick = () => abrirItem(IT[+tr.dataset.idx]));
+    if (rows.length > 120) { w.querySelectorAll('tr.grp.n3').forEach(tr => { fechados.add(tr.dataset.g); tr.classList.add('fechado'); }); aplicar(); }
+  }
+  bind();
+  root.appendChild(el('div', 'nota', 'Clique em um item para abrir o histórico de medição. Clique no cabeçalho de grupo para recolher ou expandir. As colunas calculadas (Preço Total, Qtd Medida, Valor Medido, Saldo) seguem as fórmulas da tabela TREM_QQP3 da aba QQP.'));
+}
+function abrirItem(i) {
+  if (!i) return; const d = document.getElementById('drawer');
+  d.innerHTML = `<button class="btn fech" id="fech">Fechar ✕</button><small style="color:var(--ink3);letter-spacing:.1em">ITEM ${h(i.item)} · SGC ${h(i.sgc || '–')}</small><h3>${h(i.desc)}</h3>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0">${ctTag(i.contrato)} ${abcTag(i.abc)} ${stTag(i.status)}</div>
+  <dl class="dl"><dt>Categoria</dt><dd>${h(i.n1 || '–')}</dd><dt>Nível 02</dt><dd>${h(i.n2 || '–')}</dd><dt>Nível 03</dt><dd>${h(i.n3 || '–')}</dd><dt>Contratada</dt><dd>${h(i.emp)}</dd><dt>CM unificado</dt><dd>${h(i.cm || '–')}</dd>
+  <dt>Unidade</dt><dd>${h(i.un)}</dd><dt>Preço unitário</dt><dd>${fR(i.pu)}</dd><dt>Qtd contratada</dt><dd>${fQ(i.qtd)}</dd>
+  <dt>Preço total</dt><dd>${fR(i.pt)}</dd><dt>Qtd medida</dt><dd>${fQ(i.qm)} <span style="color:var(--ink3)">(${i.pt ? fP(i.vm / i.pt) : '–'})</span></dd><dt>Valor medido</dt><dd>${fR(i.vm)}</dd><dt>Saldo</dt><dd style="${i.vs < 0 ? 'color:var(--crit)' : ''}">${fQ(i.qs)} ${h(i.un)} · ${fR(i.vs)}</dd></dl>
+  <div class="sec-h"><h2>Medição por período</h2></div><div class="ch baixo"><canvas></canvas></div>
+  <div class="tw" style="margin-top:10px"><table><thead><tr><th>Medição</th><th class="num">Qtd</th><th class="num">R$</th><th class="num">Acum. R$</th><th class="num">% item</th></tr></thead><tbody>${(() => { let a = 0; return BMS_OK.map((b, k) => { a += i.bmv[k]; return `<tr><td>${h(bmLabel(b))}</td><td class="num">${fQ(i.bm[k])}</td><td class="${numCls(i.bmv[k])}">${fR(i.bmv[k])}</td><td class="num">${fR(a)}</td><td class="num">${i.pt ? fP(a / i.pt) : '–'}</td></tr>`; }).join(''); })()}</tbody></table></div>`;
+  d.classList.add('on'); d.querySelector('#fech').onclick = () => d.classList.remove('on');
+  chart(d.querySelector('canvas'), { type: 'bar', data: { labels: BMS_OK.map(bmOrd), datasets: [{ data: i.bmv.slice(0, NR), backgroundColor: css('--azul'), borderRadius: 3, barPercentage: .5 }] }, options: { plugins: { tooltip: tipR } } });
+}
+/* ---------- 3. BASE KPI ---------- */
+function vKPI(root) {
+  root.appendChild(el('div', 'kpis', [kpi('Valor contratual total', fR(TOT.ct)), kpi('Valor medido acumulado', fR(TOT.vm), '', 'ouro'), kpi('Saldo contratual', fR(TOT.vs)), kpi('% Avanço financeiro', fP(TOT.pct))].join('')));
+  let a = 0; const ev = BMS_OK.map((b, k) => { a += TOT.porBM[k]; return { bm: bmLabel(b), per: TOT.porBM[k], acc: a, pct: a / TOT.ct, saldo: TOT.ct - a, part: TOT.porBM[k] / TOT.vm }; });
+  root.appendChild(sec('Evolução por medição', 'mês a mês', tabela([{ t: 'Medição', k: 'bm' }, { t: 'Medido no período (R$)', k: 'per', num: true, neg: true, f: fR }, { t: 'Part. no medido', k: 'part', num: true, f: v => fP(v) }, { t: 'Acumulado (R$)', k: 'acc', num: true, f: fR }, { t: '% Avanço acum.', k: 'pct', num: true, f: v => pctBar(v) }, { t: 'Saldo contratual (R$)', k: 'saldo', num: true, f: fR }], ev,
+    { semSort: true, total: (rs, c, i) => ['TOTAL', fR(TOT.vm), fP(1), '', fP(TOT.pct), fR(TOT.vs)][i] })));
+  root.appendChild(el('div', 'kpis', [kpi('Média por medição', fR(TOT.media), `${NR} medições realizadas`), kpi('Medições restantes p/ consumir saldo', fN(+TOT.bmsRest.toFixed(1)), 'no ritmo médio'), kpi('Maior medição', fR(Math.max(...TOT.porBM.slice(0, NR))), bmOrd(BMS_OK[TOT.porBM.indexOf(Math.max(...TOT.porBM.slice(0, NR)))])), kpi('Itens medidos até hoje', fN(IT.filter(i => i.qm !== 0).length), `de ${fN(IT.length)} itens da QQP`)].join('')));
+  const comp = (titulo, rotulo, key, fmtK) => { const rows = agg(IT, key).sort((x, y) => y.pt - x.pt);
+    return sec(titulo, 'previsto em contrato × medido × saldo', tabela([{ t: rotulo, k: 'k', f: fmtK || (v => h(v)) }, { t: 'Itens', k: 'n', num: true, f: fN }, { t: 'Previsto (R$)', k: 'pt', num: true, f: fR }, { t: 'Medido (R$)', k: 'vm', num: true, f: fR }, { t: 'Saldo (R$)', k: 'vs', num: true, neg: true, f: fR }, { t: '% Avanço', k: r => r.pt ? r.vm / r.pt : null, num: true, f: v => v === null ? '–' : pctBar(v, v > 1 ? 'crit' : '') }, { t: 'Part. contrato', k: r => r.pt / TOT.ct, num: true, f: v => fP(v) }], rows,
+      { total: (rs, c, i) => ['TOTAL', fN(sum(rs, r => r.n)), fR(sum(rs, r => r.pt)), fR(sum(rs, r => r.vm)), fR(sum(rs, r => r.vs)), fP(sum(rs, r => r.vm) / sum(rs, r => r.pt)), fP(1)][i] })); };
+  root.appendChild(comp('Comparativo por categoria', 'Categoria (Nível 01)', i => i.n1));
+  root.appendChild(comp('Comparativo por contrato', 'Contrato', i => i.contrato, ctTag));
+  root.appendChild(comp('Comparativo por contratada', 'Contratada', i => i.emp));
+  root.appendChild(comp('Comparativo por unidade de medição', 'Unidade', i => i.un));
+  root.appendChild(sec('Top 15 itens medidos', '', tabela([COL.descT, COL.item, COL.cat, COL.contrato, COL.un, COL.qm, COL.vm, { t: '% do medido', k: r => r.vm / TOT.vm, num: true, f: v => fP(v) }, COL.pct], [...IT].sort((x, y) => y.vm - x.vm).slice(0, 15), { semSort: true, clique: abrirItem })));
+}
+
+/* ---------- 4. ANÁLISE POR CATEGORIA ---------- */
+function vCat(root) {
+  const heat = (titulo, rows, rotulo, sub) => {
+    const max = Math.max(...rows.flatMap(r => r.bm.slice(0, NR))); const w = el('div', 'tw');
+    w.innerHTML = `<table class="heat"><thead><tr><th>${h(rotulo)}</th>${BMS_OK.map(b => `<th class="num">${h(bmOrd(b))}</th>`).join('')}<th class="num">TOTAL</th><th class="num">% Part.</th><th class="num">Previsto</th><th class="num">Saldo</th><th class="num">% Avanço</th></tr></thead><tbody>` +
+      rows.map(r => `<tr><td style="white-space:nowrap">${h(trunc(r.k, 34))}</td>${r.bm.slice(0, NR).map(v => `<td class="h" style="background:${seq(v, max)};color:${v / max > .6 ? '#fff' : 'var(--ink)'}" title="${fR(v)}">${v ? fK(v) : '<span style="color:var(--ink3)">·</span>'}</td>`).join('')}<td class="num"><b>${fK(r.vm)}</b></td><td class="num">${fP(r.vm / TOT.vm)}</td><td class="num">${fK(r.pt)}</td><td class="${numCls(r.vs)}">${fK(r.vs)}</td><td class="num">${r.pt ? fP(r.vm / r.pt) : '–'}</td></tr>`).join('') +
+      `</tbody><tfoot><tr><td>TOTAL</td>${BMS_OK.map((b, k) => `<td class="num">${fK(sum(rows, r => r.bm[k]))}</td>`).join('')}<td class="num">${fK(sum(rows, r => r.vm))}</td><td class="num">${fP(1)}</td><td class="num">${fK(sum(rows, r => r.pt))}</td><td class="num">${fK(sum(rows, r => r.vs))}</td><td class="num">${fP(TOT.pct)}</td></tr></tfoot></table>`;
+    return sec(titulo, sub, w);
+  };
+  root.appendChild(heat('Matriz de evolução · Medição × Categoria (R$)', agg(IT, i => i.n1).sort((x, y) => y.vm - x.vm), 'Categoria (Nível 01)', 'a intensidade do azul segue o valor medido na medição · passe o mouse para o valor exato'));
+  root.appendChild(heat('Matriz de evolução · Medição × Contrato (R$)', agg(IT, i => i.contrato).sort((x, y) => y.vm - x.vm), 'Contrato', ''));
+  const p = el('div', 'painel', `${legHTML(agg(IT, i => i.contrato).map((r, k) => [r.k, k === 0 ? css('--s-ct') : css('--s-tac2')]))}<div class="ch"><canvas></canvas></div>`);
+  root.appendChild(sec('Medido por medição e contrato', 'R$ no período, empilhado', p));
+  const pc = agg(IT, i => i.contrato);
+  chart(p.querySelector('canvas'), { type: 'bar', data: { labels: BMS_OK.map(bmOrd), datasets: pc.map((r, k) => ({ label: r.k, data: r.bm.slice(0, NR), backgroundColor: k === 0 ? css('--s-ct') : css('--s-tac2'), borderRadius: 3, borderWidth: 1, borderColor: css('--bg') })) }, options: { scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .5 } } } });
+  const g5 = el('div', 'grid g2');
+  for (const a of agg(IT, i => i.n1).sort((x, y) => y.vm - x.vm)) {
+    const top = IT.filter(i => i.n1 === a.k).sort((x, y) => y.vm - x.vm).slice(0, 5).filter(i => i.vm > 0);
+    const pa = el('div', 'painel', `<div class="sec-h"><h2 style="text-transform:none;letter-spacing:0;font-size:12.5px">${h(a.k)}</h2><span class="sub">medido ${fK(a.vm)} de ${fK(a.pt)} · ${a.nMed} de ${a.n} itens medidos</span></div>`);
+    if (top.length) pa.appendChild(tabela([{ t: '#', k: r => top.indexOf(r) + 1, num: true }, COL.item, { ...COL.descT, f: v => `<span title="${h(v)}">${h(trunc(v, 62))}</span>` }, { t: 'Medido (R$)', k: 'vm', num: true, f: fR0 }, { t: '% da categoria', k: r => r.vm / a.vm, num: true, f: v => pctBar(v) }], top, { semSort: true, clique: abrirItem }));
+    else pa.appendChild(el('div', 'nota', 'Categoria ainda sem medição.'));
+    g5.appendChild(pa);
+  }
+  root.appendChild(sec('Top 5 itens medidos por categoria', '', g5));
+}
+
+/* ---------- 5. SALDO & ALERTAS ---------- */
+function vSaldo(root) {
+  const par = IT.filter(i => i.parado), ni = IT.filter(i => i.naoIniciado), est = IT.filter(i => i.estouro);
+  root.appendChild(el('div', 'kpis', [kpi('Saldo contratual', fR0(TOT.vs), `${fP(1 - TOT.pct)} do contrato`),
+    kpi('Itens não iniciados', fN(ni.length), fR0(sum(ni, i => i.vs)) + ' de saldo'),
+    kpi('Itens parados', fN(par.length), `iniciados e sem medição no ${BMS[ULT]}`, par.length ? 'warn' : ''),
+    kpi('Itens estourados', fN(est.length), est.length ? fR0(sum(est, i => -i.vs)) + ' acima do contratado' : 'nenhum', est.length ? 'crit' : 'ok')].join('')));
+  const porCat = agg(IT, i => i.n1).sort((x, y) => y.vs - x.vs);
+  root.appendChild(sec('Saldo contratual por categoria', '', tabela([{ t: 'Categoria (Nível 01)', k: 'k' }, { t: 'Saldo (R$)', k: 'vs', num: true, neg: true, f: fR }, { t: '% do saldo', k: r => r.vs / TOT.vs, num: true, f: v => `<span class="barra" style="width:${Math.max(0, v) * 140}px"></span>${fP(v)}` }, { t: '% Avanço da categoria', k: r => r.pt ? r.vm / r.pt : null, num: true, f: v => v === null ? '–' : pctBar(v, v > 1 ? 'crit' : '') }, { t: 'Não iniciados', k: r => ni.filter(i => i.n1 === r.k).length, num: true, f: fN }, { t: 'Parados', k: r => par.filter(i => i.n1 === r.k).length, num: true, f: fN }, { t: 'Estourados', k: r => est.filter(i => i.n1 === r.k).length, num: true, f: fN }], porCat,
+    { total: (rs, c, i) => ['TOTAL', fR(TOT.vs), fP(1), fP(TOT.pct), fN(ni.length), fN(par.length), fN(est.length)][i] })));
+  const lst = (titulo, sub, rows, colv, extra) => sec(titulo, sub, tabela([{ t: '#', k: r => rows.indexOf(r) + 1, num: true }, COL.descT, COL.item, COL.cat, COL.un, colv, ...(extra || [])], rows, { semSort: true, clique: abrirItem }));
+  root.appendChild(lst('Top 15 maiores saldos a medir', 'itens que concentram o que falta executar', [...IT].sort((x, y) => y.vs - x.vs).slice(0, 15), { t: 'Saldo (R$)', k: 'vs', num: true, f: fR }, [{ t: '% do saldo', k: r => r.vs / TOT.vs, num: true, f: v => fP(v) }, COL.pct, COL.status]));
+  if (par.length) root.appendChild(lst('Itens parados', `iniciados, com saldo e sem medição no ${BMS[ULT]} · ${par.length} itens · ${fR0(sum(par, i => i.vs))} de saldo preso`, [...par].sort((x, y) => y.vs - x.vs).slice(0, 15), { t: 'Saldo preso (R$)', k: 'vs', num: true, f: fR }, [{ t: '% medido', k: r => r.pt ? r.vm / r.pt : null, num: true, f: v => v === null ? '–' : fP(v) }, { t: 'Última medição com lançamento', k: r => { let u = '–'; r.bm.forEach((q, k) => { if (q) u = bmOrd(BMS[k]); }); return u; } }]));
+  if (est.length) root.appendChild(lst('Estouro de medição acima do contratado', `${est.length} itens · ${fR0(sum(est, i => -i.vs))}`, [...est].sort((x, y) => x.vs - y.vs).slice(0, 15), { t: 'Estouro (R$)', k: r => -r.vs, num: true, f: fR }, [{ t: '% acima do previsto', k: r => r.pt ? -r.vs / r.pt : null, num: true, f: v => v === null ? '–' : `<span style="color:var(--crit);font-weight:700">+${fP(v, 0)}</span>` }, COL.contrato]));
+  const abc = ['A', 'B', 'C'].map(c => { const l = IT.filter(i => i.abc === c); return { c, n: l.length, np: l.length / IT.length, v: sum(l, i => i.vm), vp: sum(l, i => i.vm) / TOT.vm }; });
+  const leitura = { A: 'Foco máximo de fiscalização', B: 'Acompanhamento regular', C: 'Controle simplificado' };
+  root.appendChild(sec('Curva ABC / Pareto', 'concentração do valor medido', tabela([{ t: 'Classe', k: 'c', f: v => abcTag(v) + ' ' + ({ A: 'até 80% do medido', B: '80% a 95%', C: 'cauda de 5%' }[v]) }, { t: 'Nº de itens', k: 'n', num: true, f: fN }, { t: '% dos itens', k: 'np', num: true, f: v => fP(v) }, { t: 'Valor medido (R$)', k: 'v', num: true, f: fR }, { t: '% do medido', k: 'vp', num: true, f: v => pctBar(v) }, { t: 'Leitura', k: r => leitura[r.c] }], abc, { semSort: true, total: (rs, c, i) => ['TOTAL', fN(IT.length), fP(1), fR(TOT.vm), fP(1), ''][i] })));
+  root.appendChild(el('div', 'dica', `<b>Onde olhar primeiro.</b> ${abc[0].n} de ${IT.length} itens concentram ${fP(abc[0].vp)} do valor medido, e ${fN(ni.length)} itens (${fK(sum(ni, i => i.vs))} de saldo) ainda não tiveram nenhuma medição. Conferir os itens classe A a cada boletim cobre quase todo o risco de glosa; use o filtro "Classe ABC = A" na aba QQP para listá-los.`));
+}
+
+/* ---------- 6. RELATÓRIO DA MEDIÇÃO ---------- */
+function vBM(root) {
+  const S = STATE.bm ||= { k: ULT };
+  const f = el('div', 'filtros', selectHTML('sel', 'Medição', BMS_OK.map(bmLabel), bmLabel(BMS_OK[S.k])) + `<span class="conta">todo o relatório se atualiza com a medição escolhida</span>`);
+  const out = el('div'); root.append(f, out);
+  f.querySelector('#sel').onchange = e => { S.k = BMS_OK.map(bmLabel).indexOf(e.target.value); draw(); };
+  function draw() {
+    destroyCharts(); out.innerHTML = ''; const k = S.k, kp = k > 0 ? k - 1 : null; const per = TOT.porBM[k]; const acc = TOT.porBM.slice(0, k + 1).reduce((a, b) => a + b, 0);
+    const delta = kp !== null ? per - TOT.porBM[kp] : null;
+    out.appendChild(el('div', 'kpis', [kpi(`Medido na ${bmOrd(BMS[k])}`, fR(per), delta !== null ? `<span style="color:${delta >= 0 ? 'var(--ok)' : 'var(--crit)'}">${delta >= 0 ? '▲' : '▼'} ${fK(Math.abs(delta))} vs ${bmOrd(BMS[kp])}</span>` : (MESES[BMS[k]] || ''), 'ouro'),
+      kpi('Acumulado até a medição', fR(acc)), kpi('% Avanço acumulado', fP(acc / TOT.ct)), kpi('Saldo após a medição', fR(TOT.ct - acc)),
+      kpi('Participação no medido total', fP(per / TOT.vm)), kpi('Itens medidos na medição', fN(IT.filter(i => i.bm[k] !== 0).length))].join('')));
+    const pa = agg(IT, i => i.n1).map(r => ({ k: r.k, v: r.bm[k], ant: kp !== null ? r.bm[kp] : null })).sort((x, y) => y.v - x.v);
+    const pc = agg(IT, i => i.contrato).map(r => ({ k: r.k, v: r.bm[k], ant: kp !== null ? r.bm[kp] : null })).sort((x, y) => y.v - x.v);
+    const g = el('div', 'grid g2');
+    g.append(sec('Medição por categoria', '', tabela([{ t: 'Categoria (Nível 01)', k: 'k' }, { t: 'Medido (R$)', k: 'v', num: true, neg: true, f: fR }, { t: '% da medição', k: r => per ? r.v / per : 0, num: true, f: v => pctBar(Math.max(0, v)) }, { t: 'Medição anterior (R$)', k: 'ant', num: true, f: v => v === null ? '–' : fR0(v) }], pa, { semSort: true, total: (rs, c, i) => ['TOTAL', fR(per), fP(1), kp !== null ? fR0(TOT.porBM[kp]) : '–'][i] })),
+      sec('Medição por contrato', '', tabela([{ t: 'Contrato', k: 'k', f: ctTag }, { t: 'Medido (R$)', k: 'v', num: true, neg: true, f: fR }, { t: '% da medição', k: r => per ? r.v / per : 0, num: true, f: v => pctBar(Math.max(0, v)) }, { t: 'Medição anterior (R$)', k: 'ant', num: true, f: v => v === null ? '–' : fR0(v) }], pc, { semSort: true, total: (rs, c, i) => ['TOTAL', fR(per), fP(1), kp !== null ? fR0(TOT.porBM[kp]) : '–'][i] })));
+    out.appendChild(g);
+    const top = IT.filter(i => i.bmv[k] !== 0).sort((x, y) => Math.abs(y.bmv[k]) - Math.abs(x.bmv[k])).slice(0, 15);
+    out.appendChild(sec(`Top 15 itens da ${bmOrd(BMS[k])}`, `${IT.filter(i => i.bm[k] !== 0).length} itens com medição no boletim`, tabela([{ t: '#', k: r => top.indexOf(r) + 1, num: true }, COL.descT, COL.item, COL.cat, COL.un, { t: 'Qtd na medição', k: r => r.bm[k], num: true, f: fQ }, { t: 'Medido (R$)', k: r => r.bmv[k], num: true, neg: true, f: fR }, { t: '% da medição', k: r => r.bmv[k] / per, num: true, f: v => fP(v) }, { t: 'Acum. do item', k: r => r.pt ? r.vm / r.pt : null, num: true, f: v => v === null ? '–' : fP(v) }], top, { semSort: true, clique: abrirItem })));
+    const novos = IT.filter(i => i.bm[k] !== 0 && i.bm.slice(0, k).every(q => q === 0));
+    if (novos.length) out.appendChild(sec('Itens iniciados nesta medição', `${novos.length} itens com primeira medição`, tabela([COL.item, COL.descT, COL.cat, COL.un, { t: 'Medido (R$)', k: r => r.bmv[k], num: true, f: fR }, { t: 'Preço total (R$)', k: 'pt', num: true, f: fR }, COL.pct], novos.sort((x, y) => y.bmv[k] - x.bmv[k]), { clique: abrirItem })));
+  }
+  draw();
+}
+/* ---------- 7. INSUMOS POR MEDIÇÃO ---------- */
+function vInsumos(root) {
+  if (!INS.length) { root.appendChild(el('div', 'painel', 'A planilha não trouxe a aba Insumos por Medição.')); return; }
+  const S = STATE.ins ||= { q: '', classe: '', tipo: '', so: false };
+  const TIPOS = uniq(INS.map(x => x.tipo)).sort();
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  function bind() {
+    f.innerHTML = `<label>Buscar<input type="search" id="q" value="${h(S.q)}" placeholder="descrição ou código do insumo"></label>
+      ${selectHTML('classe', 'Classe', ['A', 'B', 'C'], S.classe, 'Todas')}${selectHTML('tipo', 'Tipo', TIPOS, S.tipo, 'Todos')}
+      <label>Filtro rápido<span class="chips"><button class="chip ${S.so ? 'on' : ''}" id="so">Só insumos já consumidos</button></span></label>
+      <button class="btn" id="limpar">Limpar filtros</button><span class="conta" id="conta"></span>`;
+    f.querySelector('#q').oninput = e => { S.q = e.target.value; draw(); };
+    ['classe', 'tipo'].forEach(k => f.querySelector('#' + k).onchange = e => { S[k] = e.target.value; draw(); });
+    f.querySelector('#so').onclick = () => { S.so = !S.so; bind(); };
+    f.querySelector('#limpar').onclick = () => { Object.assign(S, { q: '', classe: '', tipo: '', so: false }); bind(); };
+    draw();
+  }
+  function draw() {
+    destroyCharts(); out.innerHTML = '';
+    const q = S.q.trim().toLowerCase();
+    const rows = INS.filter(x => (!S.classe || x.classe === S.classe) && (!S.tipo || x.tipo === S.tipo) && (!S.so || x.vAcum > 0) && (!q || x.desc.toLowerCase().includes(q) || x.cod.includes(q)));
+    const medidos = INS.filter(x => x.vAcum > 0);
+    f.querySelector('#conta').textContent = `${fN(rows.length)} de ${fN(INS.length)} insumos · orçado ${fK(sum(rows, x => x.vOrc))} · consumido ${fK(sum(rows, x => x.vAcum))}`;
+    out.appendChild(el('div', 'kpis', [kpi('Orçado (insumos)', fR0(INS_TOT.orc), `${fN(INS.length)} insumos na composição`),
+      kpi('Consumido acumulado', fR0(INS_TOT.acum), fP(INS_TOT.pct) + ' do orçado', 'ouro'),
+      kpi('Saldo de insumos', fR0(INS_TOT.saldo)),
+      kpi('Insumos já consumidos', fN(medidos.length), `${fP(medidos.length / INS.length)} da lista`),
+      kpi('Diferença vs. medição QQP', fR0(INS_TOT.acum - TOT.vm), 'insumos × valor medido no contrato', Math.abs(INS_TOT.acum - TOT.vm) > TOT.vm * 0.02 ? 'warn' : 'ok')].join('')));
+    const g = el('div', 'grid g2');
+    const p1 = el('div', 'painel', `<div class="sec-h"><h2>Consumo de insumos por medição</h2><span class="sub">R$ no período</span></div><div class="ch"><canvas></canvas></div>`);
+    const p2 = el('div', 'painel', `<div class="sec-h"><h2>Consumo por classe</h2><span class="sub">participação no consumido</span></div><div class="ch"><canvas></canvas></div>`);
+    g.append(p1, p2); out.appendChild(sec('Evolução e composição', '', g));
+    chart(p1.querySelector('canvas'), { type: 'bar', data: { labels: BMS_OK.map(bmOrd), datasets: [{ data: INS_TOT.porBM.slice(0, NR), backgroundColor: css('--azul'), borderRadius: 4, barPercentage: .5 }] }, options: { plugins: { tooltip: tipR } } });
+    const porCl = ['A', 'B', 'C'].map(c => ({ k: c, v: sum(INS.filter(x => x.classe === c), x => x.vAcum), o: sum(INS.filter(x => x.classe === c), x => x.vOrc), n: INS.filter(x => x.classe === c).length }));
+    const cores = [css('--seq5'), css('--seq3'), css('--seq2')];
+    chart(p2.querySelector('canvas'), { type: 'doughnut', data: { labels: porCl.map(x => 'Classe ' + x.k), datasets: [{ data: porCl.map(x => x.v), backgroundColor: cores, borderWidth: 2, borderColor: css('--bg') }] },
+      options: { cutout: '62%', scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 10, usePointStyle: true, generateLabels: ch => ch.data.labels.map((l, i) => ({ text: `${l}  ${fP(ch.data.datasets[0].data[i] / INS_TOT.acum)}`, fillStyle: cores[i], strokeStyle: 'transparent', index: i })) } }, tooltip: { callbacks: { label: c => ` ${fR0(c.parsed)} (${fP(c.parsed / INS_TOT.acum)})` } } } } });
+    out.appendChild(sec('Resumo por classe', 'classificação ABC da própria planilha', tabela([{ t: 'Classe', k: 'k', f: abcTag }, { t: 'Nº de insumos', k: 'n', num: true, f: fN }, { t: 'Orçado (R$)', k: 'o', num: true, f: fR }, { t: 'Consumido (R$)', k: 'v', num: true, f: fR }, { t: 'Saldo (R$)', k: r => r.o - r.v, num: true, f: fR }, { t: '% Consumido', k: r => r.o ? r.v / r.o : null, num: true, f: v => v === null ? '–' : pctBar(v) }, { t: '% do consumo total', k: r => r.v / INS_TOT.acum, num: true, f: v => fP(v) }], porCl, { semSort: true, total: (rs, c, i) => ['TOTAL', fN(INS.length), fR(INS_TOT.orc), fR(INS_TOT.acum), fR(INS_TOT.saldo), fP(INS_TOT.pct), fP(1)][i] })));
+    const top = [...rows].sort((x, y) => y.vAcum - x.vAcum).slice(0, 15).filter(x => x.vAcum > 0);
+    out.appendChild(sec('Top 15 insumos consumidos', 'acumulado até a última medição', tabela([{ t: '#', k: r => top.indexOf(r) + 1, num: true }, { t: 'Insumo', k: 'desc', cls: 'desc', f: v => `<span title="${h(v)}">${h(trunc(v, 80))}</span>` }, { t: 'Cód.', k: 'cod', cls: 'mono' }, { t: 'Classe', k: 'classe', f: abcTag }, { t: 'Tipo', k: 'tipo' }, { t: 'Un', k: 'un' }, { t: 'Qtd acum.', k: 'qAcum', num: true, f: fQ }, { t: 'Consumido (R$)', k: 'vAcum', num: true, f: fR }, { t: '% do consumo', k: r => r.vAcum / INS_TOT.acum, num: true, f: v => fP(v) }], top, { semSort: true })));
+    const cols = [{ t: 'Insumo', k: 'desc', cls: 'desc', f: v => `<span title="${h(v)}">${h(trunc(v, 60))}</span>` }, { t: 'Cód.', k: 'cod', cls: 'mono' }, { t: 'Classe', k: 'classe', f: abcTag }, { t: 'Tipo', k: 'tipo' }, { t: 'Un', k: 'un' },
+      { t: 'Qtd orçada', k: 'qOrc', num: true, f: fQ }, { t: 'PU médio (R$)', k: 'pu', num: true, f: fR }, { t: 'Orçado (R$)', k: 'vOrc', num: true, f: fR },
+      ...BMS_OK.map((b, k) => ({ t: bmOrd(b), k: r => r.v[k], num: true, f: (v, r) => v ? `<span title="${fQ(r.q[k])} ${h(r.un)}">${fK(v)}</span>` : '<span style="color:var(--ink3)">·</span>' })),
+      { t: 'Consumido (R$)', k: 'vAcum', num: true, f: fR }, { t: 'Saldo (R$)', k: 'vSaldo', num: true, neg: true, f: fR }, { t: '% Consumido', k: r => r.vOrc ? r.vAcum / r.vOrc : null, num: true, f: v => v === null ? '–' : pctBar(Math.max(0, v), v > 1 ? 'crit' : '') }];
+    out.appendChild(sec('Todos os insumos', 'quantidade e valor por medição', tabela(cols, rows, { alto: true, sort: 7, total: (rs, c, i) => { if (i === 0) return 'TOTAL'; if (c.k === 'vOrc') return fR(sum(rs, r => r.vOrc)); if (c.k === 'vAcum') return fR(sum(rs, r => r.vAcum)); if (c.k === 'vSaldo') return fR(sum(rs, r => r.vSaldo)); const k = BMS_OK.findIndex(b => bmOrd(b) === c.t); if (k >= 0) return fK(sum(rs, r => r.v[k])); return ''; } })));
+    out.appendChild(el('div', 'nota', `O consumo de insumos (${fR0(INS_TOT.acum)}) é medido pela composição de custos e fica próximo do valor medido no contrato (${fR0(TOT.vm)}); a diferença de ${fR0(Math.abs(INS_TOT.acum - TOT.vm))} vem dos itens sem insumo vinculado na planilha.`));
+  }
+  bind();
+}
+
+/* ---------- 8. IMPACTO POR MEDIÇÃO ---------- */
+function vImpacto(root) {
+  if (!IMP.length) { root.appendChild(el('div', 'painel', 'A planilha não trouxe a aba OBRAS TP - MED.')); return; }
+  const S = STATE.imp ||= { k: ULT, bloco: '', imp: '' };
+  const BLOCOS = uniq(IMP.map(x => x.bloco)).sort();
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  const IMPS = ['ALTO IMPACTO', 'MÉDIO IMPACTO', 'BAIXO IMPACTO', 'SEM IMPACTO'];
+  function bind() {
+    f.innerHTML = selectHTML('sel', 'Medição', BMS_OK.map(bmLabel), bmLabel(BMS_OK[S.k])) + selectHTML('bloco', 'Bloco / Categoria', BLOCOS, S.bloco, 'Todos') + selectHTML('imp', 'Classificação de impacto', IMPS, S.imp, 'Todas') + '<span class="conta">classificação de impacto lançada na aba OBRAS TP - MED</span>';
+    f.querySelector('#sel').onchange = e => { S.k = BMS_OK.map(bmLabel).indexOf(e.target.value); draw(); };
+    ['bloco', 'imp'].forEach(k => f.querySelector('#' + k).onchange = e => { S[k] = e.target.value; draw(); });
+    draw();
+  }
+  function draw() {
+    destroyCharts(); out.innerHTML = ''; const k = S.k;
+    const base = IMP.filter(x => (!S.bloco || x.bloco === S.bloco) && (!S.imp || (x.med[k].imp || 'SEM IMPACTO') === S.imp));
+    const totMed = sum(IMP, x => x.med[k].v);
+    const comMed = base.filter(x => x.med[k].v !== 0);
+    const porImp = IMPS.map(nome => { const l = IMP.filter(x => (x.med[k].imp || 'SEM IMPACTO') === nome); return { k: nome, n: l.length, v: sum(l, x => x.med[k].v) }; }).filter(x => x.n);
+    out.appendChild(el('div', 'kpis', [kpi(`Medido na ${bmOrd(BMS[k])}`, fR0(totMed), MESES[BMS[k]] || '', 'ouro'),
+      kpi('Itens com lançamento', fN(IMP.filter(x => x.med[k].v !== 0).length), `de ${fN(IMP.length)} itens da EAP`),
+      kpi('Itens de alto impacto', fN(IMP.filter(x => x.med[k].imp === 'ALTO IMPACTO').length), fR0(sum(IMP.filter(x => x.med[k].imp === 'ALTO IMPACTO'), x => x.med[k].v)) + ' na medição', 'crit'),
+      kpi('Valor total da EAP', fR0(sum(IMP, x => x.total)), 'contrato inicial (sem opção de compra)'),
+      kpi('Blocos com medição', fN(uniq(IMP.filter(x => x.med[k].v !== 0).map(x => x.bloco)).length), `de ${BLOCOS.length} blocos`)].join('')));
+    const g = el('div', 'grid g2');
+    const p1 = el('div', 'painel', `<div class="sec-h"><h2>Medido por bloco</h2><span class="sub">${h(bmOrd(BMS[k]))}</span></div><div class="ch"><canvas></canvas></div>`);
+    const p2 = el('div', 'painel', `<div class="sec-h"><h2>Composição por classificação de impacto</h2></div><div class="ch"><canvas></canvas></div>`);
+    g.append(p1, p2); out.appendChild(sec('Visão da medição', '', g));
+    const porBloco = BLOCOS.map(b => ({ k: b, v: sum(IMP.filter(x => x.bloco === b), x => x.med[k].v) })).filter(x => x.v !== 0).sort((a, b) => b.v - a.v);
+    chart(p1.querySelector('canvas'), { type: 'bar', data: { labels: porBloco.map(x => trunc(x.k, 24)), datasets: [{ data: porBloco.map(x => x.v), backgroundColor: css('--azul'), borderRadius: 4 }] },
+      options: { indexAxis: 'y', scales: { x: { grid: { color: css('--linha2') }, ticks: { callback: v => fK(v) } }, y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 10.5 }, callback: function (v) { return this.getLabelForValue(v); } } } }, plugins: { tooltip: { callbacks: { label: c => ` ${fR0(c.parsed.x)}` } } }, datasets: { bar: { barPercentage: .7 } } } });
+    const coresImp = { 'ALTO IMPACTO': css('--seq6'), 'MÉDIO IMPACTO': css('--seq4'), 'BAIXO IMPACTO': css('--seq3'), 'SEM IMPACTO': css('--bg3') };
+    chart(p2.querySelector('canvas'), { type: 'doughnut', data: { labels: porImp.map(x => x.k), datasets: [{ data: porImp.map(x => Math.max(0, x.v)), backgroundColor: porImp.map(x => coresImp[x.k] || css('--ink3')), borderWidth: 2, borderColor: css('--bg') }] },
+      options: { cutout: '62%', scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 10, usePointStyle: true, generateLabels: ch => ch.data.labels.map((l, i) => ({ text: `${l}  ${fP(ch.data.datasets[0].data[i] / (totMed || 1))}`, fillStyle: ch.data.datasets[0].backgroundColor[i], strokeStyle: 'transparent', index: i })) } }, tooltip: { callbacks: { label: c => ` ${fR0(c.parsed)}` } } } } });
+    out.appendChild(sec('Resumo por classificação', '', tabela([{ t: 'Classificação', k: 'k' }, { t: 'Nº de itens', k: 'n', num: true, f: fN }, { t: 'Medido na medição (R$)', k: 'v', num: true, f: fR }, { t: '% da medição', k: r => totMed ? r.v / totMed : 0, num: true, f: v => pctBar(Math.max(0, v)) }], porImp, { semSort: true, total: (rs, c, i) => ['TOTAL', fN(sum(rs, r => r.n)), fR(totMed), fP(1)][i] })));
+    const rows = comMed.sort((a, b) => b.med[k].v - a.med[k].v);
+    out.appendChild(sec('Itens medidos na medição', `${rows.length} itens · EAP com código CPU`, tabela([
+      { t: 'Item', k: 'item', cls: 'mono', w: 74 }, { t: 'Descrição', k: 'desc', cls: 'desc', f: v => `<span title="${h(v)}">${h(trunc(v, 80))}</span>` },
+      { t: 'Bloco', k: 'bloco', f: v => h(trunc(v, 24)) }, { t: 'CPU', k: 'cpu', cls: 'mono' }, { t: 'Un', k: 'un' },
+      { t: 'Qtd contratada', k: 'qtd', num: true, f: fQ }, { t: 'Preço total (R$)', k: 'total', num: true, f: fR },
+      { t: 'Qtd na medição', k: r => r.med[k].q, num: true, f: fQ }, { t: 'Medido (R$)', k: r => r.med[k].v, num: true, neg: true, f: fR },
+      { t: '% da medição', k: r => totMed ? r.med[k].v / totMed : 0, num: true, f: v => fP(v) },
+      { t: 'Impacto', k: r => r.med[k].imp, f: v => v === 'ALTO IMPACTO' ? '<span class="tag crit">ALTO</span>' : v === 'BAIXO IMPACTO' ? '<span class="tag A">BAIXO</span>' : v ? `<span class="tag neu">${h(v.replace(' IMPACTO', ''))}</span>` : '' },
+    ], rows, { alto: true, total: (rs, c, i) => i === 0 ? 'TOTAL' : i === 8 ? fR(sum(rs, r => r.med[k].v)) : i === 6 ? fR(sum(rs, r => r.total)) : '' })));
+    out.appendChild(el('div', 'nota', 'Esta aba reproduz a aba OBRAS TP - MED, que cobre apenas o contrato inicial (não inclui os itens de opção de compra) e traz a EAP com código CPU e a classificação de impacto lançada a cada medição.'));
+  }
+  bind();
+}
+/* ---------- 9. COMPARATIVO SUPRESSÃO ---------- */
+function vSupressao(root) {
+  const SUP = D.supressao;
+  if (!SUP) { root.appendChild(el('div', 'painel', 'A planilha não trouxe a aba Comparativo Supressão.')); return; }
+  const S = STATE.sup ||= { g: SUP.linhas.map(l => l.puGramar) };
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  function bind() {
+    f.innerHTML = SUP.linhas.map((l, i) => `<label>Preço GRAMAR · ${h(trunc(l.desc, 28))} (R$/${h(l.un)})<input type="number" id="g${i}" value="${S.g[i]}" step="0.01"></label>`).join('') +
+      `<button class="btn pri" id="ok">Recalcular</button><span class="conta">BDI do contrato: ${fP(SUP.bdi)} · preços sem BDI para comparar com o custo do subcontratado</span>`;
+    f.querySelector('#ok').onclick = () => { SUP.linhas.forEach((l, i) => S.g[i] = +f.querySelector('#g' + i).value); draw(); };
+    draw();
+  }
+  function draw() {
+    destroyCharts(); out.innerHTML = '';
+    const L = SUP.linhas.map((l, i) => { const pg = S.g[i]; const dif = l.puSemBDI - pg;
+      return { ...l, pg, dif, difPct: l.puSemBDI ? dif / l.puSemBDI : 0,
+        vAcumOrc: l.acum * l.puSemBDI, vAcumGra: l.acum * pg, vSaldoOrc: l.saldo * l.puSemBDI, vSaldoGra: l.saldo * pg,
+        med: l.qtd.map(q => ({ q, orc: q * l.puSemBDI, gra: q * pg })) }; });
+    const acumOrc = sum(L, x => x.vAcumOrc), acumGra = sum(L, x => x.vAcumGra);
+    const saldoOrc = sum(L, x => x.vSaldoOrc), saldoGra = sum(L, x => x.vSaldoGra);
+    const mob = SUP.mobGramar || 0;
+    out.appendChild(el('div', 'kpis', [
+      kpi('Orçado sem BDI (acumulado)', fR0(acumOrc), 'quantidade medida × preço do contrato'),
+      kpi('Custo GRAMAR (acumulado)', fR0(acumGra), 'mesma quantidade × preço do subcontratado', 'ouro'),
+      kpi('Margem acumulada', fR0(acumOrc - acumGra), fP(acumOrc ? (acumOrc - acumGra) / acumOrc : 0) + ' sobre o orçado', acumOrc - acumGra >= 0 ? 'ok' : 'crit'),
+      kpi('Margem do saldo', fR0(saldoOrc - saldoGra), 'se o saldo for executado no mesmo preço'),
+      kpi('Margem com mobilização', fR0(acumOrc - acumGra - mob), `mobilização GRAMAR de ${fR0(mob)}`, (acumOrc - acumGra - mob) >= 0 ? 'ok' : 'crit'),
+    ].join('')));
+    out.appendChild(sec('Preços unitários', 'linha terceirizada da CPU × proposta do subcontratado', tabela([
+      { t: 'Item (linha terceirizada da CPU)', k: 'desc', cls: 'desc', f: v => h(trunc(v, 70)) }, { t: 'Un', k: 'un' },
+      { t: 'PU contrato com BDI (R$)', k: 'puComBDI', num: true, f: fR }, { t: 'PU contrato sem BDI (R$)', k: 'puSemBDI', num: true, f: fR },
+      { t: 'PU GRAMAR (R$)', k: 'pg', num: true, f: fR }, { t: 'Diferença (R$)', k: 'dif', num: true, f: v => `<span style="color:${v >= 0 ? 'var(--ok)' : 'var(--crit)'}">${fR(v)}</span>` },
+      { t: 'Margem (%)', k: 'difPct', num: true, f: v => fP(v) }, { t: 'Qtd acumulada', k: 'acum', num: true, f: fQ }, { t: 'Qtd saldo', k: 'saldo', num: true, f: fQ },
+    ], L, { semSort: true })));
+    const p = el('div', 'painel', `${legHTML([['Orçado sem BDI', css('--azul-claro')], ['Custo GRAMAR', css('--azul')]])}<div class="ch"><canvas></canvas></div>`);
+    out.appendChild(sec('Orçado × custo por medição', 'soma dos dois serviços de supressão', p));
+    const orc = BMS_OK.map((b, k) => sum(L, x => x.med[k].orc)), gra = BMS_OK.map((b, k) => sum(L, x => x.med[k].gra));
+    chart(p.querySelector('canvas'), { type: 'bar', data: { labels: BMS_OK.map(bmOrd), datasets: [{ label: 'Orçado sem BDI', data: orc, backgroundColor: css('--azul-claro'), borderRadius: 4 }, { label: 'Custo GRAMAR', data: gra, backgroundColor: css('--azul'), borderRadius: 4 }] }, options: { plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .8, categoryPercentage: .6 } } } });
+    L.forEach((l, i) => {
+      const rows = BMS_OK.map((b, k) => ({ bm: bmLabel(b), q: l.med[k].q, orc: l.med[k].orc, gra: l.med[k].gra, dif: l.med[k].orc - l.med[k].gra, fat: SUP.faturado[k] || '' }));
+      out.appendChild(sec(`${i + 1}. ${trunc(l.desc, 70)}`, `medição mês a mês · ${l.un}`, tabela([
+        { t: 'Medição', k: 'bm' }, { t: `Qtd medida (${l.un})`, k: 'q', num: true, f: fQ }, { t: 'Orçado sem BDI (R$)', k: 'orc', num: true, f: fR },
+        { t: 'Custo GRAMAR (R$)', k: 'gra', num: true, f: fR }, { t: 'Margem (R$)', k: 'dif', num: true, f: v => `<span style="color:${v >= 0 ? 'var(--ok)' : 'var(--crit)'}">${fR(v)}</span>` }, { t: 'Faturamento GRAMAR', k: 'fat' },
+      ], rows, { semSort: true, total: (rs, c, j) => ['ACUMULADO', fQ(l.acum), fR(l.vAcumOrc), fR(l.vAcumGra), fR(l.vAcumOrc - l.vAcumGra), ''][j] })));
+    });
+    const res = BMS_OK.map((b, k) => ({ bm: bmLabel(b), orc: orc[k], gra: gra[k], dif: orc[k] - gra[k], fat: SUP.faturado[k] || '' }));
+    out.appendChild(sec('Resumo por medição', 'os dois serviços somados, sem BDI', tabela([
+      { t: 'Medição', k: 'bm' }, { t: 'Valor medido sem BDI (R$)', k: 'orc', num: true, f: fR }, { t: 'Custo GRAMAR (R$)', k: 'gra', num: true, f: fR },
+      { t: 'Margem (R$)', k: 'dif', num: true, f: v => `<span style="color:${v >= 0 ? 'var(--ok)' : 'var(--crit)'}">${fR(v)}</span>` }, { t: 'Margem (%)', k: r => r.orc ? r.dif / r.orc : null, num: true, f: v => v === null ? '–' : fP(v) }, { t: 'Faturamento GRAMAR', k: 'fat' },
+    ], res, { semSort: true, total: (rs, c, i) => ['ACUMULADO', fR(acumOrc), fR(acumGra), fR(acumOrc - acumGra), fP(acumOrc ? (acumOrc - acumGra) / acumOrc : 0), ''][i] })));
+    out.appendChild(el('div', 'dica', `<b>Onde está a margem.</b> No acumulado, a supressão rende ${fR0(acumOrc - acumGra)} de margem sobre o custo do subcontratado (${fP(acumOrc ? (acumOrc - acumGra) / acumOrc : 0)}), e o saldo ainda por executar carrega mais ${fR0(saldoOrc - saldoGra)}. Descontada a mobilização de ${fR0(mob)}, o resultado acumulado hoje é ${fR0(acumOrc - acumGra - mob)}. Os preços comparados são sem BDI (${fP(SUP.bdi)}), porque o BDI cobre custos indiretos que não estão no preço do subcontratado.`));
+  }
+  bind();
+}
+
+/* ---------- 10. LINHA DO TEMPO ÔNIBUS ---------- */
+function vOnibus(root) {
+  const O = D.onibus;
+  if (!O) { root.appendChild(el('div', 'painel', 'A planilha não trouxe a aba Linha do Tempo Ônibus.')); return; }
+  const S = STATE.onibus ||= { prev: O.precoPrev, real: O.custoReal, extra: O.viagemExtra };
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  function bind() {
+    f.innerHTML = `<label>Preço contrato por ônibus·mês (R$)<input type="number" id="prev" value="${S.prev}" step="100"></label>
+      <label>Custo real por ônibus·mês (R$)<input type="number" id="real" value="${S.real}" step="100"></label>
+      <label>Custo da viagem extra (R$)<input type="number" id="extra" value="${S.extra}" step="10"></label>
+      <button class="btn pri" id="ok">Recalcular</button><span class="conta">meses já executados mantêm o valor real lançado na planilha</span>`;
+    f.querySelector('#ok').onclick = () => { S.prev = +f.querySelector('#prev').value; S.real = +f.querySelector('#real').value; S.extra = +f.querySelector('#extra').value; draw(); };
+    draw();
+  }
+  function draw() {
+    destroyCharts(); out.innerHTML = '';
+    let hp = 0, hr = 0;
+    const rows = O.meses.map(m => { const prev = m.qtd * S.prev; const real = m.real; const proj = m.qtd * S.real;
+      hp += prev; hr += (real ?? proj);
+      return { mes: m.mes, qtd: m.qtd, prev, real, proj, usado: real ?? proj, margem: prev - (real ?? proj), accPrev: hp, accReal: hr, exec: real !== null }; });
+    const execs = rows.filter(r => r.exec);
+    const prevExec = sum(execs, r => r.prev), realExec = sum(execs, r => r.usado);
+    const folga = S.prev - S.real, viagens = S.extra > 0 ? Math.floor(folga / S.extra) : 0;
+    out.appendChild(el('div', 'kpis', [
+      kpi('Ônibus·mês no contrato', fN(sum(O.meses, m => m.qtd)), `${fR0(sum(rows, r => r.prev))} previstos em 14 meses`),
+      kpi('Previsto nos meses executados', fR0(prevExec), `${execs.length} meses executados`),
+      kpi('Custo real nos executados', fR0(realExec), '', 'ouro'),
+      kpi('Margem realizada', fR0(prevExec - realExec), fP(prevExec ? (prevExec - realExec) / prevExec : 0) + ' sobre o previsto', prevExec - realExec >= 0 ? 'ok' : 'crit'),
+      kpi('Margem projetada total', fR0(sum(rows, r => r.margem)), 'mantendo o custo atual até o fim'),
+      kpi('Folga por ônibus·mês', fR0(folga), `cabem ${fN(viagens)} viagens extras`),
+    ].join('')));
+    const g = el('div', 'grid g2');
+    const p1 = el('div', 'painel', `<div class="sec-h"><h2>Previsto × real por mês</h2></div>${legHTML([['Previsto (contrato)', css('--azul-claro')], ['Real / projetado', css('--azul')]])}<div class="ch"><canvas></canvas></div>`);
+    const p2 = el('div', 'painel', `<div class="sec-h"><h2>Margem acumulada</h2><span class="sub">previsto acumulado − custo acumulado</span></div><div class="ch"><canvas></canvas></div>`);
+    g.append(p1, p2); out.appendChild(sec('Evolução', 'meses sem lançamento aparecem projetados pelo custo atual', g));
+    chart(p1.querySelector('canvas'), { type: 'bar', data: { labels: rows.map(r => r.mes), datasets: [{ label: 'Previsto', data: rows.map(r => r.prev), backgroundColor: css('--azul-claro'), borderRadius: 4 }, { label: 'Real / projetado', data: rows.map(r => r.usado), backgroundColor: rows.map(r => r.exec ? css('--azul') : css('--azul-tint2')), borderRadius: 4 }] }, options: { plugins: { tooltip: tipR }, datasets: { bar: { barPercentage: .8, categoryPercentage: .65 } } } });
+    chart(p2.querySelector('canvas'), { type: 'line', data: { labels: rows.map(r => r.mes), datasets: [{ data: rows.map(r => r.accPrev - r.accReal), borderColor: css('--ouro'), backgroundColor: css('--ouro-tint'), fill: true, borderWidth: 2, pointRadius: 3, pointBackgroundColor: css('--ouro'), tension: .2 }] }, options: { plugins: { tooltip: { callbacks: { label: c => ` Margem acumulada: ${fR0(c.parsed.y)}` } } } } });
+    out.appendChild(sec('Comparativo previsto × real', '', tabela([
+      { t: 'Mês', k: 'mes' }, { t: 'Ônibus (qtd)', k: 'qtd', num: true, f: fQ }, { t: 'Previsto (R$)', k: 'prev', num: true, f: fR },
+      { t: 'Real / projetado (R$)', k: 'usado', num: true, f: (v, r) => r.exec ? fR(v) : `<span style="color:var(--ink3)">${fR(v)}</span>` },
+      { t: 'Margem (R$)', k: 'margem', num: true, f: v => `<span style="color:${v >= 0 ? 'var(--ok)' : 'var(--crit)'}">${fR(v)}</span>` },
+      { t: 'Margem (%)', k: r => r.prev ? r.margem / r.prev : null, num: true, f: v => v === null ? '–' : fP(v) },
+      { t: 'Previsto acum. (R$)', k: 'accPrev', num: true, f: fR0 }, { t: 'Custo acum. (R$)', k: 'accReal', num: true, f: fR0 },
+      { t: 'Situação', k: r => r.exec ? (r.margem >= 0 ? 'Dentro' : 'Estourou') : 'A executar', f: v => v === 'Dentro' ? '<span class="tag ok">Dentro</span>' : v === 'Estourou' ? '<span class="tag crit">Estourou</span>' : '<span class="tag neu">A executar</span>' },
+    ], rows, { semSort: true, total: (rs, c, i) => ['TOTAL', fQ(sum(rs, r => r.qtd)), fR(sum(rs, r => r.prev)), fR(sum(rs, r => r.usado)), fR(sum(rs, r => r.margem)), fP(sum(rs, r => r.margem) / sum(rs, r => r.prev)), '', '', ''][i] })));
+    const sens = Array.from({ length: 9 }, (_, n) => ({ n, folga: folga - n * S.extra }));
+    const w = el('div', 'grid g2');
+    w.append(sec('Sensibilidade · viagens extras de fim de semana', 'quanto sobra da folga por ônibus·mês a cada viagem extra', tabela([{ t: 'Viagens extras', k: 'n', num: true, f: fN }, { t: 'Folga restante (R$)', k: 'folga', num: true, f: v => `<span style="color:${v >= 0 ? 'var(--ok)' : 'var(--crit)'}">${fR(v)}</span>` }], sens, { semSort: true })),
+      sec('Memória de cálculo', '', el('div', 'painel', `<dl class="dl" style="grid-template-columns:260px 1fr">
+        <dt>Preço contrato por ônibus·mês</dt><dd>${fR(S.prev)}</dd><dt>Custo real por ônibus·mês</dt><dd>${fR(S.real)}</dd>
+        <dt>Folga (margem) por ônibus·mês</dt><dd><b>${fR(folga)}</b></dd><dt>Custo da viagem extra</dt><dd>${fR(S.extra)}</dd>
+        <dt>Viagens extras que cabem na folga</dt><dd>${fN(viagens)}</dd><dt>Valor usado com essas viagens</dt><dd>${fR(viagens * S.extra)}</dd>
+        <dt>Folga residual</dt><dd>${fR(folga - viagens * S.extra)}</dd></dl>
+        <div class="nota">A folga é por ônibus·mês. Com ${fN(sum(O.meses, m => m.qtd))} ônibus·mês no contrato, a margem total projetada chega a ${fR0(sum(rows, r => r.margem))} se o custo atual se mantiver.</div>`)));
+    out.appendChild(w);
+  }
+  bind();
+}
+
+/* ---------- 11. ESTUDOS DE PROJEÇÃO ---------- */
+function vEstudo(root) {
+  const topo = [...IT].sort((a, b) => b.pt - a.pt).slice(0, 6);
+  const PRESETS = [...topo.map(i => ({ n: `${i.item} · ${trunc(i.desc, 44)}`, itens: [i.item] })), { n: 'Outro item (digite os códigos)', itens: [] }];
+  const S = STATE.est ||= { p: 0, custom: '', ritmo: '3', rv: 0, fim: 14 };
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  function bind() {
+    f.innerHTML = `<label>Estudo<select id="p">${PRESETS.map((p, i) => `<option value="${i}" ${S.p === i ? 'selected' : ''}>${h(p.n)}</option>`).join('')}</select></label>
+      ${S.p === PRESETS.length - 1 ? `<label>Códigos de item (separe por +)<input type="text" id="custom" value="${h(S.custom)}" placeholder="ex.: 1.2.1.3.1 + 1.2.1.1.1"></label>` : ''}
+      <label>Ritmo da projeção<select id="ritmo"><option value="3" ${S.ritmo === '3' ? 'selected' : ''}>Média das medições realizadas</option><option value="1" ${S.ritmo === '1' ? 'selected' : ''}>Última medição</option><option value="m" ${S.ritmo === 'm' ? 'selected' : ''}>Valor manual (R$/medição)</option></select></label>
+      ${S.ritmo === 'm' ? `<label>R$ por medição<input type="number" id="rv" value="${S.rv}" step="1000"></label>` : ''}
+      <label>Última medição do contrato<input type="number" id="fim" value="${S.fim}" min="${NR}" max="60"></label><button class="btn pri" id="ok">Recalcular</button>`;
+    f.querySelector('#p').onchange = e => { S.p = +e.target.value; bind(); };
+    f.querySelector('#ritmo').onchange = e => { S.ritmo = e.target.value; bind(); };
+    f.querySelector('#ok').onclick = () => { if (S.p === PRESETS.length - 1) S.custom = f.querySelector('#custom').value; if (S.ritmo === 'm') S.rv = +f.querySelector('#rv').value; S.fim = +f.querySelector('#fim').value; draw(); };
+    draw();
+  }
+  function draw() {
+    destroyCharts(); out.innerHTML = '';
+    const cods = S.p === PRESETS.length - 1 ? S.custom.split('+').map(s => s.trim()).filter(Boolean) : PRESETS[S.p].itens;
+    const L = IT.filter(i => cods.includes(i.item));
+    if (!L.length) { out.appendChild(el('div', 'painel', 'Nenhum item encontrado para os códigos informados.')); return; }
+    const t = tot(L);
+    const real = BMS_OK.map((b, k) => ({ bm: b, v: sum(L, i => i.bmv[k]), q: sum(L, i => i.bm[k]) }));
+    const media = sum(real, r => r.v) / NR, ultima = real[NR - 1].v;
+    const ritmo = S.ritmo === '3' ? media : S.ritmo === '1' ? ultima : S.rv;
+    const puMed = sum(L, i => i.pt) / (sum(L, i => i.qtd) || 1);
+    const rows = []; let acc = 0, saldo = t.pt;
+    real.forEach(r => { acc += r.v; saldo -= r.v; rows.push({ ...r, bm: bmOrd(r.bm), acc, saldo, sit: 'REALIZADO' }); });
+    let bmEsgota = null;
+    for (let n = NR + 1; n <= Math.max(S.fim, NR); n++) { const bm = `${n}ª Med.`;
+      if (saldo <= 0.005 || ritmo <= 0) { rows.push({ bm, v: 0, q: 0, acc, saldo: Math.max(0, saldo), sit: ritmo <= 0 ? 'SEM RITMO' : 'ESGOTADO' }); continue; }
+      const v = Math.min(ritmo, saldo); const parcial = v < ritmo - 0.005; acc += v; saldo -= v;
+      rows.push({ bm, v, q: v / puMed, acc, saldo, sit: parcial ? 'PARCIAL' : 'PROJEÇÃO' }); if (saldo <= 0.005 && !bmEsgota) bmEsgota = bm; }
+    const inteiras = ritmo > 0 ? Math.floor(t.vs / ritmo) : 0;
+    const restantes = Math.max(0, S.fim - NR), necessidade = ritmo * restantes, aditivo = Math.max(0, necessidade - t.vs);
+    out.appendChild(el('div', 'kpis', [kpi('Preço total dos itens', fR(t.pt), `${L.length} item(ns) · PU médio ${fR(puMed)}`),
+      kpi(`Medido até a ${bmOrd(BMS_OK[NR - 1])}`, fR(t.vm), fP(t.pt ? t.vm / t.pt : 0) + ' do total', 'ouro'),
+      kpi('Saldo atual', fR(t.vs), '', t.vs < 0 ? 'crit' : ''),
+      kpi('Ritmo adotado', fR0(ritmo) + '/med.', `média ${fK(media)} · última ${fK(ultima)}`),
+      kpi('Saldo esgota em', bmEsgota || (t.vs <= 0 ? 'já esgotado' : `após a ${S.fim}ª`), inteiras ? `dá para mais ${inteiras} medição(ões) integral(is)` : '', bmEsgota ? 'warn' : 'ok')].join('')));
+    const p = el('div', 'painel', `${legHTML([['Realizado', css('--azul')], ['Projeção', css('--azul-claro')], ['Parcial / esgotado', css('--warn')]])}<div class="ch"><canvas></canvas></div>`);
+    out.appendChild(sec('Linha do tempo · realizado + projeção', '', p));
+    chart(p.querySelector('canvas'), { type: 'bar', data: { labels: rows.map(r => r.bm), datasets: [{ data: rows.map(r => r.v), backgroundColor: rows.map(r => r.sit === 'REALIZADO' ? css('--azul') : r.sit === 'PROJEÇÃO' ? css('--azul-claro') : css('--warn')), borderRadius: 4, barPercentage: .6 }] }, options: { plugins: { tooltip: { callbacks: { label: c => ` ${fR0(c.parsed.y)} · ${rows[c.dataIndex].sit}` } } } } });
+    const sitTag = s => `<span class="tag ${s === 'REALIZADO' ? 'A' : s === 'PROJEÇÃO' ? 'B' : s === 'PARCIAL' ? 'warn' : 'neu'}">${s}</span>`;
+    out.appendChild(sec('Tabela da linha do tempo', '', tabela([{ t: 'Medição', k: 'bm' }, { t: 'Medido (R$)', k: 'v', num: true, f: fR }, { t: 'Saldo após (R$)', k: 'saldo', num: true, neg: true, f: fR }, { t: 'Acumulado (R$)', k: 'acc', num: true, f: fR }, { t: `Qtd (${h(L[0].un)})`, k: 'q', num: true, f: fQ }, { t: 'Situação', k: 'sit', f: sitTag }], rows, { semSort: true })));
+    const w = el('div', 'painel'); w.innerHTML = `<div class="sec-h"><h2>Estudo de aditivo · manter o ritmo até a ${S.fim}ª medição</h2></div><dl class="dl" style="grid-template-columns:320px 1fr">
+      <dt>Última medição realizada</dt><dd>${bmOrd(BMS_OK[NR - 1])}</dd><dt>Última medição do contrato</dt><dd>${S.fim}ª</dd><dt>Medições restantes</dt><dd>${restantes}</dd><dt>Ritmo mensal adotado</dt><dd>${fR(ritmo)}</dd>
+      <dt>Necessidade total (${restantes} medições)</dt><dd>${fR(necessidade)}</dd><dt>(−) Saldo atual disponível</dt><dd>${fR(t.vs)}</dd><dt><b>Aditivo necessário</b></dt><dd><b style="color:${aditivo > 0 ? 'var(--crit)' : 'var(--ok)'}">${fR(aditivo)}</b></dd>
+      <dt>Quantidade a aditivar</dt><dd>${fQ(aditivo / puMed)} ${h(L[0].un)}</dd><dt>% de acréscimo sobre o contratado</dt><dd>${fP(t.pt ? aditivo / t.pt : 0)}</dd><dt>Novo valor total com aditivo</dt><dd>${fR(t.pt + aditivo)}</dd></dl>
+      <div class="nota">Aditivo calculado como necessidade (ritmo × medições restantes) menos o saldo atual. Alçada de aprovação e limite de acréscimo contratual devem ser conferidos antes do pleito.</div>`;
+    out.appendChild(w);
+  }
+  bind();
+}
+
+/* ---------- init ---------- */
+(function () {
+  const m = document.getElementById('meta');
+  m.innerHTML = `<div><small>Medição atual</small><b>${h(bmOrd(BMS[ULT]))}</b></div><div><small>Itens</small><b>${fN(IT.length)}</b></div><div><small>Avanço</small><b>${fP(TOT.pct)}</b></div><div><small>Extraído em</small><b>${fmtData(D.meta.extraido_em)}</b></div>`;
+  try { const v = localStorage.getItem('tp.view'); if (v && VIEWS.some(x => x[0] === v)) STATE.view = v; } catch (e) { }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('drawer').classList.remove('on'); });
+  nav(); show();
+})();
+
+</script>
