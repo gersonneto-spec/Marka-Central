@@ -10,6 +10,7 @@
   --s-marka:#3871C1; --s-klog:#E07B39; --s-vca:#8C6BB1; --g1:#3871C1; --g2:#E07B39; --g3:#8C6BB1; --g4:#1BA39C; --g5:#B5A03A; --rec:#3871C1; --cus:#E07B39;
   --s-ct:#3871C1; --s-tac1:#8C6BB1; --s-tac2:#E07B39;
   --seq1:#E8F0FA; --seq2:#BFD3EE; --seq3:#8FB2DE; --seq4:#5A8ED0; --seq5:#3871C1; --seq6:#264F87;
+  --c1:#3871C1; --c2:#E07B39; --c3:#8C6BB1; --c4:#1BA39C; --c5:#B5A03A; --c6:#C2557A;
   --sombra:0 1px 2px rgba(31,41,51,.06),0 4px 12px rgba(31,41,51,.05);
 }
 @media (prefers-color-scheme: dark){
@@ -23,6 +24,7 @@
     --s-marka:#5B93D9; --s-klog:#E88A4D; --s-vca:#A98BD0; --g1:#5B93D9; --g2:#D95926; --g3:#9878C0; --g4:#17A093; --g5:#9A8A28; --rec:#5B93D9; --cus:#D95926;
     --s-ct:#5B93D9; --s-tac1:#A98BD0; --s-tac2:#E88A4D;
     --seq1:#1C2A3D; --seq2:#25385A; --seq3:#2F4C7C; --seq4:#3D66A5; --seq5:#5B93D9; --seq6:#8FB2DE;
+    --c1:#5B93D9; --c2:#D95926; --c3:#9878C0; --c4:#17A093; --c5:#9A8A28; --c6:#C2557A;
     --sombra:0 1px 2px rgba(0,0,0,.4);
   }
 }
@@ -36,7 +38,8 @@
   --s-marka:#5B93D9; --s-klog:#E88A4D; --s-vca:#A98BD0; --g1:#5B93D9; --g2:#D95926; --g3:#9878C0; --g4:#17A093; --g5:#9A8A28; --rec:#5B93D9; --cus:#D95926;
   --s-ct:#5B93D9; --s-tac1:#A98BD0; --s-tac2:#E88A4D;
   --seq1:#1C2A3D; --seq2:#25385A; --seq3:#2F4C7C; --seq4:#3D66A5; --seq5:#5B93D9; --seq6:#8FB2DE;
-  --sombra:0 1px 2px rgba(0,0,0,.4);
+  --c1:#5B93D9; --c2:#D95926; --c3:#9878C0; --c4:#17A093; --c5:#9A8A28; --c6:#C2557A;
+    --sombra:0 1px 2px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -149,6 +152,12 @@ td.mono{font-family:Consolas,Menlo,monospace;font-size:11.5px;white-space:nowrap
 .dl dd{margin:0}
 .rodape{margin-top:32px;padding-top:12px;border-top:2px solid var(--azul);font-size:11.5px;color:var(--ink3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 @media (max-width:760px){.topo{padding:12px 14px}.meta{margin-left:0}main{padding:12px 12px 40px}.kpi b{font-size:18px}}
+
+.leg-exp{font-size:12.3px;color:var(--ink2);background:var(--bg2);border-left:3px solid var(--azul);padding:8px 12px;border-radius:0 4px 4px 0;margin-bottom:12px}
+.leg-exp b{color:var(--ink)}
+.sel-lin{display:flex;gap:6px;flex-wrap:wrap}
+.sel-lin button{border:1px solid var(--linha);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:11.5px;cursor:pointer;color:var(--ink2)}
+.sel-lin button.on{background:var(--azul);border-color:var(--azul);color:#fff}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -249,6 +258,192 @@ function kpi(label, val, note, cls = '') { return `<div class="kpi ${cls}"><smal
 function selectHTML(id, label, opts, cur, all) { return `<label>${h(label)}<select id="${id}">${all ? `<option value="">${h(all)}</option>` : ''}${opts.map(o => `<option value="${h(o)}" ${o === cur ? 'selected' : ''}>${h(o)}</option>`).join('')}</select></label>`; }
 function seq(v, max) { const s = ['--seq1', '--seq2', '--seq3', '--seq4', '--seq5', '--seq6']; if (v <= 0 || max <= 0) return 'transparent'; const t = Math.min(1, v / max); return css(s[Math.min(5, Math.floor(t * 5.999))]); }
 function fmtData(s) { const [y, m, d] = s.split('-'); return `${d}/${m}/${y}`; }
+/* ====== biblioteca de gráficos ====== */
+/* =====================================================================
+   QUATRO FORMAS DE LEITURA · módulo comum aos painéis Marka
+   bump (ranking no tempo) · slope (dois momentos) · cascata (composição)
+   · histograma com densidade (distribuição)
+   Depende de: chart(), css(), fK(), fR0(), fP(), h(), el(), trunc(), sum()
+   ===================================================================== */
+const CAT6 = ['--c1', '--c2', '--c3', '--c4', '--c5', '--c6'];
+const corCat = i => css(CAT6[i % 6]);
+
+/* ---------- 1. BUMP · posição no ranking período a período ---------- */
+function bumpChart(canvas, series, labels, opt = {}) {
+  // series: [{nome, v:[...]}] — o ranking é recalculado em cada período
+  const N = labels.length, S = series.length;
+  const rank = series.map(() => new Array(N).fill(null));
+  for (let k = 0; k < N; k++) {
+    const ord = series.map((s, i) => ({ i, v: s.v[k] })).filter(x => x.v > 0).sort((a, b) => b.v - a.v);
+    ord.forEach((x, pos) => rank[x.i][k] = pos + 1);
+  }
+  const ds = series.map((s, i) => ({
+    label: s.nome, data: rank[i], borderColor: corCat(i), backgroundColor: corCat(i),
+    borderWidth: 2.5, pointRadius: 5, pointHoverRadius: 8, pointBorderColor: css('--bg'), pointBorderWidth: 2,
+    tension: 0, spanGaps: false,
+  }));
+  return chart(canvas, { type: 'line', data: { labels, datasets: ds }, options: {
+    scales: { y: { reverse: true, min: .5, max: S + .5, ticks: { stepSize: 1, callback: v => Number.isInteger(v) && v >= 1 && v <= S ? v + 'º' : '' }, title: { display: true, text: 'posição no ranking', color: css('--ink3') } },
+      x: { ticks: { maxRotation: 0, autoSkip: false, font: { size: 10 } } } },
+    plugins: { tooltip: { callbacks: {
+      title: c => labels[c[0].dataIndex],
+      label: c => ` ${c.parsed.y}º · ${c.dataset.label}: ${fK(series[c.datasetIndex].v[c.dataIndex])}` } } } } });
+}
+
+/* ---------- 2. SLOPE · o que mudou entre dois momentos ---------- */
+function slopeChart(canvas, linhas, rotA, rotB, opt = {}) {
+  // linhas: [{nome, a, b}] — dois pontos por linha
+  const fmt = opt.fmt || fK;
+  const ds = linhas.map((l, i) => {
+    const sobe = l.b >= l.a;
+    const c = opt.corPorSinal ? (sobe ? css('--crit') : css('--ok')) : corCat(i);
+    return { label: l.nome, data: [l.a, l.b], borderColor: c, backgroundColor: c, borderWidth: 2.5,
+      pointRadius: 6, pointHoverRadius: 9, pointBorderColor: css('--bg'), pointBorderWidth: 2, tension: 0 };
+  });
+  return chart(canvas, { type: 'line', data: { labels: [rotA, rotB], datasets: ds }, options: {
+    layout: { padding: { right: 12, left: 12 } },
+    scales: { x: { grid: { display: false }, ticks: { font: { size: 12, weight: '700' } } },
+      y: { ticks: { callback: v => fmt(v) } } },
+    plugins: { tooltip: { callbacks: {
+      label: c => ` ${c.dataset.label}: ${fmt(c.parsed.y)}`,
+      afterBody: c => { const l = linhas[c[0].datasetIndex]; const d = l.b - l.a;
+        return `variação ${d >= 0 ? '+' : ''}${fmt(d)}${l.a ? ` (${d / l.a >= 0 ? '+' : ''}${fP(d / l.a, 0)})` : ''}`; } } } } } });
+}
+
+/* ---------- 3. CASCATA · como se chega de um total a outro ---------- */
+function cascataChart(canvas, passos, opt = {}) {
+  // passos: [{nome, v, tipo:'inicio'|'delta'|'total'}]
+  const fmt = opt.fmt || fK;
+  let acum = 0; const flut = [], cores = [], valores = [];
+  for (const p of passos) {
+    if (p.tipo === 'inicio' || p.tipo === 'total') { const base = p.tipo === 'inicio' ? 0 : 0; const topo = p.tipo === 'inicio' ? p.v : acum;
+      flut.push([base, p.tipo === 'inicio' ? p.v : acum]); valores.push(p.tipo === 'inicio' ? p.v : acum);
+      cores.push(css('--azul-esc')); if (p.tipo === 'inicio') acum = p.v; }
+    else { const ini = acum; acum += p.v; flut.push([Math.min(ini, acum), Math.max(ini, acum)]); valores.push(p.v);
+      cores.push(p.v >= 0 ? css('--ok') : css('--c2')); }
+  }
+  return chart(canvas, { type: 'bar', data: { labels: passos.map(p => p.nome), datasets: [{ data: flut, backgroundColor: cores, borderRadius: 4, barPercentage: .7 }] },
+    options: { scales: { x: { ticks: { maxRotation: 30, minRotation: 0, autoSkip: false, font: { size: 10 } } }, y: { ticks: { callback: v => fmt(v) } } },
+      plugins: { tooltip: { callbacks: { label: c => { const p = passos[c.dataIndex];
+        return p.tipo === 'delta' ? ` ${p.v >= 0 ? 'entra' : 'sai'} ${fmt(Math.abs(p.v))}` : ` ${fmt(valores[c.dataIndex])}`; },
+        afterLabel: c => passos[c.dataIndex].nota || '' } } } } });
+}
+
+/* ---------- 4. HISTOGRAMA COM DENSIDADE ---------- */
+function kde(dados, grade, banda) {
+  // núcleo gaussiano; banda por regra de Silverman se não informada
+  const n = dados.length; if (!n) return grade.map(() => 0);
+  const media = sum(dados) / n;
+  const dp = Math.sqrt(sum(dados.map(x => (x - media) ** 2)) / n) || 1;
+  const ord = [...dados].sort((a, b) => a - b);
+  const q = p => ord[Math.min(n - 1, Math.max(0, Math.floor(p * (n - 1))))];
+  const iqr = q(.75) - q(.25);
+  const bw = banda || 0.9 * Math.min(dp, iqr / 1.349 || dp) * Math.pow(n, -0.2) || dp / 3;
+  return grade.map(x => sum(dados.map(d => Math.exp(-0.5 * ((x - d) / bw) ** 2))) / (n * bw * Math.sqrt(2 * Math.PI)));
+}
+function histogramaDensidade(canvas, dados, opt = {}) {
+  const nbins = opt.bins || Math.max(8, Math.min(24, Math.ceil(Math.sqrt(dados.length))));
+  const min = opt.min !== undefined ? opt.min : Math.min(...dados);
+  const max = opt.max !== undefined ? opt.max : Math.max(...dados);
+  const larg = (max - min) / nbins || 1;
+  const centros = [], contagem = new Array(nbins).fill(0);
+  for (let i = 0; i < nbins; i++) centros.push(min + larg * (i + .5));
+  for (const d of dados) { let i = Math.floor((d - min) / larg); if (i >= nbins) i = nbins - 1; if (i < 0) i = 0; contagem[i]++; }
+  // densidade na mesma unidade da contagem: dens × n × largura do bin
+  const dens = kde(dados, centros, opt.banda).map(v => v * dados.length * larg);
+  const fmt = opt.fmt || (v => v.toLocaleString('pt-BR', { maximumFractionDigits: 1 }));
+  return chart(canvas, { data: { labels: centros.map(c => fmt(c)), datasets: [
+      { type: 'bar', label: 'Itens no intervalo', data: contagem, backgroundColor: css('--azul-claro'), borderRadius: 3, barPercentage: 1, categoryPercentage: .92, order: 2 },
+      { type: 'line', label: 'Densidade', data: dens, borderColor: css('--ouro'), backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, tension: .35, order: 1 }] },
+    options: { scales: { x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10, font: { size: 10 } }, title: { display: !!opt.eixoX, text: opt.eixoX || '', color: css('--ink3') } },
+        y: { title: { display: true, text: 'nº de ocorrências', color: css('--ink3') } } },
+      plugins: { tooltip: { callbacks: {
+        title: c => `${opt.rotulo || 'faixa'} ≈ ${c[0].label}`,
+        label: c => c.dataset.type === 'bar' ? ` ${c.parsed.y} ocorrência(s)` : ` densidade ${c.parsed.y.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}` } } } } });
+}
+
+/* ---------- moldura explicativa de cada gráfico ---------- */
+function blocoGrafico(titulo, comoLer, quandoUsar, altura = 'ch alto') {
+  const p = el('div', 'painel');
+  p.innerHTML = `<div class="sec-h"><h2>${h(titulo)}</h2></div>
+    <div class="leg-exp"><b>Como ler:</b> ${comoLer}</div>
+    <div class="${altura}"><canvas></canvas></div>
+    <div class="nota"><b>Quando usar:</b> ${quandoUsar}</div>`;
+  return p;
+}
+
+/* ---------- ANÁLISES · quatro formas de leitura ---------- */
+function vAnalises(root) {
+  const MA = ATIVOS.map(k => MESES[k]);
+  const S = STATE.anal ||= { a: 0, b: MA.length - 1, dim: 'conta' };
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  const dims = { conta: 'Conta', grupo: 'Grupo' };
+  function bind() {
+    f.innerHTML = `<label>Ranking por<span class="sel-lin">${Object.entries(dims).map(([k, v]) => `<button class="${S.dim === k ? 'on' : ''}" data-d="${k}">${v}</button>`).join('')}</span></label>
+      ${selectHTML('a', 'Comparar de', MA, MA[S.a])}${selectHTML('b', 'até', MA, MA[S.b])}
+      <span class="conta">os dois meses valem para o gráfico de inclinação</span>`;
+    f.querySelectorAll('[data-d]').forEach(b => b.onclick = () => { S.dim = b.dataset.d; bind(); });
+    f.querySelector('#a').onchange = e => { S.a = MA.indexOf(e.target.value); draw(); };
+    f.querySelector('#b').onchange = e => { S.b = MA.indexOf(e.target.value); draw(); };
+    draw();
+  }
+  function draw() {
+    destroyCharts(); out.innerHTML = '';
+    const base = S.dim === 'conta' ? CONTAS.map(c => ({ k: c.conta, v: c.v, tot: c.tot })) : GRUPOS.map(g => ({ k: g.nome, v: g.v, tot: g.tot }));
+    const ord = [...base].sort((x, y) => y.tot - x.tot);
+    const top = ord.slice(0, 6);
+
+    // 1. BUMP
+    const b1 = blocoGrafico(`Ranking de custo por mês`,
+      `cada linha é ${S.dim === 'conta' ? 'uma conta' : 'um grupo'}; quanto mais alto, maior foi o custo naquele mês. Cruzamento de linhas significa troca de posição.`,
+      'para ver qual conta puxa o custo em cada mês e quando essa liderança muda. Mostra ordem, não tamanho: leia junto com a aba Mês a Mês.');
+    out.appendChild(sec('1 · Bump chart', `as ${top.length} maiores por custo acumulado`, b1));
+    bumpChart(b1.querySelector('canvas'), top.map(g => ({ nome: trunc(g.k, 28), v: ATIVOS.map(k => g.v[k]) })), MA);
+    out.appendChild(el('div', 'leg', top.map((g, i) => `<span><i style="background:${corCat(i)}"></i>${h(trunc(g.k, 34))}</span>`).join('')));
+
+    // 2. SLOPE
+    const ia = ATIVOS[S.a], ib = ATIVOS[S.b];
+    const linhas = GRUPOS.map(g => ({ nome: trunc(g.nome, 26), a: g.v[ia], b: g.v[ib] })).filter(r => r.a > 0 || r.b > 0).sort((x, y) => y.b - x.b);
+    const b2 = blocoGrafico(`Custo por grupo de ${MA[S.a]} para ${MA[S.b]}`,
+      'cada linha liga o custo do grupo nos dois meses. Linha subindo é grupo que cresceu; linha descendo é grupo que recuou.',
+      'para comparar a composição do custo em dois momentos sem a poluição da série cheia. Bom para justificar variação de margem.');
+    out.appendChild(sec('2 · Slope chart', 'custo mensal por grupo, em reais', b2));
+    slopeChart(b2.querySelector('canvas'), linhas, MA[S.a], MA[S.b], { fmt: fK });
+    out.appendChild(sec('', '', tabela([
+      { t: 'Grupo', k: 'nome' }, { t: MA[S.a], k: 'a', num: true, f: v => fR0(v) }, { t: MA[S.b], k: 'b', num: true, f: v => fR0(v) },
+      { t: 'Variação', k: r => r.b - r.a, num: true, f: v => `<span style="color:${v > 0 ? 'var(--crit)' : 'var(--ok)'}">${v > 0 ? '+' : '-'}${fR0(Math.abs(v))}</span>` },
+      { t: '%', k: r => r.a > 0 ? (r.b - r.a) / r.a : null, num: true, f: v => v === null ? '–' : fP(v, 0) },
+    ], linhas, { semSort: true })));
+
+    // 3. CASCATA
+    const gord = [...GRUPOS].sort((x, y) => y.tot - x.tot);
+    const passos = [{ nome: 'Receita bruta', v: T.rec, tipo: 'inicio' },
+      { nome: 'ISS', v: T.iss, nota: fP(Math.abs(T.iss) / T.rec) + ' da receita' },
+      ...gord.map(g => ({ nome: trunc(g.nome, 18), v: -g.tot, nota: `${fP(g.tot / T.custo)} do custo` })),
+      { nome: T.lucro >= 0 ? 'Lucro' : 'Prejuízo', v: 0, tipo: 'total' }];
+    const b3 = blocoGrafico('Da receita ao resultado',
+      'a barra azul da esquerda é a receita bruta; cada barra laranja é uma dedução (imposto ou grupo de custo); a barra azul da direita é o que sobra.',
+      'para mostrar à diretoria por onde o resultado foi construído, e não só quanto ele é. É a leitura mais direta de uma DRE.');
+    out.appendChild(sec('3 · Cascata', 'DRE acumulada do contrato', b3));
+    cascataChart(b3.querySelector('canvas'), passos, { fmt: fK });
+    out.appendChild(el('div', 'dica', `<b>Leitura.</b> Receita bruta de ${fR0(T.rec)} menos ISS de ${fR0(Math.abs(T.iss))} e custo de ${fR0(T.custo)} resulta em ${fR0(T.lucro)}, margem de ${fP(T.margem)} sobre a receita bruta.`));
+
+    // 4. HISTOGRAMA
+    const vals = []; for (const c of CONTAS) for (const k of ATIVOS) if (c.v[k] > 0) vals.push(c.v[k]);
+    vals.sort((a, b) => a - b);
+    const p95 = vals[Math.floor(vals.length * .95)] || 1;
+    const cort = vals.map(v => Math.min(v, p95));
+    const b4 = blocoGrafico('Distribuição do gasto mensal por conta',
+      'cada barra conta quantos lançamentos conta × mês caíram naquela faixa de valor; a linha dourada é a densidade, que suaviza o desenho e mostra onde a massa se concentra.',
+      'para separar o custo de rotina, que é a maioria dos lançamentos, dos poucos lançamentos grandes que decidem o mês. Serve de base para definir alçada de conferência.');
+    out.appendChild(sec('4 · Histograma com densidade', `${fN(vals.length)} lançamentos conta × mês com valor`, b4));
+    histogramaDensidade(b4.querySelector('canvas'), cort, { min: 0, max: p95, bins: 24, eixoX: `valor do lançamento no mês (limitado ao percentil 95 = ${fK(p95)})`, rotulo: 'valor', fmt: fK });
+    const grandes = vals.filter(v => v > p95).length, somaGr = sum(vals.filter(v => v > p95));
+    out.appendChild(el('div', 'dica', `<b>O que a distribuição mostra.</b> A massa dos lançamentos é pequena e repetitiva. Os ${fN(grandes)} lançamentos acima de ${fK(p95)} (${fP(grandes / vals.length)} do total) somam ${fR0(somaGr)}, ou ${fP(somaGr / T.custo)} do custo do contrato. É neles que a conferência de nota e medição precisa se concentrar.`));
+  }
+  bind();
+}
+
 /* =====================================================================
    VIEWS
    ===================================================================== */
@@ -256,6 +451,7 @@ const VIEWS = [
   ['resumo', 'Resumo', vResumo], ['dre', 'DRE Mensal', vDRE], ['grupos', 'Custo por Natureza', vGrupos],
   ['contas', 'Contas', vContas], ['mes', 'Relatório do Mês', vMes],
   ['material', 'Material e Fornecedores', vMaterial], ['concil', 'Conciliação de Fontes', vConcil],
+  ['anal', 'Análises', vAnalises],
 ];
 const STATE = { view: 'resumo' };
 function nav() {
