@@ -120,15 +120,15 @@ portal_corpo = """
     <a class="acao" href="medicao/">Abrir Medição</a>
   </div>
 
-  <div class="card prep">
-    <span class="tag prep">estrutura pronta</span>
+  <div class="card">
+    <span class="tag ativo">1 painel no ar</span>
     <h3>Cronogramas</h3>
-    <p class="desc">Análises de prazo: linha de base contra tendência, caminho crítico, marcos contratuais, curva de avanço e look ahead das frentes.</p>
+    <p class="desc">Evolução física e análises de prazo: apontamento de escavação do Trem de Passageiros, curva de avanço e produtividade por frente. Caminho crítico e look ahead entram com o cronograma da obra.</p>
     <div class="kpis">
-      <div><small>Painéis</small><b>0</b></div>
-      <div><small>Aguardando</small><b style="color:var(--ink2);font-size:13px">cronograma da obra</b></div>
+      <div><small>Painéis</small><b>1</b></div>
+      <div><small>Obra</small><b style="color:var(--ink2);font-size:13px">Trem de Passageiros</b></div>
     </div>
-    <a class="acao sec" href="cronogramas/">Ver o que entra aqui</a>
+    <a class="acao" href="cronogramas/">Abrir Cronogramas</a>
   </div>
 
   <div class="card">
@@ -199,9 +199,24 @@ medicao_corpo = """
 
 # ---------------------------------------------------- cronogramas (preparação)
 cron_corpo = """
-<p class="intro">Área reservada para as análises de prazo das obras. A estrutura está publicada e recebe os painéis assim que o cronograma for enviado, sem alterar o endereço desta página nem o restante da central.</p>
+<p class="intro">Análises de prazo e de evolução física das obras. O primeiro painel já está no ar; as demais análises entram nesta mesma página assim que o cronograma da obra for enviado, sem alterar endereços.</p>
 
-<div class="sec-h"><h2>O que entra aqui</h2><span class="sub">a partir do cronograma da obra em .xlsx, .mpp exportado ou PDF</span></div>
+<div class="sec-h"><h2>Painéis no ar</h2><span class="sub">1 painel publicado</span></div>
+<div class="cards g2">
+  <div class="card">
+    <span class="tag ativo">no ar</span>
+    <h3>Evolução da Escavação · Trem de Passageiros</h3>
+    <p class="desc">Apontamento diário de escavação de 07/07 a 05/09/2026, em volume líquido com desconto de 33% de empolamento. Painel gerencial com KPIs, curva de avanço, produtividade por talhão e DMT, mais a timeline animada para apresentação.</p>
+    <div class="kpis">
+      <div><small>Obra</small><b>Trem de Passageiros</b></div>
+      <div><small>Período</small><b>07/07 a 05/09</b></div>
+      <div><small>Volume</small><b class="ouro">líquido</b></div>
+    </div>
+    <a class="acao" href="escavacao-trem/">Abrir painel</a>
+  </div>
+</div>
+
+<div class="sec-h"><h2>Em preparação</h2><span class="sub">a partir do cronograma da obra em .xlsx, .mpp exportado ou PDF</span></div>
 <div class="cards">
   <div class="card prep"><h3>Linha de base × tendência</h3><p class="desc">Comparação entre a revisão aprovada e a data projetada de cada atividade, com o desvio em dias e o impacto nos marcos contratuais.</p></div>
   <div class="card prep"><h3>Caminho crítico</h3><p class="desc">Atividades que determinam a data de conclusão, folga de cada frente e as amarrações que travam o avanço.</p></div>
@@ -209,11 +224,11 @@ cron_corpo = """
   <div class="card prep"><h3>Look ahead</h3><p class="desc">Programação das próximas semanas por frente, com pendências de liberação de área, projeto e material.</p></div>
 </div>
 
-<div class="sec-h"><h2>Para publicar o primeiro painel</h2></div>
+<div class="sec-h"><h2>Para publicar as análises de prazo</h2></div>
 <ol class="passos">
   <li><b>Envie o cronograma</b> da obra, na revisão vigente. Cronograma com linha de base e percentual realizado permite montar as quatro análises acima; sem linha de base, saem apenas as duas primeiras.</li>
   <li><b>Confirme os marcos contratuais</b> que precisam aparecer em destaque, como entrega de frente, liberação de área e datas de medição.</li>
-  <li><b>O painel entra nesta página</b> com o mesmo padrão dos painéis de medição, e o link desta seção já pode ser divulgado desde agora.</li>
+  <li><b>O painel entra nesta mesma página</b> com o mesmo padrão dos painéis de medição, e o link desta seção já pode ser divulgado desde agora.</li>
 </ol>
 """
 
@@ -257,10 +272,52 @@ dre_corpo = """
 <p class="nota">Confidencialidade: esta central está publicada em repositório público, e custo e margem são dados mais sensíveis que medição. Se o acesso precisar ser restrito, esta área pode ser movida para repositório privado sem alterar as demais.</p>
 """
 
+# ------------------------------------------------ escavação Trem de Passageiros
+esc_corpo = """
+<p class="intro">Acompanhamento gerencial da escavação da obra do Trem de Passageiros, montado a partir do apontamento diário de produção. Os dois painéis abaixo leem a mesma base: o painel gerencial para leitura de números e a timeline para apresentação.</p>
+
+<div class="sec-h"><h2>Painéis</h2><span class="sub">abrem em tela cheia, sem instalação</span></div>
+<div class="cards g2">
+
+  <div class="card">
+    <span class="tag ativo">no ar</span>
+    <h3>Painel gerencial</h3>
+    <p class="desc">KPIs de volume, curva de avanço, filtros por material e por destino, produtividade por talhão, calendário de dias úteis e análise de DMT.</p>
+    <div class="kpis">
+      <div><small>Período</small><b>07/07 a 05/09</b></div>
+      <div><small>Empolamento</small><b class="ouro">33%</b></div>
+    </div>
+    <a class="acao" href="painel-escavacao.html">Abrir painel gerencial</a>
+  </div>
+
+  <div class="card">
+    <span class="tag ativo">no ar</span>
+    <h3>Timeline animada</h3>
+    <p class="desc">A evolução dia a dia em 53 segundos, com anotações nos marcos do período e a projeção até a data-meta. Feita para abrir em reunião.</p>
+    <div class="kpis">
+      <div><small>Duração</small><b>53 s</b></div>
+      <div><small>Base</small><b style="color:var(--ink2);font-size:13px">apontamento diário</b></div>
+    </div>
+    <a class="acao" href="timeline-escavacao.html">Abrir timeline</a>
+  </div>
+
+</div>
+
+<div class="sec-h"><h2>Base de dados</h2><span class="sub">o que alimenta os dois painéis</span></div>
+<div class="lista">
+  <div class="li"><div class="txt"><b>Apontamento diário de escavação</b><span>Volume por dia, talhão, material e destino, de 07/07/2026 a 05/09/2026.</span></div></div>
+  <div class="li"><div class="txt"><b>Volume líquido</b><span>Todo volume exibido já está com o desconto de 33% de empolamento aplicado sobre o volume solto medido em caminhão.</span></div></div>
+  <div class="li"><div class="txt"><b>Dias úteis</b><span>O calendário do painel separa dias produtivos de paradas, o que sustenta a produtividade média e a projeção de término.</span></div></div>
+</div>
+
+<p class="nota">Para atualizar: envie o apontamento com os dias novos. Os painéis são regerados e substituídos nesta pasta, e o endereço desta página não muda.</p>
+"""
+
 PAGS = [
     ("index.html", pagina("Marka Central", "Painéis gerenciais de obra · " + RODAPE_OBRA, portal_corpo, tit_tag="Marka Central")),
     ("medicao/index.html", pagina("Medição", "Boletins de medição por contrato · " + RODAPE_OBRA, medicao_corpo, volta=("../", "← Marka Central"), tit_tag="Medição · Marka Central")),
     ("cronogramas/index.html", pagina("Cronogramas", "Análises de prazo · " + RODAPE_OBRA, cron_corpo, volta=("../", "← Marka Central"), tit_tag="Cronogramas · Marka Central")),
+    ("cronogramas/escavacao-trem/index.html", pagina("Evolução da Escavação · Trem de Passageiros", "Apontamento de produção · 07/07 a 05/09/2026 · volume líquido com desconto de 33% de empolamento", esc_corpo, volta=("../", "← Cronogramas"), tit_tag="Evolução da Escavação · Marka Central")),
     ("dre/index.html", pagina("DRE e Custos", "Resultado dos contratos · " + RODAPE_OBRA, dre_corpo, volta=("../", "← Marka Central"), tit_tag="DRE e Custos · Marka Central")),
 ]
 

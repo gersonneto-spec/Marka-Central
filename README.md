@@ -9,7 +9,7 @@ Central de painéis gerenciais das obras da Marka Engenharia Ltda no Terminal Fe
 | Área | Conteúdo | Situação |
 |---|---|---|
 | [Medição](medicao/) | Boletins de medição por contrato | 2 painéis publicados |
-| [Cronogramas](cronogramas/) | Análises de prazo, caminho crítico, curva de avanço | estrutura pronta |
+| [Cronogramas](cronogramas/) | Evolução física de escavação, análises de prazo, curva de avanço | 1 painel publicado |
 | [DRE e Custos](dre/) | Resultado por contrato, custo por natureza, material por fornecedor | 1 painel publicado |
 
 ## Painéis de medição
@@ -18,6 +18,23 @@ Central de painéis gerenciais das obras da Marka Engenharia Ltda no Terminal Fe
 |---|---|---|
 | [Medição OCG](medicao/ocg/) | RT-2180KF-G-17251 · Obra 754 | `Medição OCG.xlsx`, aba QQP |
 | [Medição TP](medicao/trem/) | PQ-2180KF-G-10017 · L9057 | `Medição Trem de Passageiros.xlsx`, aba QQP |
+
+## Painel de cronogramas
+
+| Painel | Obra | Base |
+|---|---|---|
+| [Evolução da Escavação · Trem de Passageiros](cronogramas/escavacao-trem/) | PQ-2180KF-G-10017 · L9057 | apontamento diário de escavação, 07/07 a 05/09/2026 |
+
+A pasta traz dois arquivos independentes e autocontidos, sem script de extração:
+
+```
+cronogramas/escavacao-trem/
+├── index.html                 índice do painel
+├── painel-escavacao.html      painel gerencial (KPIs, curva, talhão, DMT)
+└── timeline-escavacao.html    timeline animada de 53 s
+```
+
+Volume sempre líquido, com desconto de 33% de empolamento sobre o volume solto medido em caminhão. Para atualizar, substitua os dois arquivos `.html` da pasta; o endereço não muda.
 
 ## Painel de DRE e custos
 
@@ -55,7 +72,9 @@ Marka-Central/
 │   ├── index.html          índice da área
 │   ├── ocg/                painel + scripts de extração
 │   └── trem/               painel + scripts de extração
-├── cronogramas/            estrutura pronta
+├── cronogramas/
+│   ├── index.html          índice da área
+│   └── escavacao-trem/     painel gerencial + timeline de escavação
 └── dre/
     ├── index.html          índice da área
     └── 754/                painel + scripts de extração
