@@ -206,7 +206,7 @@ cron_corpo = """
   <div class="card">
     <span class="tag ativo">no ar</span>
     <h3>Evolução da Escavação · Trem de Passageiros</h3>
-    <p class="desc">Apontamento diário de escavação de 07/07 a 05/09/2026, em volume líquido com desconto de 33% de empolamento. Painel gerencial com KPIs, curva de avanço, produtividade por talhão e DMT, mais a timeline animada para apresentação.</p>
+    <p class="desc">Apontamento diário de escavação de 07/07 a 05/09/2026, em volume líquido com desconto de 33% de empolamento. Painel gerencial com KPIs, curva de avanço, produtividade por talhão e DMT, mais duas versões da timeline para apresentação.</p>
     <div class="kpis">
       <div><small>Obra</small><b>Trem de Passageiros</b></div>
       <div><small>Período</small><b>07/07 a 05/09</b></div>
@@ -274,10 +274,10 @@ dre_corpo = """
 
 # ------------------------------------------------ escavação Trem de Passageiros
 esc_corpo = """
-<p class="intro">Acompanhamento gerencial da escavação da obra do Trem de Passageiros, montado a partir do apontamento diário de produção. Os dois painéis abaixo leem a mesma base: o painel gerencial para leitura de números e a timeline para apresentação.</p>
+<p class="intro">Acompanhamento gerencial da escavação da obra do Trem de Passageiros, montado a partir do apontamento diário de produção. Os três painéis abaixo leem a mesma base: o painel gerencial para leitura de números e duas versões da timeline para apresentação.</p>
 
 <div class="sec-h"><h2>Painéis</h2><span class="sub">abrem em tela cheia, sem instalação</span></div>
-<div class="cards g2">
+<div class="cards">
 
   <div class="card">
     <span class="tag ativo">no ar</span>
@@ -292,13 +292,24 @@ esc_corpo = """
 
   <div class="card">
     <span class="tag ativo">no ar</span>
-    <h3>Timeline animada</h3>
-    <p class="desc">A evolução dia a dia em 53 segundos, com anotações nos marcos do período e a projeção até a data-meta. Feita para abrir em reunião.</p>
+    <h3>Timeline · versão palco</h3>
+    <p class="desc">A evolução do período em 64 segundos, em fundo escuro e uma estatística por momento. Feita para projeção em auditório.</p>
+    <div class="kpis">
+      <div><small>Duração</small><b>64 s</b></div>
+      <div><small>Uso</small><b style="color:var(--ink2);font-size:13px">auditório</b></div>
+    </div>
+    <a class="acao" href="timeline-palco.html">Abrir versão palco</a>
+  </div>
+
+  <div class="card">
+    <span class="tag ativo">no ar</span>
+    <h3>Timeline · versão clara</h3>
+    <p class="desc">A mesma evolução em fundo branco, com as anotações dos marcos do período. Indicada para telão claro e para impressão de quadros.</p>
     <div class="kpis">
       <div><small>Duração</small><b>53 s</b></div>
-      <div><small>Base</small><b style="color:var(--ink2);font-size:13px">apontamento diário</b></div>
+      <div><small>Uso</small><b style="color:var(--ink2);font-size:13px">telão claro</b></div>
     </div>
-    <a class="acao" href="timeline-escavacao.html">Abrir timeline</a>
+    <a class="acao" href="timeline-escavacao.html">Abrir versão clara</a>
   </div>
 
 </div>
@@ -307,7 +318,7 @@ esc_corpo = """
 <div class="lista">
   <div class="li"><div class="txt"><b>Apontamento diário de escavação</b><span>Volume por dia, talhão, material e destino, de 07/07/2026 a 05/09/2026.</span></div></div>
   <div class="li"><div class="txt"><b>Volume líquido</b><span>Todo volume exibido já está com o desconto de 33% de empolamento aplicado sobre o volume solto medido em caminhão.</span></div></div>
-  <div class="li"><div class="txt"><b>Dias úteis</b><span>O calendário do painel separa dias produtivos de paradas, o que sustenta a produtividade média e a projeção de término.</span></div></div>
+  <div class="li"><div class="txt"><b>Dias úteis do contrato</b><span>Segunda, terça, quinta, sexta e sábado. O calendário do painel separa dias produtivos de paradas, o que sustenta a produtividade média e a projeção de término.</span></div></div>
 </div>
 
 <p class="nota">Para atualizar: envie o apontamento com os dias novos. Os painéis são regerados e substituídos nesta pasta, e o endereço desta página não muda.</p>
