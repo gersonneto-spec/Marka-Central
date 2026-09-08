@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evolução da Escavação · Marka Central</title>
+<style>
+:root{color-scheme:light;
+ --azul:#3871C1;--azul-esc:#2B5A9B;--azul-claro:#8FB2DE;--azul-tint:#E8F0FA;--azul-tint2:#D3E1F3;
+ --cinza:#656263;--ouro:#C9A84C;--ouro-tint:#F7F1DF;
+ --bg:#FFFFFF;--bg2:#F4F6F9;--bg3:#EBEFF5;--linha:#D0D7E3;--linha2:#E4E9F0;
+ --ink:#1F2933;--ink2:#656263;--ink3:#8A8F98;
+ --ok:#2E7D32;--warn:#B25E00;--crit:#C62828;
+ --sombra:0 1px 2px rgba(31,41,51,.06),0 4px 14px rgba(31,41,51,.06);}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+ --azul:#5B93D9;--azul-esc:#3871C1;--azul-claro:#7FA6D6;--azul-tint:#1C2A3D;--azul-tint2:#25385A;
+ --cinza:#B4B7BC;--ouro:#D6B75F;--ouro-tint:#2E2A1C;
+ --bg:#15181D;--bg2:#1C2026;--bg3:#242930;--linha:#353B45;--linha2:#2A3038;
+ --ink:#EEF1F5;--ink2:#B4B7BC;--ink3:#848A94;
+ --ok:#66BB6A;--warn:#F5A623;--crit:#EF5350;--sombra:0 1px 2px rgba(0,0,0,.4);}}
+:root[data-theme="dark"]{color-scheme:dark;
+ --azul:#5B93D9;--azul-esc:#3871C1;--azul-claro:#7FA6D6;--azul-tint:#1C2A3D;--azul-tint2:#25385A;
+ --cinza:#B4B7BC;--ouro:#D6B75F;--ouro-tint:#2E2A1C;
+ --bg:#15181D;--bg2:#1C2026;--bg3:#242930;--linha:#353B45;--linha2:#2A3038;
+ --ink:#EEF1F5;--ink2:#B4B7BC;--ink3:#848A94;
+ --ok:#66BB6A;--warn:#F5A623;--crit:#EF5350;--sombra:0 1px 2px rgba(0,0,0,.4);}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:var(--bg2);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;font-variant-numeric:tabular-nums}
+a{color:var(--azul);text-decoration:none}a:hover{text-decoration:underline}
+h1,h2,h3{margin:0;text-wrap:balance}
+.topo{background:#3871C1;color:#fff;padding:16px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.marca{display:flex;flex-direction:column;line-height:1;padding-right:22px;border-right:1px solid rgba(255,255,255,.35)}
+.marca b{font-size:26px;letter-spacing:.12em;font-weight:900}
+.marca span{font-size:9px;letter-spacing:.34em;margin-top:5px;opacity:.9}
+.titulo h1{font-size:20px;font-weight:700}
+.titulo p{margin:3px 0 0;font-size:12.5px;opacity:.92}
+.topo .volta{margin-left:auto;font-size:12.5px;color:#fff;border:1px solid rgba(255,255,255,.5);padding:6px 12px;border-radius:4px}
+.topo .volta:hover{background:rgba(255,255,255,.12);text-decoration:none}
+main{max-width:1180px;margin:0 auto;padding:26px 24px 56px}
+.intro{font-size:14.5px;color:var(--ink2);max-width:70ch;margin-bottom:24px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin:30px 0 12px}
+.sec-h h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--azul);font-weight:700}
+.sec-h .sub{font-size:12.5px;color:var(--ink3)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.cards.g2{grid-template-columns:repeat(auto-fit,minmax(430px,1fr))}
+.card{background:var(--bg);border:1px solid var(--linha);border-top:4px solid var(--azul);border-radius:6px;padding:18px 20px 20px;box-shadow:var(--sombra);display:flex;flex-direction:column;gap:10px}
+.card.prep{border-top-color:var(--linha)}
+.card h3{font-size:16px;color:var(--ink)}
+.card .desc{font-size:13px;color:var(--ink2);flex:1}
+.card .kpis{display:flex;gap:18px;flex-wrap:wrap;padding-top:4px;border-top:1px solid var(--linha2)}
+.kpis div{display:flex;flex-direction:column;gap:2px}
+.kpis small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);line-height:1.3}
+.kpis b{font-size:15px;color:var(--azul);line-height:1.2}
+.kpis b.ouro{color:var(--ouro)}
+.acao{display:inline-block;background:var(--azul);color:#fff;padding:8px 14px;border-radius:4px;font-size:13px;font-weight:700;align-self:flex-start}
+.acao:hover{background:var(--azul-esc);text-decoration:none}
+.acao.sec{background:transparent;color:var(--azul);border:1px solid var(--azul)}
+.tag{display:inline-block;padding:3px 9px;border-radius:3px;font-size:10.5px;font-weight:700;letter-spacing:.06em}
+.tag.ativo{background:var(--azul-tint);color:var(--azul-esc)}
+.tag.prep{background:var(--bg3);color:var(--ink2)}
+.lista{background:var(--bg);border:1px solid var(--linha);border-radius:6px;padding:4px 0;box-shadow:var(--sombra)}
+.lista .li{display:flex;gap:14px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--linha2);flex-wrap:wrap}
+.lista .li:last-child{border-bottom:0}
+.lista .li .txt{flex:1;min-width:240px}
+.lista .li .txt b{display:block;font-size:14.5px}
+.lista .li .txt span{font-size:12.5px;color:var(--ink2)}
+.passos{counter-reset:p;padding:0;margin:0;list-style:none}
+.passos li{counter-increment:p;position:relative;padding:0 0 14px 34px;font-size:13.5px;color:var(--ink2)}
+.passos li::before{content:counter(p);position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:var(--azul-tint);color:var(--azul-esc);font-weight:700;font-size:11.5px;display:flex;align-items:center;justify-content:center}
+.passos li b{color:var(--ink)}
+.nota{font-size:12.5px;color:var(--ink3);margin-top:14px}
+code{background:var(--bg3);padding:2px 6px;border-radius:3px;font-size:12.5px}
+.rodape{max-width:1180px;margin:0 auto;padding:14px 24px 40px;border-top:2px solid var(--azul);font-size:12px;color:var(--ink3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media (max-width:700px){.topo{padding:14px 16px}main{padding:18px 14px 40px}}
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="marca"><b>MARKA</b><span>ENGENHARIA</span></div>
+  <div class="titulo"><h1>Evolução da Escavação · Trem de Passageiros</h1><p>Apontamento de produção · 07/07 a 05/09/2026 · volume líquido com desconto de 33% de empolamento</p></div>
+  <a class="volta" href="../">← Cronogramas</a>
+</header>
+<main>
+
+<p class="intro">Acompanhamento gerencial da escavação da obra do Trem de Passageiros, montado a partir do apontamento diário de produção. Os dois painéis abaixo leem a mesma base: o painel gerencial para leitura de números e a timeline para apresentação.</p>
+
+<div class="sec-h"><h2>Painéis</h2><span class="sub">abrem em tela cheia, sem instalação</span></div>
+<div class="cards g2">
+
+  <div class="card">
+    <span class="tag ativo">no ar</span>
+    <h3>Painel gerencial</h3>
+    <p class="desc">KPIs de volume, curva de avanço, filtros por material e por destino, produtividade por talhão, calendário de dias úteis e análise de DMT.</p>
+    <div class="kpis">
+      <div><small>Período</small><b>07/07 a 05/09</b></div>
+      <div><small>Empolamento</small><b class="ouro">33%</b></div>
+    </div>
+    <a class="acao" href="painel-escavacao.html">Abrir painel gerencial</a>
+  </div>
+
+  <div class="card">
+    <span class="tag ativo">no ar</span>
+    <h3>Timeline animada</h3>
+    <p class="desc">A evolução dia a dia em 53 segundos, com anotações nos marcos do período e a projeção até a data-meta. Feita para abrir em reunião.</p>
+    <div class="kpis">
+      <div><small>Duração</small><b>53 s</b></div>
+      <div><small>Base</small><b style="color:var(--ink2);font-size:13px">apontamento diário</b></div>
+    </div>
+    <a class="acao" href="timeline-escavacao.html">Abrir timeline</a>
+  </div>
+
+</div>
+
+<div class="sec-h"><h2>Base de dados</h2><span class="sub">o que alimenta os dois painéis</span></div>
+<div class="lista">
+  <div class="li"><div class="txt"><b>Apontamento diário de escavação</b><span>Volume por dia, talhão, material e destino, de 07/07/2026 a 05/09/2026.</span></div></div>
+  <div class="li"><div class="txt"><b>Volume líquido</b><span>Todo volume exibido já está com o desconto de 33% de empolamento aplicado sobre o volume solto medido em caminhão.</span></div></div>
+  <div class="li"><div class="txt"><b>Dias úteis</b><span>O calendário do painel separa dias produtivos de paradas, o que sustenta a produtividade média e a projeção de término.</span></div></div>
+</div>
+
+<p class="nota">Para atualizar: envie o apontamento com os dias novos. Os painéis são regerados e substituídos nesta pasta, e o endereço desta página não muda.</p>
+
+</main>
+<footer class="rodape"><span>Marka Engenharia Ltda · Coordenação de Obras · TFPM · São Luís, MA</span><span>Atualizado em 08/09/2026</span></footer>
+</body>
+</html>
