@@ -1,0 +1,481 @@
+<title>Curvas de Produção · Trem de Passageiros</title>
+<style>
+:root{
+  color-scheme:light;
+  --azul:#3871C1; --azul-esc:#2B5A9B; --azul-claro:#8FB2DE; --azul-tint:#E8F0FA; --azul-tint2:#D3E1F3;
+  --cinza:#656263; --ouro:#C9A84C; --ouro-tint:#F7F1DF;
+  --bg:#FFFFFF; --bg2:#F4F6F9; --bg3:#EBEFF5; --linha:#D0D7E3; --linha2:#E4E9F0;
+  --ink:#1F2933; --ink2:#656263; --ink3:#8A8F98;
+  --ok:#2E7D32; --ok-tint:#E6F2E7; --warn:#B25E00; --warn-tint:#FDF1E1; --crit:#C62828; --crit-tint:#FBE9E9;
+  --s-marka:#3871C1; --s-klog:#E07B39; --s-vca:#8C6BB1; --g1:#3871C1; --g2:#E07B39; --g3:#8C6BB1; --g4:#1BA39C; --g5:#B5A03A; --rec:#3871C1; --cus:#E07B39;
+  --s-ct:#3871C1; --s-tac1:#8C6BB1; --s-tac2:#E07B39;
+  --seq1:#E8F0FA; --seq2:#BFD3EE; --seq3:#8FB2DE; --seq4:#5A8ED0; --seq5:#3871C1; --seq6:#264F87;
+  --c1:#3871C1; --c2:#E07B39; --c3:#8C6BB1; --c4:#1BA39C; --c5:#B5A03A; --c6:#C2557A;
+  --sombra:0 1px 2px rgba(31,41,51,.06),0 4px 12px rgba(31,41,51,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --azul:#5B93D9; --azul-esc:#3871C1; --azul-claro:#7FA6D6; --azul-tint:#1C2A3D; --azul-tint2:#25385A;
+    --cinza:#B4B7BC; --ouro:#D6B75F; --ouro-tint:#2E2A1C;
+    --bg:#15181D; --bg2:#1C2026; --bg3:#242930; --linha:#353B45; --linha2:#2A3038;
+    --ink:#EEF1F5; --ink2:#B4B7BC; --ink3:#848A94;
+    --ok:#66BB6A; --ok-tint:#1B2E1D; --warn:#F5A623; --warn-tint:#33270F; --crit:#EF5350; --crit-tint:#3A1C1C;
+    --s-marka:#5B93D9; --s-klog:#E88A4D; --s-vca:#A98BD0; --g1:#5B93D9; --g2:#D95926; --g3:#9878C0; --g4:#17A093; --g5:#9A8A28; --rec:#5B93D9; --cus:#D95926;
+    --s-ct:#5B93D9; --s-tac1:#A98BD0; --s-tac2:#E88A4D;
+    --seq1:#1C2A3D; --seq2:#25385A; --seq3:#2F4C7C; --seq4:#3D66A5; --seq5:#5B93D9; --seq6:#8FB2DE;
+    --c1:#5B93D9; --c2:#D95926; --c3:#9878C0; --c4:#17A093; --c5:#9A8A28; --c6:#C2557A;
+    --sombra:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --azul:#5B93D9; --azul-esc:#3871C1; --azul-claro:#7FA6D6; --azul-tint:#1C2A3D; --azul-tint2:#25385A;
+  --cinza:#B4B7BC; --ouro:#D6B75F; --ouro-tint:#2E2A1C;
+  --bg:#15181D; --bg2:#1C2026; --bg3:#242930; --linha:#353B45; --linha2:#2A3038;
+  --ink:#EEF1F5; --ink2:#B4B7BC; --ink3:#848A94;
+  --ok:#66BB6A; --ok-tint:#1B2E1D; --warn:#F5A623; --warn-tint:#33270F; --crit:#EF5350; --crit-tint:#3A1C1C;
+  --s-marka:#5B93D9; --s-klog:#E88A4D; --s-vca:#A98BD0; --g1:#5B93D9; --g2:#D95926; --g3:#9878C0; --g4:#17A093; --g5:#9A8A28; --rec:#5B93D9; --cus:#D95926;
+  --s-ct:#5B93D9; --s-tac1:#A98BD0; --s-tac2:#E88A4D;
+  --seq1:#1C2A3D; --seq2:#25385A; --seq3:#2F4C7C; --seq4:#3D66A5; --seq5:#5B93D9; --seq6:#8FB2DE;
+  --c1:#5B93D9; --c2:#D95926; --c3:#9878C0; --c4:#17A093; --c5:#9A8A28; --c6:#C2557A;
+    --sombra:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg2);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.45;font-variant-numeric:tabular-nums}
+a{color:var(--azul)}
+button,select,input{font:inherit;color:inherit}
+h1,h2,h3{margin:0;text-wrap:balance}
+/* ---------- topo ---------- */
+.topo{background:#3871C1;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.marca{display:flex;flex-direction:column;line-height:1;padding-right:22px;border-right:1px solid rgba(255,255,255,.35)}
+.marca b{font-size:26px;letter-spacing:.12em;font-weight:900}
+.marca span{font-size:9px;letter-spacing:.34em;margin-top:5px;opacity:.9}
+.titulo h1{font-size:20px;font-weight:700;letter-spacing:.01em}
+.titulo p{margin:3px 0 0;font-size:12px;opacity:.9}
+.meta{margin-left:auto;display:flex;gap:18px;font-size:12px}
+.meta div{display:flex;flex-direction:column;gap:2px}
+.meta small{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.meta b{font-size:14px}
+/* ---------- abas ---------- */
+.abas{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--linha);display:flex;gap:2px;padding:0 16px;overflow-x:auto;scrollbar-width:thin}
+.abas button{background:none;border:0;border-bottom:3px solid transparent;padding:11px 12px 9px;color:var(--ink2);cursor:pointer;white-space:nowrap;font-size:12.5px;font-weight:700;letter-spacing:.01em}
+.abas button:hover{color:var(--ink);background:var(--bg2)}
+.abas button.on{color:var(--azul);border-bottom-color:var(--azul)}
+.abas button:focus-visible{outline:2px solid var(--azul);outline-offset:-2px}
+main{padding:18px 24px 48px;max-width:1600px;margin:0 auto}
+.view{display:none}.view.on{display:block}
+/* ---------- blocos ---------- */
+.sec{margin-top:22px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.sec-h h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--azul);font-weight:700}
+.sec-h .sub{font-size:12px;color:var(--ink3)}
+.painel{background:var(--bg);border:1px solid var(--linha);border-radius:6px;padding:14px 16px;box-shadow:var(--sombra)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--linha);border-top:4px solid var(--azul);border-radius:6px;padding:12px 14px 12px;box-shadow:var(--sombra);min-width:0}
+.kpi.ouro{border-top-color:var(--ouro)}
+.kpi.crit{border-top-color:var(--crit)}.kpi.warn{border-top-color:var(--warn)}.kpi.ok{border-top-color:var(--ok)}
+.kpi small{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px}
+.kpi b{display:block;font-size:22px;font-weight:700;color:var(--azul);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi.ouro b{color:var(--ouro)}.kpi.crit b{color:var(--crit)}.kpi.warn b{color:var(--warn)}.kpi.ok b{color:var(--ok)}
+.kpi em{display:block;font-style:normal;font-size:11.5px;color:var(--ink3);margin-top:4px}
+/* ---------- filtros ---------- */
+.filtros{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-end;padding:12px 14px;background:var(--bg);border:1px solid var(--linha);border-radius:6px;margin-bottom:14px}
+.filtros label{display:flex;flex-direction:column;gap:3px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.filtros select,.filtros input{border:1px solid var(--linha);background:var(--bg);border-radius:4px;padding:6px 8px;font-size:12.5px;min-width:130px;max-width:290px}
+.filtros input[type=text],.filtros input[type=search]{min-width:220px}
+.filtros input[type=number]{min-width:110px;max-width:140px}
+.filtros .chips{display:flex;gap:4px;flex-wrap:wrap}
+.chip{border:1px solid var(--linha);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer;color:var(--ink2)}
+.chip.on{background:var(--azul);border-color:var(--azul);color:#fff}
+.btn{border:1px solid var(--linha);background:var(--bg);border-radius:4px;padding:6px 10px;font-size:12px;cursor:pointer;color:var(--ink)}
+.btn:hover{background:var(--bg2)}
+.btn.pri{background:var(--azul);border-color:var(--azul);color:#fff}
+.conta{font-size:12px;color:var(--ink3);margin-left:auto;align-self:center}
+/* ---------- tabelas ---------- */
+.tw{overflow-x:auto;border:1px solid var(--linha);border-radius:6px;background:var(--bg)}
+.tw.alto{max-height:70vh;overflow-y:auto}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.3px}
+thead th{position:sticky;top:0;z-index:2;background:var(--azul-esc);color:#fff;font-weight:700;text-align:left;padding:8px 9px;white-space:nowrap;font-size:11px;letter-spacing:.04em;border-bottom:1px solid var(--linha)}
+:root[data-theme="dark"] thead th{background:#2B4E80}
+thead th.num{text-align:right}
+thead th.sort{cursor:pointer;user-select:none}
+thead th.sort:hover{background:var(--azul)}
+thead th .seta{opacity:.6;font-size:9px;margin-left:3px}
+tbody td{padding:6px 9px;border-bottom:1px solid var(--linha2);vertical-align:top}
+tbody tr:nth-child(even) td{background:var(--bg2)}
+tbody tr:hover td{background:var(--azul-tint)}
+tbody tr.clk{cursor:pointer}
+td.num,th.num{text-align:right;white-space:nowrap}
+td.neg{color:var(--crit)}
+td.pos{color:var(--ok)}
+tfoot td,tr.total td{background:var(--ouro-tint)!important;color:var(--ink);font-weight:700;border-top:2px solid var(--ouro);padding:7px 9px;white-space:nowrap}
+tr.grp td{background:var(--azul-tint)!important;font-weight:700;color:var(--azul-esc);cursor:pointer}
+tr.grp.n2 td{background:var(--bg3)!important;color:var(--ink);font-weight:700}
+tr.grp td .tri{display:inline-block;width:14px;color:var(--ink3);transition:transform .15s}
+tr.grp.fechado td .tri{transform:rotate(-90deg)}
+td.desc{min-width:280px;max-width:520px;white-space:normal}
+td.mono{font-family:Consolas,Menlo,monospace;font-size:11.5px;white-space:nowrap}
+.barra{display:inline-block;height:8px;border-radius:2px;background:var(--azul);vertical-align:middle;margin-right:6px}
+.barra.ouro{background:var(--ouro)}.barra.crit{background:var(--crit)}.barra.warn{background:var(--warn)}.barra.ok{background:var(--ok)}
+.pct{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pct i{display:inline-block;width:70px;height:7px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.pct i b{display:block;height:100%;background:var(--azul);border-radius:2px}
+.tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10.5px;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+.tag.A{background:var(--azul);color:#fff}.tag.B{background:var(--azul-tint2);color:var(--azul-esc)}.tag.C{background:var(--bg3);color:var(--ink2)}
+.tag.ok{background:var(--ok-tint);color:var(--ok)}.tag.warn{background:var(--warn-tint);color:var(--warn)}.tag.crit{background:var(--crit-tint);color:var(--crit)}.tag.neu{background:var(--bg3);color:var(--ink2)}
+.emp{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.emp i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.emp.MARKA i{background:var(--s-marka)}.emp.KLOG i{background:var(--s-klog)}.emp.VCA i{background:var(--s-vca)}.emp.x i{background:var(--ink3)}
+/* heatmap */
+.heat td.h{text-align:right;padding:5px 7px;font-size:11.5px}
+/* charts */
+.ch{position:relative;height:280px}
+.ch.baixo{height:220px}.ch.alto{height:360px}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink2);margin-bottom:6px}
+.leg span{display:inline-flex;align-items:center;gap:5px}.leg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+/* dica */
+.dica{border-left:3px solid var(--ouro);background:var(--ouro-tint);padding:9px 12px;border-radius:0 4px 4px 0;font-size:12.3px;color:var(--ink);margin-top:10px}
+.dica b{color:var(--ink)}
+.nota{font-size:11.5px;color:var(--ink3);margin-top:8px}
+/* drawer */
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(560px,100%);background:var(--bg);border-left:1px solid var(--linha);box-shadow:-8px 0 24px rgba(0,0,0,.15);z-index:40;transform:translateX(100%);transition:transform .2s;overflow-y:auto;padding:18px 20px}
+.drawer.on{transform:none}
+.drawer h3{font-size:15px;color:var(--azul);margin-bottom:4px}
+.drawer .fech{position:absolute;top:10px;right:12px}
+.dl{display:grid;grid-template-columns:150px 1fr;gap:4px 10px;font-size:12.3px;margin:12px 0}
+.dl dt{color:var(--ink3);text-transform:uppercase;font-size:10.5px;letter-spacing:.08em;padding-top:2px}
+.dl dd{margin:0}
+.rodape{margin-top:32px;padding-top:12px;border-top:2px solid var(--azul);font-size:11.5px;color:var(--ink3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media (max-width:760px){.topo{padding:12px 14px}.meta{margin-left:0}main{padding:12px 12px 40px}.kpi b{font-size:18px}}
+
+.leg-exp{font-size:12.3px;color:var(--ink2);background:var(--bg2);border-left:3px solid var(--azul);padding:8px 12px;border-radius:0 4px 4px 0;margin-bottom:12px}
+.leg-exp b{color:var(--ink)}
+.sel-lin{display:flex;gap:6px;flex-wrap:wrap}
+.sel-lin button{border:1px solid var(--linha);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:11.5px;cursor:pointer;color:var(--ink2)}
+.sel-lin button.on{background:var(--azul);border-color:var(--azul);color:#fff}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<header class="topo">
+  <div class="marca"><b>MARKA</b><span>ENGENHARIA</span></div>
+  <div class="titulo">
+    <h1>Curvas de Produção &middot; SEM 38</h1>
+    <p>Oficina de Manutenção de Carros de Passageiros &middot; PQ-2180KF-G-10017 &middot; Vale S.A. &middot; TFPM &middot; São Luís, MA</p>
+  </div>
+  <div class="meta" id="meta"></div>
+</header>
+<nav class="abas" id="abas"></nav>
+<main id="main"></main>
+<aside class="drawer" id="drawer"></aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+window.CV = {"meta":{"arquivo":"curvas.xlsx","semana":"SEM 38","extraido_em":"2026-09-20"},"kpi":{"corte":"2026-09-18","meta":46.2267,"ultApont":"2026-09-17","prevAc":46.2267,"realAc":27.202136,"pctReal":0.588451,"spi":0.588451,"ritmo4":3.95124,"saldo":19.024564,"fimBL":"2026-09-06","semParaConcluir":4.814834,"fimProj":"2026-10-21","status":"Crítico","atrasoSem":6.529119},"proj":{"janelaDias":15.0,"iniJanela":"2026-09-03","prodJanela":9.41718,"diasUteisJanela":11.0,"produtDia":0.856107,"saldo":19.024564,"diasUteisNec":23.0,"calendario":"Seg, Ter, Qui, Sex, Sáb (sem quarta e domingo)","fimProj":"2026-10-20","diasUteis":23.0,"semanas":4.571429,"fimBL":"2026-09-06","atrasoSem":6.285714},"calendario":[{"n":1,"data":"2026-09-04","dia":"sex","prod":null,"acum":null},{"n":2,"data":"2026-09-05","dia":"sáb","prod":null,"acum":null},{"n":3,"data":"2026-09-07","dia":"seg","prod":null,"acum":null},{"n":4,"data":"2026-09-08","dia":"ter","prod":null,"acum":null},{"n":5,"data":"2026-09-10","dia":"qui","prod":null,"acum":null},{"n":6,"data":"2026-09-11","dia":"sex","prod":null,"acum":null},{"n":7,"data":"2026-09-12","dia":"sáb","prod":null,"acum":null},{"n":8,"data":"2026-09-14","dia":"seg","prod":null,"acum":null},{"n":9,"data":"2026-09-15","dia":"ter","prod":null,"acum":null},{"n":10,"data":"2026-09-17","dia":"qui","prod":null,"acum":null},{"n":11,"data":"2026-09-18","dia":"sex","prod":null,"acum":null},{"n":12,"data":"2026-09-19","dia":"sáb","prod":0.856107,"acum":28.058244},{"n":13,"data":"2026-09-21","dia":"seg","prod":0.856107,"acum":28.914351},{"n":14,"data":"2026-09-22","dia":"ter","prod":0.856107,"acum":29.770458},{"n":15,"data":"2026-09-24","dia":"qui","prod":0.856107,"acum":30.626566},{"n":16,"data":"2026-09-25","dia":"sex","prod":0.856107,"acum":31.482673},{"n":17,"data":"2026-09-26","dia":"sáb","prod":0.856107,"acum":32.33878},{"n":18,"data":"2026-09-28","dia":"seg","prod":0.856107,"acum":33.194887},{"n":19,"data":"2026-09-29","dia":"ter","prod":0.856107,"acum":34.050995},{"n":20,"data":"2026-10-01","dia":"qui","prod":0.856107,"acum":34.907102},{"n":21,"data":"2026-10-02","dia":"sex","prod":0.856107,"acum":35.763209},{"n":22,"data":"2026-10-03","dia":"sáb","prod":0.856107,"acum":36.619316},{"n":23,"data":"2026-10-05","dia":"seg","prod":0.856107,"acum":37.475424},{"n":24,"data":"2026-10-06","dia":"ter","prod":0.856107,"acum":38.331531},{"n":25,"data":"2026-10-08","dia":"qui","prod":0.856107,"acum":39.187638},{"n":26,"data":"2026-10-09","dia":"sex","prod":0.856107,"acum":40.043746},{"n":27,"data":"2026-10-10","dia":"sáb","prod":0.856107,"acum":40.899853},{"n":28,"data":"2026-10-12","dia":"seg","prod":0.856107,"acum":41.75596},{"n":29,"data":"2026-10-13","dia":"ter","prod":0.856107,"acum":42.612067},{"n":30,"data":"2026-10-15","dia":"qui","prod":0.856107,"acum":43.468175},{"n":31,"data":"2026-10-16","dia":"sex","prod":0.856107,"acum":44.324282},{"n":32,"data":"2026-10-17","dia":"sáb","prod":0.856107,"acum":45.180389},{"n":33,"data":"2026-10-19","dia":"seg","prod":0.856107,"acum":46.036496},{"n":34,"data":"2026-10-20","dia":"ter","prod":0.190204,"acum":46.2267},{"n":35,"data":"2026-10-22","dia":"qui","prod":0.0,"acum":46.2267},{"n":36,"data":"2026-10-23","dia":"sex","prod":0.0,"acum":46.2267},{"n":37,"data":"2026-10-24","dia":"sáb","prod":0.0,"acum":46.2267},{"n":38,"data":"2026-10-26","dia":"seg","prod":0.0,"acum":46.2267},{"n":39,"data":"2026-10-27","dia":"ter","prod":0.0,"acum":46.2267},{"n":40,"data":"2026-10-29","dia":"qui","prod":0.0,"acum":46.2267},{"n":41,"data":"2026-10-30","dia":"sex","prod":0.0,"acum":46.2267},{"n":42,"data":"2026-10-31","dia":"sáb","prod":0.0,"acum":46.2267},{"n":43,"data":"2026-11-02","dia":"seg","prod":0.0,"acum":46.2267},{"n":44,"data":"2026-11-03","dia":"ter","prod":0.0,"acum":46.2267},{"n":45,"data":"2026-11-05","dia":"qui","prod":0.0,"acum":46.2267},{"n":46,"data":"2026-11-06","dia":"sex","prod":0.0,"acum":46.2267},{"n":47,"data":"2026-11-07","dia":"sáb","prod":0.0,"acum":46.2267},{"n":48,"data":"2026-11-09","dia":"seg","prod":0.0,"acum":46.2267},{"n":49,"data":"2026-11-10","dia":"ter","prod":0.0,"acum":46.2267},{"n":50,"data":"2026-11-12","dia":"qui","prod":0.0,"acum":46.2267},{"n":51,"data":"2026-11-13","dia":"sex","prod":0.0,"acum":46.2267},{"n":52,"data":"2026-11-14","dia":"sáb","prod":0.0,"acum":46.2267},{"n":53,"data":"2026-11-16","dia":"seg","prod":0.0,"acum":46.2267},{"n":54,"data":"2026-11-17","dia":"ter","prod":0.0,"acum":46.2267},{"n":55,"data":"2026-11-19","dia":"qui","prod":0.0,"acum":46.2267},{"n":56,"data":"2026-11-20","dia":"sex","prod":0.0,"acum":46.2267},{"n":57,"data":"2026-11-21","dia":"sáb","prod":0.0,"acum":46.2267},{"n":58,"data":"2026-11-23","dia":"seg","prod":0.0,"acum":46.2267},{"n":59,"data":"2026-11-24","dia":"ter","prod":0.0,"acum":46.2267},{"n":60,"data":"2026-11-26","dia":"qui","prod":0.0,"acum":46.2267},{"n":61,"data":"2026-11-27","dia":"sex","prod":0.0,"acum":46.2267},{"n":62,"data":"2026-11-28","dia":"sáb","prod":0.0,"acum":46.2267},{"n":63,"data":"2026-11-30","dia":"seg","prod":0.0,"acum":46.2267},{"n":64,"data":"2026-12-01","dia":"ter","prod":0.0,"acum":46.2267},{"n":65,"data":"2026-12-03","dia":"qui","prod":0.0,"acum":46.2267},{"n":66,"data":"2026-12-04","dia":"sex","prod":0.0,"acum":46.2267},{"n":67,"data":"2026-12-05","dia":"sáb","prod":0.0,"acum":46.2267},{"n":68,"data":"2026-12-07","dia":"seg","prod":0.0,"acum":46.2267},{"n":69,"data":"2026-12-08","dia":"ter","prod":0.0,"acum":46.2267},{"n":70,"data":"2026-12-10","dia":"qui","prod":0.0,"acum":46.2267},{"n":71,"data":"2026-12-11","dia":"sex","prod":0.0,"acum":46.2267},{"n":72,"data":"2026-12-12","dia":"sáb","prod":0.0,"acum":46.2267}],"atividades":[{"aba":"Escavação de 1a Categoria","titulo":"Escavação de 1ª Categoria","un":"m³ x mil","frente":"Terraplanagem","semanas":["2026-07-05","2026-07-12","2026-07-19","2026-07-26","2026-08-02","2026-08-09","2026-08-16","2026-08-23","2026-08-30","2026-09-06","2026-09-13","2026-09-17","2026-09-27","2026-10-04","2026-10-11","2026-10-18","2026-10-25"],"blA":[null,0.76304,4.32386,4.80674,3.41721,4.68535,7.566755,4.312925,11.59917,4.75165,null,null,null,null,null,null,null],"blAac":[null,0.76304,5.0869,9.89364,13.31085,17.9962,25.562955,29.87588,41.47505,46.2267,null,null,null,null,null,null,null],"blB":[null,0.67536,0.6566,2.09174,1.538797,2.9547,3.47998,2.42004,9.414317,3.37462,2.024772,3.37462,3.37462,3.166802,2.877182,2.301746,2.500804],"blBac":[null,0.67536,1.33196,3.4237,4.962497,7.917197,11.397177,13.817217,23.231534,26.606154,28.630926,32.005546,35.380166,38.546967,41.42415,43.725896,46.2267],"real":[null,0.67536,0.6566,2.09174,1.538797,2.9547,3.47998,2.42004,3.96774,3.17948,3.4706,2.7671,null,null,null,null,null],"realac":[null,0.67536,1.33196,3.4237,4.962497,7.917197,11.397177,13.817217,17.784956,20.964436,24.435036,27.202136,null,null,null,null,null],"tend":[null,null,null,null,null,null,null,null,null,null,null,2.19492,3.935027,4.385267,3.888127,3.32338,4.064944],"tendac":[null,null,null,null,null,null,null,null,null,null,null,26.629956,30.564983,34.95025,38.838376,42.161756,46.2267]},{"aba":"Demolição de Laje - TP05","titulo":"Demolição de Laje — TP05","un":"m³","frente":"Galeria TP05","semanas":["2026-07-12","2026-07-19","2026-07-26","2026-08-02","2026-08-09","2026-08-16","2026-08-23","2026-08-30","2026-09-06","2026-09-13","2026-09-23"],"blA":[null,14.5,19.0,22.0,null,null,null,null,null,null,null],"blAac":[null,14.5,33.5,55.5,null,null,null,null,null,null,null],"blB":[null,null,10.88,22.52,18.4,0.2,3.94,10.622959,12.96308,7.777831,0.576129],"blBac":[null,0.0,10.88,33.4,51.8,52.0,55.94,66.562959,79.526039,87.303871,87.88],"real":[null,null,10.88,22.52,18.4,0.2,3.94,7.78,2.11,22.05,null],"realac":[null,0.0,10.88,33.4,51.8,52.0,55.94,63.72,65.83,87.88,null],"tend":[null,null,null,null,null,null,null,null,null,null,null],"tendac":[null,null,null,null,null,null,null,null,null,null,null]},{"aba":"Supressão","titulo":"Supressão Vegetal","un":"m² x mil","frente":"Vias Férreas","semanas":["2026-06-14","2026-06-21","2026-06-28","2026-07-05","2026-07-12","2026-07-19","2026-07-26","2026-08-02","2026-08-09","2026-08-16","2026-08-20"],"blB":[0.0,1.66328,3.39988,2.72551,3.37907,3.26864,3.25535,3.00285,1.30173,null,null],"blBac":[0.0,1.66328,5.06316,7.78867,11.16774,14.43638,17.69173,20.69458,21.99631,null,null],"real":[0.0,6.252573,8.21589,0.0,3.66257,3.66529,0.0,0.0,null,null,0.2],"realac":[0.0,6.252573,14.468463,14.468463,18.131033,21.796323,21.796323,21.796323,21.796323,21.796323,22.0],"tend":[null,null,null,null,null,null,null,null,null,null,null],"tendac":[null,null,null,null,null,null,null,null,null,null,22.0]},{"aba":"Escavação (1a e 2a categoria)","titulo":"Escavação (1ª e 2ª cat.)","un":"m³ x mil","frente":"Terraplanagem","semanas":["2026-07-12","2026-07-19","2026-07-26","2026-08-02","2026-08-09","2026-08-16","2026-08-23","2026-08-30","2026-09-06"],"real":[4.92504,3.84058,4.46194,3.83157,5.30274,4.5048,11.27806,3.37229,1.33058],"realac":[4.92504,8.76562,13.22756,17.05913,22.36187,26.86667,38.14473,41.51702,42.8476]},{"aba":"Compactação de Aterro","titulo":"Compactação de Aterro","un":"m³ x mil","frente":"Terraplanagem","semanas":["2026-07-12","2026-07-19","2026-07-26","2026-08-02","2026-08-09","2026-08-16","2026-08-23","2026-08-30","2026-09-06"],"real":[4.47561,3.81971,6.37367,3.339,4.71747,7.12504,11.34331,5.46578,1.93427],"realac":[4.47561,8.29532,14.66899,18.00799,22.72546,29.8505,41.19381,46.65959,48.59386]},{"aba":"Drenagem (2)","titulo":"Drenagem — consolidado","un":"km","frente":"Drenagem","semanas":["2026-08-15","2026-08-22","2026-08-29","2026-09-05","2026-09-12","2026-09-19","2026-09-26","2026-10-03","2026-10-10","2026-10-17","2026-10-24","2026-10-31","2026-11-07","2026-11-14","2026-11-21","2026-11-28"],"blB":[0.005086,0.006104,0.00763,0.01603,0.017137,0.029717,0.029717,0.029717,0.029717,0.023773,0.029188,0.085955,0.157915,0.267951,0.189263,0.075102],"blBac":[0.005086,0.01119,0.01882,0.03485,0.051987,0.081703,0.11142,0.141137,0.170853,0.194626,0.223814,0.309769,0.467684,0.735635,0.924898,1.0],"real":[0.004526,0.009052,0.0,0.021238,0.008704,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"realac":[0.004526,0.013578,0.013578,0.034817,null,null,null,null,null,null,null,null,null,null,null,null]},{"aba":"Drenagem - Sarjeta","titulo":"Drenagem — Sarjeta Trapezoidal","un":"m","frente":"Drenagem","semanas":["2026-08-09","2026-08-16","2026-08-23","2026-08-30","2026-09-06","2026-09-13","2026-09-20","2026-09-27","2026-10-04","2026-10-11","2026-10-18"],"blB":[55.125871,66.151077,82.688826,82.688826,49.613288,82.688826,82.688826,82.688826,82.688826,66.151077,76.955729],"blBac":[55.125871,121.276948,203.965774,286.654601,336.267889,418.956715,501.645541,584.334368,667.023194,733.174271,810.13],"real":[26.0,52.0,null,122.0,50.0,null,null,null,null,null,null],"realac":[26.0,78.0,78.0,200.0,250.0,null,null,null,null,null,null]},{"aba":"Drenagem - Canaleta","titulo":"Drenagem — Canaleta Ferroviária","un":"m","frente":"Drenagem","semanas":["2026-09-13","2026-09-20","2026-09-27","2026-10-04","2026-10-11","2026-10-18","2026-10-25","2026-11-01","2026-11-08","2026-11-15","2026-11-22","2026-11-29","2026-12-06"],"blB":[49.249387,72.182824,126.844233,126.844233,126.844233,126.844233,101.475384,126.844233,126.844233,101.475384,126.844233,86.355554,16.021837],"blBac":[49.249387,121.432211,248.276444,375.120677,501.96491,628.809142,730.284527,857.128759,983.972992,1085.448376,1212.292609,1298.648163,1314.67],"real":[null,null,null,null,null,null,null,null,null,null,null,null,null],"realac":[null,null,null,null,null,null,null,null,null,null,null,null,null]},{"aba":"Concreto Estrutural","titulo":"Concreto Estrutural","un":"m³","frente":"Estruturas","semanas":["2026-09-18","2026-09-25","2026-10-02","2026-10-09","2026-10-16","2026-10-23","2026-10-30","2026-11-06","2026-11-13","2026-11-20","2026-11-27","2026-12-04","2026-12-11","2026-12-18","2026-12-25","2027-01-01","2027-01-08","2027-01-15","2027-01-22","2027-01-29","2027-02-05","2027-02-12","2027-02-19","2027-02-26","2027-03-05","2027-03-12","2027-03-19","2027-03-26","2027-04-02","2027-04-09","2027-04-16","2027-04-23","2027-04-30","2027-05-07","2027-05-14","2027-05-21","2027-05-28","2027-06-04"],"real":[45.83,47.96,0.0,0.0,0.0,48.49,30.53,15.25,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.52,13.35,0.0,0.0,0.0,0.0,15.09,150.93,0.0,41.51,47.0,3.39,0.0,0.0,0.0,38.76,0.0,0.0,0.0,17.96,61.06],"realac":[45.83,93.79,93.79,93.79,93.79,142.28,172.81,188.06,188.06,188.06,188.06,188.06,188.06,188.06,188.06,188.06,188.06,190.58,203.93,203.93,203.93,203.93,203.93,219.02,369.95,369.95,411.46,458.46,461.85,461.85,461.85,461.85,500.61,500.61,500.61,500.61,518.57,579.63]}]};
+</script>
+<script>
+/* =====================================================================
+   CURVAS DE PRODUÇÃO · SEM 38 · Trem de Passageiros
+   Fonte: "Trem de Passageiro - SEM 38 - Curvas de Produção.xlsx"
+   ===================================================================== */
+const D = window.CV, K = D.kpi, PJ = D.proj, ATV = D.atividades, CAL = D.calendario;
+
+/* ---------- utilitários ---------- */
+function sum(a, f) { let s = 0; for (const x of a) s += (f ? f(x) : x) || 0; return s; }
+const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fN = (v, d = 2) => (v === null || v === undefined || !isFinite(v)) ? '–' : v.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
+const fP = (v, d = 1) => (v === null || v === undefined || !isFinite(v)) ? '–' : (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
+const fD = s => s ? s.slice(8, 10) + '/' + s.slice(5, 7) + '/' + s.slice(0, 4) : '–';
+const fDc = s => s ? s.slice(8, 10) + '/' + s.slice(5, 7) : '–';
+const trunc = (s, n = 90) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+const ult = a => { for (let i = a.length - 1; i >= 0; i--) if (a[i] !== null && a[i] !== undefined) return a[i]; return null; };
+const ultIdx = a => { for (let i = a.length - 1; i >= 0; i--) if (a[i] !== null && a[i] !== undefined) return i; return -1; };
+
+/* cada atividade ganha os derivados que o painel usa */
+const temVal = x => Array.isArray(x) && x.some(v => v !== null && v !== undefined);
+ATV.forEach(a => {
+  const prevAc = temVal(a.blBac) ? a.blBac : (temVal(a.blAac) ? a.blAac : null);
+  a.prevAc = prevAc;
+  a.iReal = ultIdx(a.realac || []);
+  a.realHoje = a.realac ? ult(a.realac) : null;
+  // previsto comparável: último previsto lançado até a semana do último real
+  a.prevHoje = null;
+  if (prevAc) { const lim = a.iReal >= 0 ? a.iReal : prevAc.length - 1;
+    for (let i = Math.min(lim, prevAc.length - 1); i >= 0; i--) if (prevAc[i] !== null && prevAc[i] !== undefined) { a.prevHoje = prevAc[i]; break; } }
+  a.metaTot = temVal(a.tendac) ? ult(a.tendac) : (prevAc ? ult(prevAc) : null);
+  a.semMeta = a.metaTot === null;
+  a.spi = (a.prevHoje && a.realHoje !== null) ? a.realHoje / a.prevHoje : null;
+  a.pct = (a.metaTot && a.realHoje !== null) ? a.realHoje / a.metaTot : null;
+  a.saldo = (a.metaTot !== null && a.realHoje !== null) ? a.metaTot - a.realHoje : null;
+  // ritmo das 4 últimas semanas com apontamento
+  const sem = a.real || [];
+  const cheio = sem.map((v, i) => [v, i]).filter(x => x[0] !== null && x[0] !== undefined && x[0] > 0);
+  const ul4 = cheio.slice(-4);
+  a.ritmo4 = ul4.length ? sum(ul4, x => x[0]) / ul4.length : null;
+  a.semRest = (a.ritmo4 && a.saldo > 0) ? a.saldo / a.ritmo4 : null;
+  a.status = a.spi === null ? 'sem baseline' : a.spi >= 0.95 ? 'no ritmo' : a.spi >= 0.80 ? 'atenção' : 'crítico';
+  a.temBL = !!prevAc;
+});
+const ATV_BL = ATV.filter(a => a.temBL);
+
+/* ---------- DOM ---------- */
+function el(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; }
+function sec(t, sub, ...kids) { const s = el('section', 'sec', `<div class="sec-h"><h2>${h(t)}</h2>${sub ? `<span class="sub">${sub}</span>` : ''}</div>`); kids.forEach(k => k && s.appendChild(typeof k === 'string' ? el('div', '', k) : k)); return s; }
+function kpi(l, v, n, cls = '') { return `<div class="kpi ${cls}"><small>${h(l)}</small><b title="${h(v)}">${h(v)}</b>${n ? `<em>${n}</em>` : ''}</div>`; }
+function selectHTML(id, label, opts, cur) { return `<label>${h(label)}<select id="${id}">${opts.map(o => `<option value="${h(o)}" ${o === cur ? 'selected' : ''}>${h(o)}</option>`).join('')}</select></label>`; }
+function stTag(s) { const m = { 'no ritmo': 'ok', 'atenção': 'warn', 'crítico': 'crit', 'sem baseline': 'neu' }; return `<span class="tag ${m[s] || 'neu'}">${h(s)}</span>`; }
+function pctBar(v) { return `<span class="pct"><i><b style="width:${Math.max(0, Math.min(100, (v || 0) * 100))}%"></b></i>${fP(v)}</span>`; }
+
+/* ---------- tabela ---------- */
+let TID = 0;
+function tabela(cols, rows, opt = {}) {
+  const st = { sort: opt.sort ?? null, dir: opt.dir ?? -1 };
+  const box = el('div', 'tw' + (opt.alto ? ' alto' : ''));
+  const val = (r, c) => typeof c.k === 'function' ? c.k(r) : r[c.k];
+  function render() {
+    let rs = [...rows];
+    if (st.sort !== null) { const c = cols[st.sort]; rs.sort((a, b) => { const x = val(a, c), y = val(b, c); if (x === y) return 0; if (x == null) return 1; if (y == null) return -1; return (x > y ? 1 : -1) * st.dir; }); }
+    let t = '<table><thead><tr>' + cols.map((c, i) => `<th class="${c.num ? 'num ' : ''}${opt.semSort ? '' : 'sort'}" data-i="${i}">${h(c.t)}${st.sort === i ? `<span class="seta">${st.dir > 0 ? '▲' : '▼'}</span>` : ''}</th>`).join('') + '</tr></thead><tbody>';
+    for (const r of rs) t += '<tr>' + cols.map(c => { const v = val(r, c); return `<td class="${c.num ? 'num' : (c.cls || '')}">${c.f ? c.f(v, r) : h(v ?? '')}</td>`; }).join('') + '</tr>';
+    box.innerHTML = t + '</tbody></table>';
+    if (!opt.semSort) box.querySelectorAll('th.sort').forEach(th => th.onclick = () => { const i = +th.dataset.i; if (st.sort === i) st.dir *= -1; else { st.sort = i; st.dir = cols[i].num ? -1 : 1; } render(); });
+  }
+  render(); return box;
+}
+
+/* ---------- gráficos ---------- */
+const CH = [];
+function chart(canvas, cfg) {
+  const ink2 = css('--ink2'), ink3 = css('--ink3'), grid = css('--linha2');
+  Chart.defaults.font.family = 'Arial, Helvetica, sans-serif'; Chart.defaults.font.size = 11; Chart.defaults.color = ink2;
+  Chart.defaults.plugins.legend.display = false;
+  Chart.defaults.plugins.tooltip.backgroundColor = css('--ink'); Chart.defaults.plugins.tooltip.titleColor = css('--bg');
+  Chart.defaults.plugins.tooltip.bodyColor = css('--bg'); Chart.defaults.plugins.tooltip.padding = 8; Chart.defaults.plugins.tooltip.cornerRadius = 4;
+  const base = { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: 'index', intersect: false },
+    scales: { x: { grid: { display: false }, border: { color: grid }, ticks: { color: ink3 } },
+              y: { grid: { color: grid, drawTicks: false }, border: { display: false }, ticks: { color: ink3 } } } };
+  cfg.options = deepMerge(base, cfg.options || {});
+  const c = new Chart(canvas, cfg); CH.push(c); return c;
+}
+function deepMerge(a, b) { const o = { ...a }; for (const k in b) o[k] = (b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) && a[k] && typeof a[k] === 'object') ? deepMerge(a[k], b[k]) : b[k]; return o; }
+function destroyCharts() { CH.forEach(c => c.destroy()); CH.length = 0; }
+function caixa(alt = 'ch') { const d = el('div', 'painel'); d.appendChild(el('div', alt, '<canvas></canvas>')); return d; }
+function legHTML(items) { return el('div', 'leg', items.map(([n, c]) => `<span><i style="background:${c}"></i>${h(n)}</span>`).join('')); }
+
+/* curva S de uma atividade */
+function curvaS(canvas, a) {
+  const L = a.semanas.map(fDc);
+  const ds = [];
+  const linha = (dados, rot, cor, dash) => dados && dados.some(v => v !== null && v !== undefined) &&
+    ds.push({ label: rot, data: dados, borderColor: cor, backgroundColor: cor, borderWidth: 2, borderDash: dash || [],
+              pointRadius: 2, pointHoverRadius: 5, tension: .15, spanGaps: false });
+  linha(a.blAac, 'Previsto BL0', css('--ink3'), [3, 3]);
+  linha(a.blBac, 'Previsto BL1', css('--azul'));
+  linha(a.tendac, 'Tendência', css('--c5'), [6, 3]);
+  linha(a.realac, 'Realizado', css('--c2'));
+  return chart(canvas, { type: 'line', data: { labels: L, datasets: ds },
+    options: { scales: { y: { ticks: { callback: v => fN(v, v >= 100 ? 0 : 1) }, title: { display: true, text: a.un + ' acumulado' } } },
+      plugins: { tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fN(c.parsed.y)} ${a.un}` } } } } });
+}
+/* barras semanais previsto x real */
+function barrasSemana(canvas, a) {
+  const L = a.semanas.map(fDc), ds = [];
+  if (a.blB || a.blA) ds.push({ label: 'Previsto', data: a.blB || a.blA, backgroundColor: css('--azul-claro'), borderRadius: 3 });
+  if (a.real) ds.push({ label: 'Realizado', data: a.real, backgroundColor: css('--azul'), borderRadius: 3 });
+  return chart(canvas, { type: 'bar', data: { labels: L, datasets: ds },
+    options: { scales: { y: { ticks: { callback: v => fN(v, 1) }, title: { display: true, text: a.un + ' na semana' } } },
+      plugins: { tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fN(c.parsed.y)} ${a.un}` } } } } });
+}
+
+/* =====================================================================
+   VIEWS
+   ===================================================================== */
+const VIEWS = [
+  ['painel', 'Painel', vPainel], ['esc', 'Escavação 1ª Cat.', vEsc],
+  ['ativ', 'Curva por Atividade', vAtiv], ['proj', 'Projeção de Término', vProj],
+  ['comp', 'Comparativo', vComp],
+];
+const STATE = { view: 'painel' };
+
+function vPainel(root) {
+  destroyCharts();
+  const esc = ATV[0];
+  const atraso = K.atrasoSem;
+  root.appendChild(el('div', 'kpis',
+    kpi('Avanço da escavação', fP(K.pctReal), `${fN(K.realAc)} de ${fN(K.meta)} m³ x mil`, K.pctReal < .8 ? 'crit' : '') +
+    kpi('Aderência ao BL0', fN(K.spi, 3), `deveria estar 100% em ${fD(K.fimBL)}`, K.spi < .8 ? 'crit' : '') +
+    kpi('Saldo a executar', fN(K.saldo) + ' mil m³', 'até a meta contratual') +
+    kpi('Ritmo 4 semanas', fN(K.ritmo4) + ' mil m³', 'por semana apontada') +
+    kpi('Término projetado', fD(K.fimProj), `baseline ${fD(K.fimBL)}`, 'crit') +
+    kpi('Atraso projetado', fN(atraso, 1) + ' sem', 'mantido o ritmo atual', 'ouro')));
+
+  root.appendChild(el('div', 'dica', `<b>Duas leituras de atraso, as duas verdadeiras.</b> Contra o <b>BL0</b>, a linha de base original, a escavação deveria estar concluída em ${fD(K.fimBL)} e está em ${fP(K.pctReal)}: SPI 0,588. Contra o <b>BL1</b>, o replanejamento que empurrou o término para ${fD(ATV[0].semanas[ATV[0].semanas.length - 1])}, o SPI é ${fN(ATV[0].spi, 3)}. O primeiro número é o que a Vale cobra no contrato; o segundo é o que mede a equipe hoje. Leve os dois para a reunião.`));
+  root.appendChild(el('div', 'dica', `<b>Onde a obra está.</b> A escavação de 1ª categoria fechou o baseline em ${fD(K.fimBL)} com ${fP(K.pctReal)} executado. Faltam ${fN(K.saldo)} mil m³ e o ritmo das últimas 4 semanas é de ${fN(K.ritmo4)} mil m³ por semana, o que joga o término para ${fD(K.fimProj)}. Esse é o número que sustenta conversa de prazo com a Vale e eventual pleito de improdutividade.`));
+
+  const c1 = caixa('ch alto');
+  root.appendChild(sec('Curva S · Escavação de 1ª Categoria', 'previsto BL0, previsto BL1, realizado e tendência', c1));
+  curvaS(c1.querySelector('canvas'), esc);
+  root.appendChild(legHTML([['Previsto BL0', css('--ink3')], ['Previsto BL1', css('--azul')], ['Tendência', css('--c5')], ['Realizado', css('--c2')]]));
+
+  const linhas = ATV.map(a => ({ ...a }));
+  root.appendChild(sec('Todas as frentes medidas', `${ATV.length} atividades acompanhadas por curva`, tabela([
+    { t: 'Atividade', k: 'titulo' }, { t: 'Frente', k: 'frente' }, { t: 'Un.', k: 'un' },
+    { t: 'Meta', k: 'metaTot', num: true, f: v => v === null ? '–' : fN(v) },
+    { t: 'Realizado', k: 'realHoje', num: true, f: v => fN(v) },
+    { t: 'Previsto até hoje', k: 'prevHoje', num: true, f: v => v === null ? '–' : fN(v) },
+    { t: '% concluído', k: 'pct', num: true, f: (v, r) => r.semMeta ? '<span style="color:var(--ink3)">sem meta na aba</span>' : pctBar(v) },
+    { t: 'SPI vs BL1', k: 'spi', num: true, f: v => v === null ? '–' : `<span style="color:${v >= .95 ? 'var(--ok)' : v >= .8 ? 'var(--warn)' : 'var(--crit)'}">${fN(v, 3)}</span>` },
+    { t: 'Ritmo 4 sem', k: 'ritmo4', num: true, f: v => v === null ? '–' : fN(v) },
+    { t: 'Saldo', k: 'saldo', num: true, f: v => v === null ? '–' : fN(v) },
+    { t: 'Semanas p/ concluir', k: 'semRest', num: true, f: v => v === null ? '–' : fN(v, 1) },
+    { t: 'Status', k: 'status', f: v => stTag(v) },
+  ], linhas, { sort: 6 })));
+
+  const criticas = ATV_BL.filter(a => a.spi !== null && a.spi < .8);
+  if (criticas.length) root.appendChild(el('div', 'dica', `<b>Frentes fora de ritmo.</b> ${criticas.length} de ${ATV_BL.length} atividades com baseline estão abaixo de 0,80 de SPI: ${criticas.map(a => `${h(a.titulo)} (${fN(a.spi, 2)})`).join(', ')}. São essas que puxam o cronograma e que precisam de plano de recuperação nesta semana.`));
+}
+
+function vEsc(root) {
+  destroyCharts();
+  const a = ATV[0];
+  const c1 = caixa('ch alto'); root.appendChild(sec('Curva S acumulada', a.un, c1)); curvaS(c1.querySelector('canvas'), a);
+  root.appendChild(legHTML([['Previsto BL0', css('--ink3')], ['Previsto BL1', css('--azul')], ['Tendência', css('--c5')], ['Realizado', css('--c2')]]));
+  const c2 = caixa(); root.appendChild(sec('Produção semanal', 'previsto x realizado, semana a semana', c2)); barrasSemana(c2.querySelector('canvas'), a);
+  root.appendChild(legHTML([['Previsto', css('--azul-claro')], ['Realizado', css('--azul')]]));
+
+  const rows = a.semanas.map((s, i) => ({
+    sem: fD(s), prevS: (a.blB || [])[i], prevA: (a.blBac || [])[i], realS: (a.real || [])[i], realA: (a.realac || [])[i],
+    bl0: (a.blAac || [])[i], tend: (a.tendac || [])[i],
+    desv: ((a.realac || [])[i] !== null && (a.realac || [])[i] !== undefined && (a.blBac || [])[i]) ? (a.realac[i] - a.blBac[i]) : null,
+  }));
+  root.appendChild(sec('Semana a semana', 'valores em ' + a.un, tabela([
+    { t: 'Semana', k: 'sem' },
+    { t: 'Previsto BL0 acum.', k: 'bl0', num: true, f: v => v == null ? '–' : fN(v) },
+    { t: 'Previsto BL1 sem.', k: 'prevS', num: true, f: v => v == null ? '–' : fN(v) },
+    { t: 'Previsto BL1 acum.', k: 'prevA', num: true, f: v => v == null ? '–' : fN(v) },
+    { t: 'Realizado sem.', k: 'realS', num: true, f: v => v == null ? '–' : fN(v) },
+    { t: 'Realizado acum.', k: 'realA', num: true, f: v => v == null ? '–' : fN(v) },
+    { t: 'Desvio acum.', k: 'desv', num: true, f: v => v == null ? '–' : `<span style="color:${v >= 0 ? 'var(--ok)' : 'var(--crit)'}">${v > 0 ? '+' : ''}${fN(v)}</span>` },
+    { t: 'Tendência acum.', k: 'tend', num: true, f: v => v == null ? '–' : fN(v) },
+  ], rows, { semSort: true })));
+
+  const i = a.iReal, desvHoje = a.realac[i] - a.blBac[i];
+  root.appendChild(el('div', 'dica', `<b>Leitura.</b> Na semana de ${fD(a.semanas[i])} o acumulado real é de ${fN(a.realac[i])} ${a.un} contra ${fN(a.blBac[i])} previstos, ou seja ${fN(Math.abs(desvHoje))} ${a.un} de déficit (${fP(Math.abs(desvHoje) / a.blBac[i])} do previsto). O BL0 original pedia ${fN(ult(a.blAac))} ${a.un} já concluídos em ${fD(K.fimBL)}.`));
+}
+
+function vAtiv(root) {
+  const S = STATE.ativ ||= { i: 0 };
+  const f = el('div', 'filtros'); const out = el('div'); root.append(f, out);
+  f.innerHTML = selectHTML('a', 'Atividade', ATV.map(a => a.titulo), ATV[S.i].titulo) +
+    `<span class="conta">${ATV.length} curvas acompanhadas</span>`;
+  f.querySelector('#a').onchange = e => { S.i = ATV.findIndex(a => a.titulo === e.target.value); draw(); };
+  function draw() {
+    destroyCharts(); out.innerHTML = '';
+    const a = ATV[S.i];
+    out.appendChild(el('div', 'kpis',
+      kpi('Meta', fN(a.metaTot) + ' ' + a.un, 'quantidade total da curva') +
+      kpi('Realizado', fN(a.realHoje) + ' ' + a.un, fP(a.pct) + ' da meta') +
+      kpi('Previsto até hoje', a.prevHoje === null ? '–' : fN(a.prevHoje) + ' ' + a.un, a.temBL ? 'pela linha de base' : 'sem baseline nesta aba') +
+      kpi('SPI', a.spi === null ? '–' : fN(a.spi, 3), 'realizado / previsto', a.spi !== null && a.spi < .8 ? 'crit' : '') +
+      kpi('Ritmo 4 sem', a.ritmo4 === null ? '–' : fN(a.ritmo4) + ' ' + a.un, 'média das últimas 4 semanas com apontamento') +
+      kpi('Semanas p/ concluir', a.semRest === null ? '–' : fN(a.semRest, 1), 'mantido o ritmo', 'ouro')));
+    const c1 = caixa('ch alto'); out.appendChild(sec('Curva S acumulada', a.frente + ' · ' + a.un, c1)); curvaS(c1.querySelector('canvas'), a);
+    out.appendChild(legHTML([['Previsto BL0', css('--ink3')], ['Previsto BL1', css('--azul')], ['Tendência', css('--c5')], ['Realizado', css('--c2')]]));
+    const c2 = caixa(); out.appendChild(sec('Produção semanal', 'previsto x realizado', c2)); barrasSemana(c2.querySelector('canvas'), a);
+    const rows = a.semanas.map((s, i) => ({ sem: fD(s), p: (a.blBac || a.blAac || [])[i], r: (a.realac || [])[i], ps: (a.blB || a.blA || [])[i], rs: (a.real || [])[i] }));
+    out.appendChild(sec('Semana a semana', a.un, tabela([
+      { t: 'Semana', k: 'sem' }, { t: 'Previsto sem.', k: 'ps', num: true, f: v => v == null ? '–' : fN(v) },
+      { t: 'Realizado sem.', k: 'rs', num: true, f: v => v == null ? '–' : fN(v) },
+      { t: 'Previsto acum.', k: 'p', num: true, f: v => v == null ? '–' : fN(v) },
+      { t: 'Realizado acum.', k: 'r', num: true, f: v => v == null ? '–' : fN(v) },
+      { t: 'Desvio', k: r => (r.r != null && r.p) ? r.r - r.p : null, num: true, f: v => v == null ? '–' : `<span style="color:${v >= 0 ? 'var(--ok)' : 'var(--crit)'}">${v > 0 ? '+' : ''}${fN(v)}</span>` },
+    ], rows, { semSort: true })));
+  }
+  draw();
+}
+
+function vProj(root) {
+  destroyCharts();
+  root.appendChild(el('div', 'kpis',
+    kpi('Produtividade por dia útil', fN(PJ.produtDia, 3) + ' mil m³', `janela de ${PJ.janelaDias} dias desde ${fD(PJ.iniJanela)}`) +
+    kpi('Produção na janela', fN(PJ.prodJanela) + ' mil m³', `em ${PJ.diasUteisJanela} dias úteis`) +
+    kpi('Saldo a executar', fN(PJ.saldo) + ' mil m³', 'até a meta de ' + fN(K.meta)) +
+    kpi('Dias úteis necessários', fN(PJ.diasUteisNec, 0), PJ.calendario) +
+    kpi('Término projetado', fD(PJ.fimProj), `${fN(PJ.semanas, 1)} semanas corridas`, 'crit') +
+    kpi('Atraso vs baseline', fN(PJ.atrasoSem, 1) + ' sem', `baseline ${fD(PJ.fimBL)}`, 'ouro')));
+
+  root.appendChild(el('div', 'dica', `<b>Como a projeção é montada.</b> Pega a produção dos últimos ${PJ.janelaDias} dias corridos (${fN(PJ.prodJanela)} mil m³ em ${PJ.diasUteisJanela} dias úteis), divide pelo número de dias úteis e projeta o saldo de ${fN(PJ.saldo)} mil m³ no calendário real da obra: ${PJ.calendario}. Não usa média histórica, usa o ritmo de agora.`));
+
+  const futuro = CAL.filter(d => d.prod !== null && d.prod !== undefined);
+  const c1 = caixa('ch alto'); root.appendChild(sec('Projeção até o término', 'acumulado projetado dia útil a dia útil', c1));
+  chart(c1.querySelector('canvas'), { type: 'line',
+    data: { labels: futuro.map(d => fDc(d.data)), datasets: [
+      { label: 'Acumulado projetado', data: futuro.map(d => d.acum), borderColor: css('--c5'), backgroundColor: css('--c5'), borderWidth: 2, borderDash: [6, 3], pointRadius: 0, tension: .1 },
+      { label: 'Meta', data: futuro.map(() => K.meta), borderColor: css('--crit'), borderWidth: 1.5, borderDash: [2, 4], pointRadius: 0 }] },
+    options: { scales: { y: { ticks: { callback: v => fN(v, 0) }, title: { display: true, text: 'm³ x mil acumulado' } }, x: { ticks: { maxTicksLimit: 14 } } },
+      plugins: { tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fN(c.parsed.y)} mil m³` } } } } });
+  root.appendChild(legHTML([['Acumulado projetado', css('--c5')], ['Meta contratual', css('--crit')]]));
+
+  root.appendChild(sec('Calendário de dias úteis', `${futuro.length} dias úteis projetados · ${PJ.calendario}`, tabela([
+    { t: '#', k: 'n', num: true }, { t: 'Data', k: r => fD(r.data) }, { t: 'Dia', k: 'dia' },
+    { t: 'Produção do dia', k: 'prod', num: true, f: v => fN(v, 3) },
+    { t: 'Acumulado', k: 'acum', num: true, f: v => fN(v) },
+    { t: 'Falta para a meta', k: r => K.meta - r.acum, num: true, f: v => v <= 0 ? '<span style="color:var(--ok)">meta atingida</span>' : fN(v) },
+  ], futuro, { semSort: true, alto: true })));
+}
+
+function vComp(root) {
+  destroyCharts();
+  const c1 = caixa('ch alto');
+  root.appendChild(sec('Avanço comparado', 'todas as frentes na mesma escala, em % da própria meta', c1));
+  const CAT = ['--c1', '--c2', '--c3', '--c4', '--c5', '--c6'];
+  const ord = ATV.filter(a => !a.semMeta).sort((a, b) => (b.pct || 0) - (a.pct || 0));
+  const sem = ATV.filter(a => a.semMeta);
+  chart(c1.querySelector('canvas'), { type: 'bar',
+    data: { labels: ord.map(a => trunc(a.titulo, 30)), datasets: [{ data: ord.map(a => a.pct), backgroundColor: ord.map((a, i) => css(CAT[i % 6])), borderRadius: 4 }] },
+    options: { indexAxis: 'y', scales: { x: { max: 1, ticks: { callback: v => fP(v, 0) } }, y: { ticks: { callback: function (v) { return this.getLabelForValue(v); }, font: { size: 10 } } } },
+      plugins: { tooltip: { callbacks: { label: c => ` ${fP(c.parsed.x)} da meta` } } } } });
+
+  if (sem.length) root.appendChild(el('div', 'nota', `Fora do gráfico por não terem quantidade de meta na aba de origem: ${sem.map(a => h(a.titulo) + ' (' + fN(a.realHoje) + ' ' + a.un + ' apontados)').join(' · ')}. Vale pedir ao planejamento a quantidade contratual dessas três para fechar o comparativo.`));
+  const c2 = caixa('ch alto');
+  root.appendChild(sec('Aderência ao baseline', 'SPI por frente; abaixo de 0,80 é zona crítica', c2));
+  const cb = ATV_BL.slice().sort((a, b) => a.spi - b.spi);
+  chart(c2.querySelector('canvas'), { type: 'bar',
+    data: { labels: cb.map(a => trunc(a.titulo, 30)), datasets: [{ data: cb.map(a => a.spi), backgroundColor: cb.map(a => a.spi >= .95 ? css('--ok') : a.spi >= .8 ? css('--warn') : css('--crit')), borderRadius: 4 }] },
+    options: { indexAxis: 'y', scales: { x: { ticks: { callback: v => fN(v, 2) } }, y: { ticks: { callback: function (v) { return this.getLabelForValue(v); }, font: { size: 10 } } } },
+      plugins: { tooltip: { callbacks: { label: c => ` SPI ${fN(c.parsed.x, 3)}` } } } } });
+
+  root.appendChild(el('div', 'dica', `<b>Como usar.</b> O primeiro gráfico mostra quanto falta de cada frente, o segundo mostra se ela está no prazo. Frente com avanço alto e SPI baixo é frente que começou cedo e perdeu ritmo. Frente com avanço baixo e SPI alto ainda está dentro do plano, só não chegou a hora dela.`));
+}
+
+/* ---------- navegação e init ---------- */
+function nav() {
+  const a = document.getElementById('abas');
+  a.innerHTML = VIEWS.map(v => `<button data-v="${v[0]}" class="${STATE.view === v[0] ? 'on' : ''}">${h(v[1])}</button>`).join('');
+  a.querySelectorAll('button').forEach(b => b.onclick = () => { STATE.view = b.dataset.v; try { localStorage.setItem('cv.view', STATE.view); } catch (e) { } nav(); show(); });
+}
+function show() {
+  destroyCharts();
+  const m = document.getElementById('main'); m.innerHTML = '';
+  const v = VIEWS.find(x => x[0] === STATE.view) || VIEWS[0];
+  const root = el('div', 'view on'); m.appendChild(root); v[2](root);
+  root.appendChild(el('footer', 'rodape', `<span>Marka Engenharia Ltda &middot; Coordenação de Obras &middot; TFPM &middot; São Luís, MA</span><span>Fonte: ${h(D.meta.arquivo)} &middot; ${h(D.meta.semana)} &middot; extraído em ${fD(D.meta.extraido_em)}</span>`));
+  window.scrollTo(0, 0);
+}
+(function () {
+  document.getElementById('meta').innerHTML =
+    `<div><small>Semana</small><b>${h(D.meta.semana)}</b></div>` +
+    `<div><small>Data de corte</small><b>${fD(K.corte)}</b></div>` +
+    `<div><small>Escavação</small><b>${fP(K.pctReal)}</b></div>` +
+    `<div><small>Término proj.</small><b>${fD(K.fimProj)}</b></div>`;
+  try { const v = localStorage.getItem('cv.view'); if (v && VIEWS.some(x => x[0] === v)) STATE.view = v; } catch (e) { }
+  nav(); show();
+})();
+
+</script>
