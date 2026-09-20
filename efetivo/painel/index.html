@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Efetivo x Salário | TFPM</title>
+<style>
+:root{
+  --azul:#3871C1; --azul2:#8FB2DE; --azul3:#E5E9F2; --cinza:#656263; --gold:#C9A84C;
+  --bg:#F4F6F9; --card:#FFFFFF; --txt:#23262B; --mut:#656263; --ln:#D0D7E3; --alt:#F4F6F9;
+  --ok:#2E7D32; --warn:#F57F17; --bad:#C62828; --badbg:#FDECEA; --warnbg:#FFF4E0;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#12161C; --card:#1B2129; --txt:#E7EAEE; --mut:#A3A9B2; --ln:#2C3440; --alt:#20272F;
+  --azul:#5B8FD6; --azul2:#3E5F8C; --azul3:#243246; --badbg:#3A1E1E; --warnbg:#3A2E18; }}
+:root[data-theme="dark"]{
+  --bg:#12161C; --card:#1B2129; --txt:#E7EAEE; --mut:#A3A9B2; --ln:#2C3440; --alt:#20272F;
+  --azul:#5B8FD6; --azul2:#3E5F8C; --azul3:#243246; --badbg:#3A1E1E; --warnbg:#3A2E18; }
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-size:14px;line-height:1.45}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px 48px}
+header{background:#3871C1;color:#fff;padding:22px 0 18px}
+header .wrap{padding-bottom:0;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
+.brand{font-weight:bold;letter-spacing:.06em;font-size:13px}
+.brand span{font-weight:normal;opacity:.85;margin-left:4px}
+h1{margin:6px 0 4px;font-size:26px;line-height:1.15}
+.sub{opacity:.85;font-size:13px}
+.seg{display:flex;background:rgba(255,255,255,.14);border-radius:8px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;color:#fff;font:inherit;font-size:13px;padding:8px 14px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:#fff;color:#3871C1;font-weight:bold}
+.seg button:focus-visible{outline:2px solid #C9A84C;outline-offset:2px}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:-1px;padding-top:20px}
+.kpi{background:var(--card);border-top:4px solid var(--azul);padding:14px 14px 12px;border-radius:0 0 6px 6px}
+.kpi.gold{border-top-color:var(--gold)}
+.kpi .v{font-size:26px;font-weight:bold;color:var(--azul);line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi.gold .v{color:var(--gold)}
+.kpi .l{color:var(--mut);font-size:12px;margin-top:4px}
+.kpi .d{font-size:12px;margin-top:6px;color:var(--txt)}
+section{margin-top:26px}
+h2{font-size:17px;margin:0 0 4px;color:var(--txt)}
+.h2s{color:var(--mut);font-size:12.5px;margin:0 0 12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{background:var(--card);border:1px solid var(--ln);border-radius:6px;padding:18px}
+.insights{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ins{background:var(--card);border-left:4px solid var(--azul);padding:12px 14px;border-radius:0 6px 6px 0;font-size:13.5px}
+.ins b{display:block;font-size:20px;color:var(--azul);margin-bottom:2px}
+.ins.w{border-left-color:var(--warn)} .ins.w b{color:var(--warn)}
+.ins.r{border-left-color:var(--bad)} .ins.r b{color:var(--bad)}
+/* bars */
+.hb{display:grid;grid-template-columns:minmax(120px,38%) 1fr auto;gap:6px 10px;align-items:center;font-size:12.5px}
+.hb .lab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb .trk{height:16px;background:var(--azul3);border-radius:3px;position:relative;overflow:hidden;display:flex}
+.hb .fil{height:100%;background:var(--azul)}
+.hb .fil.tp{background:var(--azul2)}
+.hb .val{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.hb .val small{color:var(--mut);margin-left:6px}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--mut);margin-bottom:10px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+/* compare MOD/MOI */
+.cmp{display:grid;gap:14px}
+.cmp .row .t{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;color:var(--mut)}
+.stack{display:flex;height:28px;border-radius:4px;overflow:hidden;font-size:12px;font-weight:bold;color:#fff}
+.stack div{display:flex;align-items:center;justify-content:center;min-width:0;white-space:nowrap}
+.stack .a{background:var(--azul)} .stack .b{background:var(--gold)}
+.mini{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.mini div{background:var(--alt);padding:10px 12px;border-radius:4px}
+.mini b{display:block;font-size:18px;font-variant-numeric:tabular-nums}
+.mini span{font-size:12px;color:var(--mut)}
+/* columns chart */
+.cols{display:flex;align-items:flex-end;gap:8px;height:190px;padding-top:22px;border-bottom:1px solid var(--ln)}
+.cols .c{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.cols .bar{width:100%;max-width:56px;display:flex;flex-direction:column-reverse;border-radius:3px 3px 0 0;overflow:hidden}
+.cols .bar div{width:100%}
+.cols .n{font-size:12px;font-weight:bold;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.xl{display:flex;gap:8px;margin-top:6px}
+.xl div{flex:1;text-align:center;font-size:11px;color:var(--mut);min-width:0;line-height:1.2}
+/* table */
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tools input,.tools select{font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--ln);border-radius:6px;background:var(--card);color:var(--txt);min-width:0}
+.tools input{flex:1 1 220px}
+.tbl{overflow-x:auto;border:1px solid var(--ln);border-radius:6px;max-height:560px;overflow-y:auto}
+table{border-collapse:collapse;width:100%;font-size:12.5px;background:var(--card)}
+th{position:sticky;top:0;background:#3871C1;color:#fff;text-align:left;padding:9px 10px;font-weight:bold;cursor:pointer;white-space:nowrap;user-select:none;z-index:1}
+th.num,td.num{text-align:right}
+th[aria-sort="ascending"]::after{content:" ▲";font-size:9px}
+th[aria-sort="descending"]::after{content:" ▼";font-size:9px}
+td{padding:7px 10px;border-top:1px solid var(--ln);white-space:nowrap;font-variant-numeric:tabular-nums}
+tbody tr:nth-child(even) td{background:var(--alt)}
+tfoot td{background:var(--gold);color:#fff;font-weight:bold;position:sticky;bottom:0}
+.tag{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:3px;background:var(--azul3);color:var(--azul);font-weight:bold}
+.tag.moi{background:#F3ECD6;color:#8A6D1E}
+.pb{display:inline-block;width:60px;height:6px;background:var(--azul3);border-radius:3px;vertical-align:middle;margin-left:6px;overflow:hidden}
+.pb i{display:block;height:100%;background:var(--azul)}
+/* escala */
+.fam{border-top:1px solid var(--ln);padding:12px 0}
+.fam:first-child{border-top:0;padding-top:0}
+.fam h3{font-size:13.5px;margin:0 0 8px;display:flex;justify-content:space-between;gap:10px}
+.fam h3 span{font-weight:normal;color:var(--mut);font-size:12px;white-space:nowrap}
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.step{background:var(--alt);border-radius:4px;padding:7px 10px;min-width:92px;font-size:12px}
+.step b{display:block;font-size:13.5px;font-variant-numeric:tabular-nums}
+.step em{font-style:normal;color:var(--ok);font-size:11px}
+.step.inv{background:var(--badbg);outline:1px solid var(--bad)}
+.step.inv em{color:var(--bad);font-weight:bold}
+.alerts li{margin-bottom:8px}
+.alerts{padding-left:18px;margin:0;font-size:13.5px}
+.foot{color:var(--mut);font-size:12px;margin-top:28px;border-top:1px solid var(--ln);padding-top:12px}
+.two{columns:2;column-gap:28px}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(3,1fr)}.insights{grid-template-columns:1fr 1fr}}
+@media (max-width:720px){
+  .grid2,.insights{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}
+  h1{font-size:21px}.kpi .v{font-size:21px}.two{columns:1}
+  .hb{grid-template-columns:minmax(100px,42%) 1fr auto}
+  .cols{height:160px}.xl div{font-size:10px}
+  .seg{width:100%}.seg button{flex:1;padding:8px 4px;font-size:12px;white-space:normal}
+}
+@media (prefers-reduced-motion:no-preference){.fil,.stack div{transition:width .35s ease}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div>
+    <div class="brand">MARKA<span>ENGENHARIA</span></div>
+    <h1>Efetivo x Salário por Função</h1>
+    <div class="sub">Contrato Vale S.A. TFPM | Obras Civis e Oficina de Trens de Passageiros | Base Fortes de 03/09/2026</div>
+  </div>
+  <div class="seg" role="group" aria-label="Filtrar obra">
+    <button data-o="ALL" aria-pressed="true">Consolidado</button>
+    <button data-o="OC" aria-pressed="false">Obras Civis</button>
+    <button data-o="TP" aria-pressed="false">Trem de Passageiro</button>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <h2>Leitura gerencial</h2>
+    <p class="h2s">Recalculada conforme a obra selecionada.</p>
+    <div class="insights" id="ins"></div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel">
+      <h2>Concentração da folha (Pareto)</h2>
+      <p class="h2s">As 15 funções de maior folha mensal e o acumulado sobre o total.</p>
+      <div class="legend"><span><i style="background:var(--azul)"></i>Obras Civis</span><span><i style="background:var(--azul2)"></i>Trem de Passageiro</span></div>
+      <div class="hb" id="pareto"></div>
+    </div>
+    <div class="panel">
+      <h2>Maiores salários por função</h2>
+      <p class="h2s">Top 10 salários contratuais e quantas pessoas ocupam cada função.</p>
+      <div class="hb" id="topsal"></div>
+    </div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel">
+      <h2>Estrutura direta x indireta</h2>
+      <p class="h2s">Peso da MOI no efetivo e na folha.</p>
+      <div class="cmp" id="mod"></div>
+      <div class="mini" id="modmini"></div>
+    </div>
+    <div class="panel">
+      <h2>Efetivo por faixa salarial</h2>
+      <p class="h2s">Salário mensal contratual.</p>
+      <div class="legend"><span><i style="background:var(--azul)"></i>Obras Civis</span><span><i style="background:var(--azul2)"></i>Trem de Passageiro</span></div>
+      <div class="cols" id="faixas"></div><div class="xl" id="faixasx"></div>
+    </div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel">
+      <h2>Maiores efetivos por função</h2>
+      <p class="h2s">As 12 funções com mais pessoas.</p>
+      <div class="hb" id="topef"></div>
+    </div>
+    <div class="panel">
+      <h2>Tempo de casa</h2>
+      <p class="h2s">Pela data de admissão, até a emissão da base (03/09/2026).</p>
+      <div class="cols" id="casa"></div><div class="xl" id="casax"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Escala salarial por família de função</h2>
+    <p class="h2s">Famílias com dois níveis ou mais. O percentual mostra o salto sobre o nível anterior; em vermelho, nível superior pagando menos que o inferior.</p>
+    <div class="two" id="escala"></div>
+  </section>
+
+  <section>
+    <h2>Tabela completa por função</h2>
+    <p class="h2s">Clique no cabeçalho para ordenar.</p>
+    <div class="tools">
+      <input id="q" type="search" placeholder="Buscar função" aria-label="Buscar função">
+      <select id="fm" aria-label="Filtrar MOD ou MOI"><option value="">MOD e MOI</option><option>MOD</option><option>MOI</option></select>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr>
+        <th data-k="c">Função</th><th data-k="m">Tipo</th><th class="num" data-k="s">Salário</th>
+        <th class="num" data-k="oc">Obras Civis</th><th class="num" data-k="tp">Trem Pass.</th><th class="num" data-k="n">Efetivo</th>
+        <th class="num" data-k="fo">Folha mensal</th><th class="num" data-k="p">% folha</th>
+      </tr></thead>
+      <tbody id="tb"></tbody><tfoot id="tf"></tfoot>
+    </table></div>
+  </section>
+
+  <section class="panel">
+    <h2>Pendências de cadastro</h2>
+    <p class="h2s">Pontos para acertar com o DP antes de usar a base em promoção, reajuste ou pleito.</p>
+    <ul class="alerts" id="alerts"></ul>
+  </section>
+
+  <div class="foot">Folha considera apenas o salário contratual do Fortes, sem encargos, adicionais, horas extras e benefícios. Aprendizes (salário por hora de R$ 7,37) convertidos com 150 h/mês. MOD/MOI conforme a Área Organizacional. Painel sem dados nominais.</div>
+</div>
+
+<script>
+const D = [{"o": "OC", "c": "ENCANADOR I", "f": "ENCANADOR", "n": "I", "m": "MOD", "s": 2526.43, "h": false, "a": "2020-10", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2023-05", "x": false}, {"o": "OC", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS II", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "II", "m": "MOD", "s": 3316.52, "h": false, "a": "2026-03", "x": false}, {"o": "OC", "c": "MONTADOR DE ANDAIME", "f": "MONTADOR DE ANDAIME", "n": "Único", "m": "MOD", "s": 2613.6, "h": false, "a": "2025-11", "x": false}, {"o": "OC", "c": "ENCARREGADO CIVIL IV", "f": "ENCARREGADO CIVIL", "n": "IV", "m": "MOI", "s": 5009.55, "h": false, "a": "2023-10", "x": false}, {"o": "OC", "c": "MARTELETEIRO", "f": "MARTELETEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2023-04", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-09", "x": false}, {"o": "OC", "c": "ELETRICISTA", "f": "ELETRICISTA", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2022-01", "x": false}, {"o": "OC", "c": "ALMOXARIFE IV", "f": "ALMOXARIFE", "n": "IV", "m": "MOI", "s": 3362.67, "h": false, "a": "2020-10", "x": false}, {"o": "OC", "c": "TECNICO DE QUALIDADE II", "f": "TECNICO DE QUALIDADE", "n": "II", "m": "MOI", "s": 3572.1, "h": false, "a": "2026-07", "x": false}, {"o": "OC", "c": "TECNICO DE QUALIDADE V", "f": "TECNICO DE QUALIDADE", "n": "V", "m": "MOI", "s": 4754.45, "h": false, "a": "2020-12", "x": false}, {"o": "OC", "c": "ENCARREGADO DE ELETRICA IV", "f": "ENCARREGADO DE ELETRICA", "n": "IV", "m": "MOI", "s": 4995.95, "h": false, "a": "2013-06", "x": false}, {"o": "OC", "c": "TECNICO ADMINISTRATIVO III", "f": "TECNICO ADMINISTRATIVO", "n": "III", "m": "MOI", "s": 3580.5, "h": false, "a": "2025-11", "x": false}, {"o": "OC", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "TOPOGRAFO IV", "f": "TOPOGRAFO", "n": "IV", "m": "MOI", "s": 5498.48, "h": false, "a": "2017-08", "x": false}, {"o": "OC", "c": "MONTADOR DE ANDAIME", "f": "MONTADOR DE ANDAIME", "n": "Único", "m": "MOD", "s": 2613.6, "h": false, "a": "2025-11", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-01", "x": false}, {"o": "OC", "c": "OFICIAL DE SERVIÇOS GERAIS", "f": "OFICIAL DE SERVICOS GERAIS", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2023-10", "x": false}, {"o": "OC", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2024-06", "x": false}, {"o": "OC", "c": "TECNICO EM SEGURANÇA DO TRABALHO II", "f": "TECNICO EM SEGURANCA DO TRABALHO", "n": "II", "m": "MOI", "s": 3572.1, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "TECNICO EM SEGURANÇA DO TRABALHO IV", "f": "TECNICO EM SEGURANCA DO TRABALHO", "n": "IV", "m": "MOI", "s": 4396.67, "h": false, "a": "2025-11", "x": false}, {"o": "OC", "c": "AJUDANTE DE MONTAGEM", "f": "AJUDANTE DE MONTAGEM", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-06", "x": false}, {"o": "OC", "c": "MOTORISTA I", "f": "MOTORISTA", "n": "I", "m": "MOD", "s": 2813.7, "h": false, "a": "2019-09", "x": false}, {"o": "OC", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS IV", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "IV", "m": "MOD", "s": 4851.01, "h": false, "a": "2012-02", "x": false}, {"o": "OC", "c": "APRENDIZ TEC SEG DO TRABALHO", "f": "APRENDIZ TEC SEG DO TRABALHO", "n": "Único", "m": "MOI", "s": 1105.5, "h": true, "a": "2026-02", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2023-12", "x": false}, {"o": "OC", "c": "APRENDIZ TEC SEG DO TRABALHO", "f": "APRENDIZ TEC SEG DO TRABALHO", "n": "Único", "m": "MOI", "s": 1105.5, "h": true, "a": "2026-02", "x": false}, {"o": "OC", "c": "MESTRE DE OBRAS III", "f": "MESTRE DE OBRAS", "n": "III", "m": "MOI", "s": 11235.0, "h": false, "a": "2001-09", "x": false}, {"o": "OC", "c": "SINALEIRO DE RIGGER", "f": "SINALEIRO DE RIGGER", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2022-11", "x": false}, {"o": "OC", "c": "AUXILIAR DE TOPOGRAFIA", "f": "AUXILIAR DE TOPOGRAFIA", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2024-09", "x": false}, {"o": "OC", "c": "ENCARREGADO CIVIL I", "f": "ENCARREGADO CIVIL", "n": "I", "m": "MOI", "s": 3308.68, "h": false, "a": "2018-04", "x": false}, {"o": "OC", "c": "SERVENTE", "f": "SERVENTE", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2023-07", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-05", "x": false}, {"o": "OC", "c": "APRENDIZ TEC SEG DO TRABALHO", "f": "APRENDIZ TEC SEG DO TRABALHO", "n": "Único", "m": "MOI", "s": 1105.5, "h": true, "a": "2026-02", "x": false}, {"o": "OC", "c": "MONTADOR DE ANDAIME", "f": "MONTADOR DE ANDAIME", "n": "Único", "m": "MOD", "s": 2613.6, "h": false, "a": "2025-11", "x": false}, {"o": "OC", "c": "AUXILIAR ADMINISTRATIVO I", "f": "AUXILIAR ADMINISTRATIVO", "n": "I", "m": "MOI", "s": 2205.0, "h": false, "a": "2024-01", "x": false}, {"o": "OC", "c": "MECANICO MONTADOR", "f": "MECANICO MONTADOR", "n": "Único", "m": "MOD", "s": 2613.6, "h": false, "a": "2026-06", "x": false}, {"o": "OC", "c": "TECNICO EM SEGURANÇA DO TRABALHO II", "f": "TECNICO EM SEGURANCA DO TRABALHO", "n": "II", "m": "MOI", "s": 3572.1, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "TECNICO EM SEGURANCA DO TRABALHO", "f": "TECNICO EM SEGURANCA DO TRABALHO", "n": "Único", "m": "MOI", "s": 2613.6, "h": false, "a": "2025-06", "x": false}, {"o": "OC", "c": "MACARIQUEIRO", "f": "MACARIQUEIRO", "n": "Único", "m": "MOD", "s": 2412.36, "h": false, "a": "2024-07", "x": false}, {"o": "OC", "c": "PINTOR", "f": "PINTOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2020-07", "x": false}, {"o": "OC", "c": "SINALEIRO", "f": "SINALEIRO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-07", "x": false}, {"o": "OC", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-09", "x": false}, {"o": "OC", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-05", "x": false}, {"o": "OC", "c": "ENCARREGADO CIVIL I", "f": "ENCARREGADO CIVIL", "n": "I", "m": "MOI", "s": 3308.68, "h": false, "a": "2014-12", "x": false}, {"o": "OC", "c": "MARTELETEIRO", "f": "MARTELETEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2020-01", "x": false}, {"o": "OC", "c": "ALMOXARIFE II", "f": "ALMOXARIFE", "n": "II", "m": "MOI", "s": 2779.07, "h": false, "a": "2026-06", "x": false}, {"o": "OC", "c": "ENGENHEIRO CIVIL IV", "f": "ENGENHEIRO CIVIL", "n": "IV", "m": "MOI", "s": 13548.15, "h": false, "a": "2025-05", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-04", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "MECANICO MONTADOR", "f": "MECANICO MONTADOR", "n": "Único", "m": "MOD", "s": 2613.6, "h": false, "a": "2026-07", "x": false}, {"o": "OC", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2022-11", "x": false}, {"o": "OC", "c": "MONTADOR DE ANDAIME", "f": "MONTADOR DE ANDAIME", "n": "Único", "m": "MOD", "s": 2613.6, "h": false, "a": "2026-08", "x": false}, {"o": "OC", "c": "PEDREIRO I", "f": "PEDREIRO", "n": "I", "m": "MOD", "s": 2526.43, "h": false, "a": "2020-07", "x": false}, {"o": "OC", "c": "APRENDIZ TEC SEG DO TRABALHO", "f": "APRENDIZ TEC SEG DO TRABALHO", "n": "Único", "m": "MOI", "s": 1105.5, "h": true, "a": "2026-02", "x": false}, {"o": "OC", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS V", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "V", "m": "MOD", "s": 4431.33, "h": false, "a": "2025-06", "x": false}, {"o": "OC", "c": "APRENDIZ TEC SEG DO TRABALHO", "f": "APRENDIZ TEC SEG DO TRABALHO", "n": "Único", "m": "MOI", "s": 1105.5, "h": true, "a": "2026-02", "x": false}, {"o": "OC", "c": "SUPERVISOR TECNICO EM SEGURANCA DO TRABALHO I", "f": "SUPERVISOR TECNICO EM SEGURANCA DO TRABALHO", "n": "I", "m": "MOI", "s": 5775.0, "h": false, "a": "2021-03", "x": false}, {"o": "OC", "c": "MECANICO MONTADOR", "f": "MECANICO MONTADOR", "n": "Único", "m": "MOD", "s": 2613.6, "h": false, "a": "2026-02", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-04", "x": false}, {"o": "OC", "c": "OPERADOR DE CAMINHAO MUNCK III", "f": "OPERADOR DE CAMINHAO MUNCK", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2020-09", "x": false}, {"o": "OC", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2026-06", "x": false}, {"o": "OC", "c": "ARQUITETO I", "f": "ARQUITETO", "n": "I", "m": "MOI", "s": 6659.86, "h": false, "a": "2020-10", "x": false}, {"o": "OC", "c": "ENCARREGADO DE TERRAPLANAGEM IV", "f": "ENCARREGADO DE TERRAPLANAGEM", "n": "IV", "m": "MOI", "s": 5009.55, "h": false, "a": "2025-06", "x": false}, {"o": "OC", "c": "APONTADOR", "f": "APONTADOR", "n": "Único", "m": "MOI", "s": 2296.8, "h": false, "a": "2025-06", "x": false}, {"o": "OC", "c": "PINTOR", "f": "PINTOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-03", "x": false}, {"o": "OC", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2025-08", "x": false}, {"o": "OC", "c": "CALDEIREIRO", "f": "CALDEIREIRO", "n": "Único", "m": "MOD", "s": 2875.4, "h": false, "a": "2026-02", "x": false}, {"o": "OC", "c": "TOPOGRAFO II", "f": "TOPOGRAFO", "n": "II", "m": "MOI", "s": 4544.2, "h": false, "a": "2024-06", "x": false}, {"o": "OC", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-05", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-08", "x": false}, {"o": "OC", "c": "TECNICO DE PLANEJAMENTO III", "f": "TECNICO DE PLANEJAMENTO", "n": "III", "m": "MOI", "s": 4179.53, "h": false, "a": "2026-08", "x": false}, {"o": "OC", "c": "COORDENADOR DE OBRAS V", "f": "COORDENADOR DE OBRAS", "n": "V", "m": "MOI", "s": 15142.05, "h": false, "a": "2013-08", "x": false}, {"o": "OC", "c": "AJUDANTE DE MONTAGEM", "f": "AJUDANTE DE MONTAGEM", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-03", "x": false}, {"o": "OC", "c": "MESTRE DE OBRAS II", "f": "MESTRE DE OBRAS", "n": "II", "m": "MOI", "s": 10195.5, "h": false, "a": "2005-04", "x": false}, {"o": "OC", "c": "TECNICO DE MEDIÇAO IV", "f": "TECNICO DE MEDICAO", "n": "IV", "m": "MOI", "s": 4597.48, "h": false, "a": "2025-11", "x": false}, {"o": "OC", "c": "AUXILIAR DE PLANEJAMENTO", "f": "AUXILIAR DE PLANEJAMENTO", "n": "Único", "m": "MOI", "s": 1720.4, "h": false, "a": "2026-06", "x": false}, {"o": "OC", "c": "SUPERVISOR(A) DE MEDICAO II", "f": "SUPERVISOR(A) DE MEDICAO", "n": "II", "m": "MOI", "s": 7532.7, "h": false, "a": "2026-04", "x": false}, {"o": "OC", "c": "TECNICO DE MEDIÇAO III", "f": "TECNICO DE MEDICAO", "n": "III", "m": "MOI", "s": 4179.53, "h": false, "a": "2026-05", "x": false}, {"o": "OC", "c": "PEDREIRO I", "f": "PEDREIRO", "n": "I", "m": "MOD", "s": 2526.43, "h": false, "a": "2023-06", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2023-11", "x": false}, {"o": "OC", "c": "APRENDIZ TEC SEG DO TRABALHO", "f": "APRENDIZ TEC SEG DO TRABALHO", "n": "Único", "m": "MOI", "s": 1105.5, "h": true, "a": "2026-02", "x": false}, {"o": "OC", "c": "PINTOR", "f": "PINTOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-05", "x": false}, {"o": "OC", "c": "MECANICO DE EQUIPAMENTOS", "f": "MECANICO DE EQUIPAMENTOS", "n": "Único", "m": "MOI", "s": 3499.61, "h": false, "a": "2026-07", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-04", "x": false}, {"o": "OC", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-04", "x": false}, {"o": "OC", "c": "AUXILIAR DE TOPOGRAFIA", "f": "AUXILIAR DE TOPOGRAFIA", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2022-11", "x": false}, {"o": "OC", "c": "MOTORISTA", "f": "MOTORISTA", "n": "Único", "m": "MOD", "s": 2557.93, "h": false, "a": "2020-01", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-04", "x": false}, {"o": "OC", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2025-06", "x": false}, {"o": "OC", "c": "MACARIQUEIRO I", "f": "MACARIQUEIRO", "n": "I", "m": "MOD", "s": 2653.6, "h": false, "a": "2012-07", "x": false}, {"o": "OC", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-04", "x": false}, {"o": "OC", "c": "ENCARREGADO DE TRANSPORTE IV", "f": "ENCARREGADO DE TRANSPORTE", "n": "IV", "m": "MOI", "s": 5009.55, "h": false, "a": "2025-04", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-01", "x": false}, {"o": "OC", "c": "ENGENHEIRO DE PLANEJAMENTO V", "f": "ENGENHEIRO DE PLANEJAMENTO", "n": "V", "m": "MOI", "s": 15142.05, "h": false, "a": "2023-08", "x": false}, {"o": "OC", "c": "GREIDISTA", "f": "GREIDISTA", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-05", "x": false}, {"o": "OC", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2025-04", "x": false}, {"o": "OC", "c": "CARPINTEIRO III", "f": "CARPINTEIRO", "n": "III", "m": "MOD", "s": 3102.38, "h": false, "a": "2004-12", "x": false}, {"o": "OC", "c": "MOTORISTA DE CARRETA IV", "f": "MOTORISTA DE CARRETA", "n": "IV", "m": "MOD", "s": 4009.1, "h": false, "a": "2025-08", "x": false}, {"o": "OC", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2024-09", "x": false}, {"o": "OC", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-08", "x": false}, {"o": "OC", "c": "SOLDADOR", "f": "SOLDADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2024-06", "x": false}, {"o": "OC", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-09", "x": false}, {"o": "OC", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-11", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2024-09", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "SERVENTE", "f": "SERVENTE", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2023-05", "x": false}, {"o": "OC", "c": "AUXILIAR ADMINISTRATIVO I", "f": "AUXILIAR ADMINISTRATIVO", "n": "I", "m": "MOI", "s": 2205.0, "h": false, "a": "2024-02", "x": false}, {"o": "OC", "c": "TECNICO EM MEIO AMBIENTE III", "f": "TECNICO EM MEIO AMBIENTE", "n": "III", "m": "MOI", "s": 3929.3, "h": false, "a": "2025-10", "x": false}, {"o": "OC", "c": "ARMADOR I", "f": "ARMADOR", "n": "I", "m": "MOD", "s": 2526.43, "h": false, "a": "2018-07", "x": false}, {"o": "OC", "c": "TECNICO EM SEGURANÇA DO TRABALHO III", "f": "TECNICO EM SEGURANCA DO TRABALHO", "n": "III", "m": "MOI", "s": 3929.3, "h": false, "a": "2026-09", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-04", "x": false}, {"o": "OC", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-11", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2022-11", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-01", "x": false}, {"o": "OC", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-08", "x": false}, {"o": "OC", "c": "SINALEIRO", "f": "SINALEIRO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-07", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "TECNICO EM SEGURANÇA DO TRABALHO III", "f": "TECNICO EM SEGURANCA DO TRABALHO", "n": "III", "m": "MOI", "s": 3929.3, "h": false, "a": "2023-09", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-04", "x": false}, {"o": "OC", "c": "MARTELETEIRO", "f": "MARTELETEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-06", "x": false}, {"o": "OC", "c": "SINALEIRO DE RIGGER", "f": "SINALEIRO DE RIGGER", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2020-09", "x": false}, {"o": "OC", "c": "TECNICO LABORATORISTA III", "f": "TECNICO LABORATORISTA", "n": "III", "m": "MOI", "s": 4322.25, "h": false, "a": "2026-09", "x": false}, {"o": "OC", "c": "APONTADOR", "f": "APONTADOR", "n": "Único", "m": "MOI", "s": 2296.8, "h": false, "a": "2026-05", "x": false}, {"o": "OC", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "AJUDANTE DE MONTAGEM", "f": "AJUDANTE DE MONTAGEM", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-03", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-05", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-09", "x": false}, {"o": "OC", "c": "SINALEIRO", "f": "SINALEIRO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-07", "x": false}, {"o": "OC", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-05", "x": false}, {"o": "OC", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS V", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "V", "m": "MOD", "s": 4431.33, "h": false, "a": "2024-08", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2022-11", "x": false}, {"o": "OC", "c": "APONTADOR", "f": "APONTADOR", "n": "Único", "m": "MOI", "s": 2296.8, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "SINALEIRO DE RIGGER", "f": "SINALEIRO DE RIGGER", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-05", "x": false}, {"o": "OC", "c": "MOTORISTA CAMINHAO I", "f": "MOTORISTA CAMINHAO", "n": "I", "m": "MOD", "s": 3012.1, "h": false, "a": "2023-09", "x": false}, {"o": "OC", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-06", "x": false}, {"o": "OC", "c": "AJUDANTE DE MONTAGEM", "f": "AJUDANTE DE MONTAGEM", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-06", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2025-02", "x": false}, {"o": "OC", "c": "AUXILIAR DE LABORATORIO", "f": "AUXILIAR DE LABORATORIO", "n": "Único", "m": "MOI", "s": 1720.4, "h": false, "a": "2025-02", "x": false}, {"o": "OC", "c": "SERVENTE", "f": "SERVENTE", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2023-05", "x": false}, {"o": "OC", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS V", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "V", "m": "MOD", "s": 4431.33, "h": false, "a": "2026-06", "x": false}, {"o": "OC", "c": "OPERADOR DE CAMINHAO MUNCK III", "f": "OPERADOR DE CAMINHAO MUNCK", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2019-01", "x": false}, {"o": "OC", "c": "ASSISTENTE DE TOPOGRAFIA", "f": "ASSISTENTE DE TOPOGRAFIA", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2024-07", "x": false}, {"o": "OC", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2025-06", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2023-07", "x": false}, {"o": "OC", "c": "TECNICO DE QUALIDADE V", "f": "TECNICO DE QUALIDADE", "n": "V", "m": "MOI", "s": 4754.45, "h": false, "a": "2026-09", "x": false}, {"o": "OC", "c": "ANALISTA ADMINSTRATIVO", "f": "ANALISTA ADMINSTRATIVO", "n": "Único", "m": "MOI", "s": 5040.0, "h": false, "a": "2018-05", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2024-09", "x": false}, {"o": "OC", "c": "ENCARREGADO CIVIL", "f": "ENCARREGADO CIVIL", "n": "Único", "m": "MOI", "s": 3007.89, "h": false, "a": "2025-04", "x": false}, {"o": "OC", "c": "SINALEIRO", "f": "SINALEIRO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-07", "x": false}, {"o": "OC", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-10", "x": false}, {"o": "OC", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2026-01", "x": false}, {"o": "OC", "c": "AUXILIAR DE ALMOXARIFE", "f": "AUXILIAR DE ALMOXARIFE", "n": "Único", "m": "MOI", "s": 1720.4, "h": false, "a": "2023-04", "x": false}, {"o": "OC", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-04", "x": false}, {"o": "OC", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2025-05", "x": false}, {"o": "OC", "c": "ENGENHEIRO DE SEGURANÇA DO TRABALHO III", "f": "ENGENHEIRO DE SEGURANCA DO TRABALHO", "n": "III", "m": "MOI", "s": 11550.0, "h": false, "a": "2026-04", "x": false}, {"o": "OC", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2025-07", "x": false}, {"o": "OC", "c": "ENGENHEIRO CIVIL V", "f": "ENGENHEIRO CIVIL", "n": "V", "m": "MOI", "s": 15142.05, "h": false, "a": "2006-11", "x": false}, {"o": "OC", "c": "MOTORISTA CAMINHÃO MUNK II", "f": "MOTORISTA CAMINHAO MUNK", "n": "II", "m": "MOD", "s": 3316.52, "h": false, "a": "2026-05", "x": false}, {"o": "OC", "c": "MECANICO MONTADOR", "f": "MECANICO MONTADOR", "n": "Único", "m": "MOD", "s": 2613.6, "h": false, "a": "2025-10", "x": false}, {"o": "OC", "c": "SOLDADOR II", "f": "SOLDADOR", "n": "II", "m": "MOD", "s": 2820.36, "h": false, "a": "2023-08", "x": false}, {"o": "OC", "c": "ELETRICISTA I", "f": "ELETRICISTA", "n": "I", "m": "MOD", "s": 2526.43, "h": false, "a": "2023-03", "x": false}, {"o": "OC", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2025-04", "x": false}, {"o": "OC", "c": "TECNICO DE MEDIÇAO IV", "f": "TECNICO DE MEDICAO", "n": "IV", "m": "MOI", "s": 4597.48, "h": false, "a": "2026-05", "x": false}, {"o": "TP", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "TECNICO EM SEGURANÇA DO TRABALHO III", "f": "TECNICO EM SEGURANCA DO TRABALHO", "n": "III", "m": "MOI", "s": 3929.3, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-09", "x": false}, {"o": "TP", "c": "SINALEIRO", "f": "SINALEIRO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2025-09", "x": false}, {"o": "TP", "c": "SINALEIRO", "f": "SINALEIRO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2025-08", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-04", "x": false}, {"o": "TP", "c": "MARTELETEIRO", "f": "MARTELETEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2023-09", "x": false}, {"o": "TP", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2026-09", "x": false}, {"o": "TP", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "APONTADOR", "f": "APONTADOR", "n": "Único", "m": "MOI", "s": 2296.8, "h": false, "a": "2026-05", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2022-11", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2026-09", "x": false}, {"o": "TP", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2025-06", "x": false}, {"o": "TP", "c": "MOTORISTA", "f": "MOTORISTA", "n": "Único", "m": "MOD", "s": 2557.93, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "MARTELETEIRO", "f": "MARTELETEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2023-04", "x": false}, {"o": "TP", "c": "ENCARREGADO CIVIL V", "f": "ENCARREGADO CIVIL", "n": "V", "m": "MOI", "s": 5460.0, "h": false, "a": "2020-10", "x": false}, {"o": "TP", "c": "ENCARREGADO CIVIL", "f": "ENCARREGADO CIVIL", "n": "Único", "m": "MOI", "s": 3007.89, "h": false, "a": "2024-09", "x": false}, {"o": "TP", "c": "MOTORISTA DE CARRETA III", "f": "MOTORISTA DE CARRETA", "n": "III", "m": "MOD", "s": 3644.64, "h": false, "a": "2026-01", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2026-09", "x": false}, {"o": "TP", "c": "SINALEIRO", "f": "SINALEIRO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "SINALEIRO", "f": "SINALEIRO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-09", "x": false}, {"o": "TP", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-09", "x": false}, {"o": "TP", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "ENCARREGADO DE TERRAPLANAGEM V", "f": "ENCARREGADO DE TERRAPLANAGEM", "n": "V", "m": "MOI", "s": 5460.0, "h": false, "a": "2025-05", "x": false}, {"o": "TP", "c": "SUPERVISOR TECNICO EM SEGURANCA DO TRABALHO II", "f": "SUPERVISOR TECNICO EM SEGURANCA DO TRABALHO", "n": "II", "m": "MOI", "s": 6300.0, "h": false, "a": "2009-04", "x": false}, {"o": "TP", "c": "SUPERVISOR DE MECANICA V", "f": "SUPERVISOR DE MECANICA", "n": "V", "m": "MOI", "s": 10027.5, "h": false, "a": "2025-11", "x": false}, {"o": "TP", "c": "TECNICO DE PLANEJAMENTO IV", "f": "TECNICO DE PLANEJAMENTO", "n": "IV", "m": "MOI", "s": 4597.48, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2025-05", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2021-02", "x": false}, {"o": "TP", "c": "ALMOXARIFE", "f": "ALMOXARIFE", "n": "Único", "m": "MOI", "s": 2296.8, "h": false, "a": "2024-09", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-04", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "SINALEIRO", "f": "SINALEIRO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-01", "x": false}, {"o": "TP", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "AUXILIAR DE TOPOGRAFIA", "f": "AUXILIAR DE TOPOGRAFIA", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "TOPOGRAFO IV", "f": "TOPOGRAFO", "n": "IV", "m": "MOI", "s": 5498.48, "h": false, "a": "2026-05", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-04", "x": false}, {"o": "TP", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS II", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "II", "m": "MOD", "s": 3316.52, "h": false, "a": "2026-03", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-09", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-09", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-04", "x": false}, {"o": "TP", "c": "AUXILIAR DE TOPOGRAFIA", "f": "AUXILIAR DE TOPOGRAFIA", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "TECNICO EM SEGURANÇA DO TRABALHO III", "f": "TECNICO EM SEGURANCA DO TRABALHO", "n": "III", "m": "MOI", "s": 3929.3, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "TECNICO ADMINISTRATIVO", "f": "TECNICO ADMINISTRATIVO", "n": "Único", "m": "MOI", "s": 2688.0, "h": false, "a": "2019-11", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "SINALEIRO", "f": "SINALEIRO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2021-08", "x": false}, {"o": "TP", "c": "APONTADOR", "f": "APONTADOR", "n": "Único", "m": "MOI", "s": 2296.8, "h": false, "a": "2026-05", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "TECNICO EM SEGURANÇA DO TRABALHO III", "f": "TECNICO EM SEGURANCA DO TRABALHO", "n": "III", "m": "MOI", "s": 3929.3, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-04", "x": false}, {"o": "TP", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "ELETRICISTA I", "f": "ELETRICISTA", "n": "I", "m": "MOD", "s": 2526.43, "h": false, "a": "2025-09", "x": false}, {"o": "TP", "c": "TECNICO EM SEGURANÇA DO TRABALHO V", "f": "TECNICO EM SEGURANCA DO TRABALHO", "n": "V", "m": "MOI", "s": 4754.45, "h": false, "a": "2025-11", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "GREIDISTA", "f": "GREIDISTA", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-08", "x": false}, {"o": "TP", "c": "ENGENHEIRO CIVIL II", "f": "ENGENHEIRO CIVIL", "n": "II", "m": "MOI", "s": 10395.0, "h": false, "a": "2025-05", "x": false}, {"o": "TP", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "PEDREIRO I", "f": "PEDREIRO", "n": "I", "m": "MOD", "s": 2526.43, "h": false, "a": "2021-10", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2024-09", "x": false}, {"o": "TP", "c": "AUXILIAR ADMINISTRATIVO", "f": "AUXILIAR ADMINISTRATIVO", "n": "Único", "m": "MOD", "s": 1720.4, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "ELETRICISTA", "f": "ELETRICISTA", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2026-01", "x": false}, {"o": "TP", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS V", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "V", "m": "MOD", "s": 4431.33, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "OPERADOR DE EQUIPAMENTOS DIVERSOS III", "f": "OPERADOR DE EQUIPAMENTOS DIVERSOS", "n": "III", "m": "MOD", "s": 3629.28, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "MARTELETEIRO", "f": "MARTELETEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2025-05", "x": false}, {"o": "TP", "c": "AUXILIAR DE SERVICOS GERAIS", "f": "AUXILIAR DE SERVICOS GERAIS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "MOTORISTA CAMINHÃO MUNK II", "f": "MOTORISTA CAMINHAO MUNK", "n": "II", "m": "MOD", "s": 3316.52, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-09", "x": false}, {"o": "TP", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2025-07", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "OPERADOR DE CAMINHAO MUNCK II", "f": "OPERADOR DE CAMINHAO MUNCK", "n": "II", "m": "MOD", "s": 3316.52, "h": false, "a": "2026-09", "x": false}, {"o": "TP", "c": "TECNICO EM MEIO AMBIENTE IV", "f": "TECNICO EM MEIO AMBIENTE", "n": "IV", "m": "MOI", "s": 4396.67, "h": false, "a": "2025-11", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-04", "x": false}, {"o": "TP", "c": "PEDREIRO", "f": "PEDREIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "CARPINTEIRO", "f": "CARPINTEIRO", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-08", "x": false}, {"o": "TP", "c": "MOTORISTA II", "f": "MOTORISTA", "n": "II", "m": "MOD", "s": 3095.06, "h": false, "a": "2026-06", "x": false}, {"o": "TP", "c": "SERVENTE DE OBRAS", "f": "SERVENTE DE OBRAS", "n": "Único", "m": "MOD", "s": 1656.6, "h": false, "a": "2024-09", "x": false}, {"o": "TP", "c": "ARMADOR", "f": "ARMADOR", "n": "Único", "m": "MOD", "s": 2296.8, "h": false, "a": "2026-07", "x": false}];
+const brl = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+const brl2 = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2});
+const kbrl = v => v>=1e6 ? 'R$ '+(v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2})+' mi' : 'R$ '+(v/1e3).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mil';
+const pct = (v,d=1) => (v*100).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
+const int = v => v.toLocaleString('pt-BR');
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const REF = new Date(2026,8,3);
+let OBRA='ALL', sortK='fo', sortD=-1;
+
+function funcs(rows){
+  const m={};
+  rows.forEach(r=>{const f=m[r.c]||(m[r.c]={c:r.c,f:r.f,nv:r.n,m:r.m,s:r.s,h:r.h,oc:0,tp:0,n:0,fo:0,foc:0,ftp:0});
+    f.n++; f.fo+=r.s; if(r.o==='OC'){f.oc++;f.foc+=r.s}else{f.tp++;f.ftp+=r.s}});
+  return Object.values(m);
+}
+function hbar(el,items,max,fmt){
+  el.innerHTML=items.map(it=>{
+    const a=(it.a/max*100), b=((it.b||0)/max*100);
+    return `<div class="lab" title="${esc(it.l)}">${esc(it.l)}</div><div class="trk"><div class="fil" style="width:${a}%"></div>${it.b!=null?`<div class="fil tp" style="width:${b}%"></div>`:''}</div><div class="val">${fmt(it)}</div>`;
+  }).join('');
+}
+function cols(el,xel,items,max){
+  el.innerHTML=items.map(it=>`<div class="c"><div class="n">${int(it.a+(it.b||0))}</div><div class="bar" style="height:${(it.a+(it.b||0))/max*100}%">
+    <div style="height:${(it.a/(it.a+(it.b||0)||1))*100}%;background:var(--azul)"></div>${it.b!=null?`<div style="height:${(it.b/(it.a+it.b||1))*100}%;background:var(--azul2)"></div>`:''}</div></div>`).join('');
+  xel.innerHTML=items.map(it=>`<div>${it.l}</div>`).join('');
+}
+
+function render(){
+  const R = OBRA==='ALL'?D:D.filter(r=>r.o===OBRA);
+  const F = funcs(R);
+  const tot = R.reduce((a,r)=>a+r.s,0), n=R.length;
+  const moi=R.filter(r=>r.m==='MOI'), mod=R.filter(r=>r.m==='MOD');
+  const fmoi=moi.reduce((a,r)=>a+r.s,0), fmod=tot-fmoi;
+  const sorted=[...R].map(r=>r.s).sort((a,b)=>a-b), med=n?(n%2?sorted[(n-1)/2]:(sorted[n/2-1]+sorted[n/2])/2):0;
+
+  // KPIs
+  document.getElementById('kpis').innerHTML=[
+    ['Efetivo total',int(n),`${int(mod.length)} MOD | ${int(moi.length)} MOI`,''],
+    ['Folha mensal contratual',kbrl(tot),`${kbrl(tot*12)} em 12 meses`,'gold'],
+    ['Salário médio',brl(n?tot/n:0),`Mediana ${brl(med)}`,''],
+    ['Salário médio MOD',brl(mod.length?fmod/mod.length:0),`${pct(n?mod.length/n:0)} do efetivo`,''],
+    ['Salário médio MOI',brl(moi.length?fmoi/moi.length:0),`${pct(tot?fmoi/tot:0)} da folha`,''],
+    ['Funções distintas',int(F.length),`${int(F.filter(f=>f.n===1).length)} com uma só pessoa`,'']
+  ].map(k=>`<div class="kpi ${k[3]}"><div class="v">${k[1]}</div><div class="l">${k[0]}</div><div class="d">${k[2]}</div></div>`).join('');
+
+  // Pareto
+  const byF=[...F].sort((a,b)=>b.fo-a.fo); let acc=0;
+  const n80=(()=>{let s=0;for(let i=0;i<byF.length;i++){s+=byF[i].fo;if(s>=tot*.8)return i+1}return byF.length})();
+  const n50=(()=>{let s=0;for(let i=0;i<byF.length;i++){s+=byF[i].fo;if(s>=tot*.5)return i+1}return byF.length})();
+  const top15=byF.slice(0,15);
+  hbar(document.getElementById('pareto'),top15.map(f=>{acc+=f.fo;return{l:f.c,a:f.foc,b:f.ftp,t:f.fo,acc}}),top15[0]?.fo||1,
+    it=>`${kbrl(it.t)}<small>${pct(it.acc/tot,0)}</small>`);
+
+  // Top salários
+  const ts=[...F].sort((a,b)=>b.s-a.s||a.c.localeCompare(b.c)).slice(0,10);
+  hbar(document.getElementById('topsal'),ts.map(f=>({l:f.c,a:f.s,n:f.n})),ts[0]?.s||1,it=>`${brl(it.a)}<small>${it.n} pess.</small>`);
+
+  // Top efetivo
+  const te=[...F].sort((a,b)=>b.n-a.n||b.fo-a.fo).slice(0,12);
+  hbar(document.getElementById('topef'),te.map(f=>({l:f.c,a:f.oc,b:f.tp,n:f.n})),te[0]?.n||1,it=>`${it.n}<small>${pct(it.n/n,0)}</small>`);
+
+  // MOD/MOI
+  const st=(l,a,b,fa,fb)=>`<div class="row"><div class="t"><span>${l}</span><span>${fa} | ${fb}</span></div><div class="stack"><div class="a" style="width:${a*100}%">${a>.12?'MOD '+pct(a,0):''}</div><div class="b" style="width:${b*100}%">${b>.12?'MOI '+pct(b,0):''}</div></div></div>`;
+  document.getElementById('mod').innerHTML=
+    st('Efetivo',n?mod.length/n:0,n?moi.length/n:0,int(mod.length)+' MOD',int(moi.length)+' MOI')+
+    st('Folha mensal',tot?fmod/tot:0,tot?fmoi/tot:0,kbrl(fmod),kbrl(fmoi));
+  const ratio=(mod.length&&moi.length)?(fmoi/moi.length)/(fmod/mod.length):0;
+  document.getElementById('modmini').innerHTML=
+    `<div><b>${moi.length?(mod.length/moi.length).toLocaleString('pt-BR',{maximumFractionDigits:1}):'-'}</b><span>pessoas de MOD por pessoa de MOI</span></div>
+     <div><b>${ratio.toLocaleString('pt-BR',{maximumFractionDigits:1})}x</b><span>salário médio MOI sobre MOD</span></div>`;
+
+  // Faixas
+  const FX=[['Até 2 mil',0,2000],['2 a 3 mil',2000,3000],['3 a 4 mil',3000,4000],['4 a 6 mil',4000,6000],['6 a 10 mil',6000,10000],['Acima de 10 mil',10000,1e9]];
+  const fx=FX.map(([l,a,b])=>{const s=R.filter(r=>r.s>a&&r.s<=b);return{l,a:s.filter(r=>r.o==='OC').length,b:s.filter(r=>r.o==='TP').length}});
+  cols(document.getElementById('faixas'),document.getElementById('faixasx'),fx,Math.max(...fx.map(x=>x.a+x.b),1));
+
+  // Tempo de casa
+  const mo=r=>{if(!r.a)return null;const [y,m]=r.a.split('-').map(Number);return (REF.getFullYear()-y)*12+(REF.getMonth()+1-m)};
+  const TC=[['Até 3 meses',-1,3],['3 a 6 m',3,6],['6 a 12 m',6,12],['1 a 2 anos',12,24],['2 a 5 anos',24,60],['Mais de 5 anos',60,1e4]];
+  const tc=TC.map(([l,a,b])=>{const s=R.filter(r=>{const m=mo(r);return m!=null&&m>a&&m<=b});return{l,a:s.filter(r=>r.o==='OC').length,b:s.filter(r=>r.o==='TP').length}});
+  cols(document.getElementById('casa'),document.getElementById('casax'),tc,Math.max(...tc.map(x=>x.a+x.b),1));
+  const novos=R.filter(r=>{const m=mo(r);return m!=null&&m<=6}).length;
+
+  // Escala
+  const ord={'Único':0,I:1,II:2,III:3,IV:4,V:5};
+  const fams={};F.forEach(f=>(fams[f.f]=fams[f.f]||[]).push(f));
+  const invs=[];
+  const fl=Object.entries(fams).filter(([k,v])=>v.length>1).sort((a,b)=>b[1].reduce((s,x)=>s+x.fo,0)-a[1].reduce((s,x)=>s+x.fo,0));
+  document.getElementById('escala').innerHTML=fl.length?fl.map(([k,v])=>{
+    v.sort((a,b)=>ord[a.nv]-ord[b.nv]);
+    const amp=v[v.length-1].s/v[0].s-1;
+    return `<div class="fam" style="break-inside:avoid"><h3>${esc(k)}<span>${v.reduce((s,x)=>s+x.n,0)} pess. | amplitude ${pct(amp,0)}</span></h3><div class="steps">${v.map((x,i)=>{
+      const j=i?x.s/v[i-1].s-1:null; if(j!=null&&j<0)invs.push({c:x.c,p:v[i-1].c,j,s:x.s,ps:v[i-1].s});
+      return `<div class="step ${j!=null&&j<0?'inv':''}">${x.nv==='Único'?'Sem nível':'Nível '+x.nv}<b>${brl2(x.s)}</b>${j!=null?`<em>${j>=0?'+':''}${pct(j)}</em>`:`<em style="color:var(--mut)">${x.n} pess.</em>`}</div>`}).join('')}</div></div>`}).join(''):'<p class="h2s">Nenhuma família com mais de um nível nesta obra.</p>';
+
+  // Insights
+  const top10s=[...R].sort((a,b)=>b.s-a.s).slice(0,10).reduce((a,r)=>a+r.s,0);
+  const bigF=byF[0];
+  const ins=[
+    ['',`${n50} funções`,`respondem por 50% da folha e ${n80} funções por 80%, num universo de ${F.length}. O controle de custo de MO se resolve nesse grupo.`],
+    ['',bigF?pct(bigF.fo/tot):'-',`da folha está numa única função: ${bigF?esc(bigF.c.toLowerCase()):''} (${bigF?bigF.n:0} pessoas, ${bigF?kbrl(bigF.fo):''}/mês).`],
+    ['',pct(tot?top10s/tot:0),`da folha fica com as 10 pessoas de maior salário, ou ${pct(n?10/n:0)} do efetivo.`],
+    [ (tot&&fmoi/tot>.4)?'w':'', pct(tot?fmoi/tot:0),`da folha é indireta (MOI), com ${pct(n?moi.length/n:0)} do efetivo. Cada pessoa de MOI custa em média ${ratio.toLocaleString('pt-BR',{maximumFractionDigits:1})} vezes uma de MOD.`],
+    [ novos/n>.3?'w':'', `${novos} pessoas`,`admitidas nos últimos 6 meses (${pct(n?novos/n:0)} do efetivo). Equipe nova pede atenção a curva de aprendizado e integração de SSMA.`],
+    [ invs.length?'r':'', invs.length?`${invs.length} inversão`:'Escala ok',
+      invs.length?invs.map(i=>`${esc(i.c.toLowerCase())} ganha ${pct(-i.j)} menos que o nível anterior (${brl2(i.s)} contra ${brl2(i.ps)}).`).join(' '):'Nenhum nível superior paga menos que o inferior nesta obra.']
+  ];
+  document.getElementById('ins').innerHTML=ins.map(i=>`<div class="ins ${i[0]}"><b>${i[1]}</b>${i[2]}</div>`).join('');
+
+  // Alerts
+  const semcod=R.filter(r=>r.x).length;
+  const al=[];
+  invs.forEach(i=>al.push(`<b>Inversão de escala:</b> ${esc(i.c)} (${brl2(i.s)}) abaixo de ${esc(i.p)} (${brl2(i.ps)}).`));
+  if(semcod) al.push(`<b>${semcod} colaboradores sem código Fortes</b> na base do Trem de Passageiro.`);
+  if(R.some(r=>r.h)) al.push(`<b>Aprendizes com salário por hora</b> (R$ 7,37): mensal estimado com 150 h. Confirmar a jornada contratada.`);
+  const has=c=>F.some(f=>f.c===c);
+  const dup=[['SERVENTE','SERVENTE DE OBRAS'],['MOTORISTA CAMINHÃO MUNK II','OPERADOR DE CAMINHAO MUNCK II'],['TECNICO EM SEGURANCA DO TRABALHO','TECNICO EM SEGURANÇA DO TRABALHO II']].filter(p=>has(p[0])&&has(p[1]));
+  if(dup.length) al.push(`<b>Cargos com nome parecido</b> que merecem saneamento: ${dup.map(p=>esc(p[0])+' e '+esc(p[1])).join('; ')}.`);
+  document.getElementById('alerts').innerHTML=al.length?al.map(a=>`<li>${a}</li>`).join(''):'<li>Sem pendências nesta obra.</li>';
+
+  renderTable(F,tot);
+}
+
+function renderTable(F,tot){
+  const q=document.getElementById('q').value.trim().toUpperCase(), fm=document.getElementById('fm').value;
+  let rows=F.map(f=>({...f,p:tot?f.fo/tot:0})).filter(f=>(!q||f.c.includes(q))&&(!fm||f.m===fm));
+  rows.sort((a,b)=>{const x=a[sortK],y=b[sortK];return (typeof x==='string'?x.localeCompare(y):x-y)*sortD});
+  const mx=Math.max(...rows.map(r=>r.p),0.0001);
+  document.getElementById('tb').innerHTML=rows.map(f=>`<tr><td>${esc(f.c)}</td><td><span class="tag ${f.m==='MOI'?'moi':''}">${f.m}</span></td><td class="num">${brl2(f.s)}</td><td class="num">${f.oc||'-'}</td><td class="num">${f.tp||'-'}</td><td class="num"><b>${f.n}</b></td><td class="num">${brl2(f.fo)}</td><td class="num">${pct(f.p)}<span class="pb"><i style="width:${f.p/mx*100}%"></i></span></td></tr>`).join('');
+  const sn=rows.reduce((a,r)=>a+r.n,0), sf=rows.reduce((a,r)=>a+r.fo,0);
+  document.getElementById('tf').innerHTML=`<tr><td>Total (${rows.length} funções)</td><td></td><td class="num">${brl2(sn?sf/sn:0)}</td><td class="num">${rows.reduce((a,r)=>a+r.oc,0)}</td><td class="num">${rows.reduce((a,r)=>a+r.tp,0)}</td><td class="num">${sn}</td><td class="num">${brl2(sf)}</td><td class="num">${pct(tot?sf/tot:0)}</td></tr>`;
+  document.querySelectorAll('th').forEach(th=>th.setAttribute('aria-sort',th.dataset.k===sortK?(sortD>0?'ascending':'descending'):'none'));
+}
+
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{OBRA=b.dataset.o;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
+document.querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(sortK===k)sortD*=-1;else{sortK=k;sortD=(k==='c'||k==='m')?1:-1}render()});
+document.getElementById('q').oninput=render; document.getElementById('fm').onchange=render;
+render();
+</script>
+</body>
+</html>
