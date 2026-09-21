@@ -1,83 +1,106 @@
 # Marka Central
 
-Central de painéis gerenciais das obras da Marka Engenharia Ltda no Terminal Ferroviário da Ponta da Madeira (Vale S.A., São Luís/MA).
+Central de painéis gerenciais das obras da Marka Engenharia Ltda no Terminal Ferroviário
+da Ponta da Madeira (Vale S.A., São Luís/MA).
 
-**Acesso:** https://gersonneto-spec.github.io/Marka-Central/
+**Acesso:** <https://gersonneto-spec.github.io/Marka-Central/>
+
+---
 
 ## Áreas
 
 | Área | Conteúdo | Situação |
 |---|---|---|
-| [Medição](medicao/) | Boletins de medição por contrato | 2 painéis publicados |
-| [Cronogramas](cronogramas/) | Evolução física de escavação, análises de prazo, curva de avanço | 1 painel publicado |
-| [DRE e Custos](dre/) | Resultado por contrato, custo por natureza, material por fornecedor | 1 painel publicado |
+| [Medição](medicao/) | Boletins de medição por contrato | 2 painéis |
+| [Cronogramas](cronogramas/) | Guia da semana, look-ahead, marcos e curvas de produção | 2 painéis |
+| [DRE e Custos](dre/) | Resultado por contrato, custo por natureza, material por fornecedor | 1 painel |
+| [Efetivo](efetivo/) | Efetivo e folha por função, com gráficos e análise | 1 painel |
 
-## Painéis de medição
+## Painéis publicados
 
-| Painel | Contrato | Base |
+| Painel | Obra / contrato | Base |
 |---|---|---|
-| [Medição OCG](medicao/ocg/) | RT-2180KF-G-17251 · Obra 754 | `Medição OCG.xlsx`, aba QQP |
-| [Medição TP](medicao/trem/) | PQ-2180KF-G-10017 · L9057 | `Medição Trem de Passageiros.xlsx`, aba QQP |
+| [Medição OCG](medicao/ocg/) | Obras Civis Gerais · RT-2180KF-G-17251 · Obra 754 | `Medição OCG.xlsx`, aba QQP |
+| [Medição TP](medicao/trem/) | Oficina de Carros de Passageiros · PQ-2180KF-G-10017 | `Medição Trem de Passageiros.xlsx`, aba QQP |
+| [Guia da Semana](cronogramas/semana/) | Oficina de Carros de Passageiros | cronograma semanal em PDF, Rev. 00 / LB_rev1 |
+| [Curvas de Produção](cronogramas/curvas/) | Oficina de Carros de Passageiros | `Curvas de Produção.xlsx`, 9 frentes |
+| [DRE e Custos 754](dre/754/) | Obras Civis Gerais · Obra 754 | DRE contábil + painel de apropriações do SIENGE |
+| [Efetivo x Salário](efetivo/painel/) | Obras Civis e Trem de Passageiros | Listagem de Talentos do Fortes |
 
-## Painel de cronogramas
+`cronogramas/escavacao-trem/` é o endereço antigo do painel de escavação e hoje
+redireciona para `cronogramas/curvas/`, que ampliou o escopo para as nove frentes
+medidas por volume. O link antigo continua válido.
 
-| Painel | Obra | Base |
-|---|---|---|
-| [Evolução da Escavação · Trem de Passageiros](cronogramas/escavacao-trem/) | PQ-2180KF-G-10017 · L9057 | apontamento diário de escavação, 07/07 a 05/09/2026 |
+---
 
-A pasta traz dois arquivos independentes e autocontidos, sem script de extração:
+## Como atualizar
 
-```
-cronogramas/escavacao-trem/
-├── index.html                 índice do painel
-├── painel-escavacao.html      painel gerencial (KPIs, curva, talhão, DMT)
-└── timeline-escavacao.html    timeline animada de 53 s
-```
+**Todo o código que gera os painéis está em [`fonte/`](fonte/), com o passo a passo
+completo em [`fonte/README.md`](fonte/README.md).**
 
-Volume sempre líquido, com desconto de 33% de empolamento sobre o volume solto medido em caminhão. Para atualizar, substitua os dois arquivos `.html` da pasta; o endereço não muda.
-
-## Painel de DRE e custos
-
-| Painel | Contrato | Base |
-|---|---|---|
-| [DRE e Custos 754](dre/754/) | RT-2180KF-G-17251 · Obra 754 | `DRE_754_Evolucao_Contrato_Marka.xlsx` (aba Consolidado) + `Painel_Custos_Contrato_Obra754.xlsx` |
+Os `index.html` de cada pasta são saída, não fonte. Para atualizar um painel não se edita
+o HTML publicado: roda-se o extrator sobre a planilha nova, roda-se o build e sobe-se o
+`index.html` resultante. O endereço nunca muda, então qualquer link já divulgado
+continua valendo.
 
 ```
-python3 extract_dre.py "DRE_754.xlsx" "Painel_Custos.xlsx" > dre_data.json
-python3 build_dre.py                  # gera dre_custos_754.html
+planilha (.xlsx) ou cronograma (.pdf)
+        │
+        ▼  extract_*.py     lê as abas e grava os dados crus
+   dados.json
+        │
+        ▼  build_*.py       injeta o JSON no template
+   index.html
+        │
+        ▼  upload no GitHub substitui o arquivo da pasta do painel
+   painel no ar em 1 a 2 minutos
 ```
 
-## Atualizar um painel de medição
+Rotina mais frequente, toda semana, na área de Cronogramas:
 
-Na pasta do painel, com Python 3 e `openpyxl` instalados:
-
-```
-# OCG
-python3 extract_qqp.py "Medição OCG.xlsx" > qqp_data.json
-python3 build.py                      # gera medicao_ocg.html
-
-# TP
-python3 extract_tp.py "Medição Trem de Passageiros.xlsx" > tp_data.json
-python3 build_tp.py                   # gera medicao_tp.html
+```bash
+python3 extract_crono.py  "Trem de Passageiro - SEM39 - Cronograma.pdf"      > crono_data.json
+python3 extract_curvas.py "Trem de Passageiro - SEM 39 - Curvas.xlsx"        > curvas_data.json
+python3 build_sm.py && python3 build_cv.py
 ```
 
-Renomeie o arquivo gerado para `index.html` e substitua o arquivo da pasta correspondente. O GitHub Pages republica sozinho em 1 a 2 minutos e o endereço do painel não muda.
+---
 
 ## Estrutura
 
 ```
 Marka-Central/
-├── index.html              portal
+├── index.html                  portal
+├── build_portal.py             gera o portal e as páginas de área
+├── fonte/                      TODO o código-fonte + README de atualização
 ├── medicao/
-│   ├── index.html          índice da área
-│   ├── ocg/                painel + scripts de extração
-│   └── trem/               painel + scripts de extração
+│   ├── ocg/                    Medição OCG
+│   └── trem/                   Medição TP
 ├── cronogramas/
-│   ├── index.html          índice da área
-│   └── escavacao-trem/     painel gerencial + timeline de escavação
-└── dre/
-    ├── index.html          índice da área
-    └── 754/                painel + scripts de extração
+│   ├── semana/                 Guia da Semana
+│   ├── curvas/                 Curvas de Produção
+│   └── escavacao-trem/         redireciona para curvas/
+├── dre/
+│   └── 754/                    DRE e Custos da Obra 754
+└── efetivo/
+    └── painel/                 Efetivo x Salário por Função
 ```
 
-Marka Engenharia Ltda · Coordenação de Obras
+---
+
+## Confidencialidade
+
+Este repositório é **público**.
+
+- O painel de **Efetivo** não carrega nome, matrícula Fortes nem data de admissão
+  individual. Trabalha por função, família e nível. A consulta nominal fica apenas na
+  planilha de trabalho.
+- O painel de **DRE e Custos** expõe receita, custo e margem do contrato 754. Se o acesso
+  precisar ser restrito, essa área pode ser movida para repositório privado sem alterar
+  as demais.
+- A pasta `fonte/` contém apenas lógica de extração e layout. Nenhum dado de obra, custo
+  ou pessoal.
+
+---
+
+Marka Engenharia Ltda · Coordenação de Obras · TFPM, São Luís/MA
