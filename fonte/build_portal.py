@@ -115,7 +115,7 @@ portal_corpo = """
     <div class="kpis">
       <div><small>Contratos</small><b>2</b></div>
       <div><small>Valor somado</small><b>R$ 126,2 mi</b></div>
-      <div><small>Medido</small><b class="ouro">R$ 48,6 mi</b></div>
+      <div><small>Medido</small><b class="ouro">R$ 49,9 mi</b></div>
     </div>
     <a class="acao" href="medicao/">Abrir Medição</a>
   </div>
@@ -188,11 +188,11 @@ medicao_corpo = """
   <div class="li">
     <div class="txt">
       <b>Medição TP · Oficina de Carros de Passageiros</b>
-      <span>PQ-2180KF-G-10017 · L9057 · 346 itens · 1ª a 3ª medição</span>
+      <span>PQ-2180KF-G-10017 · L9057 · 346 itens · 1ª a 4ª medição</span>
     </div>
     <div class="kpis" style="border:0;gap:22px">
       <div><small>Contrato</small><b>R$ 37.476.724</b></div>
-      <div><small>Medido</small><b class="ouro">10,9%</b></div>
+      <div><small>Medido</small><b class="ouro">14,3%</b></div>
     </div>
     <a class="acao" href="trem/">Abrir painel</a>
   </div>

@@ -185,8 +185,12 @@ const D = window.TP, BMS = D.meta.bms, NB = BMS.length, MESES = D.meta.meses || 
 const IT = D.items.map((x, i) => {
   const qtd = Object.values(x.base).reduce((a, b) => a + b, 0);
   const qm = x.bm.reduce((a, b) => a + b, 0);
-  const bmv = x.bm.map(q => q * x.pu);
-  return { ...x, idx: i, qtd, pt: qtd * x.pu, qm, vm: qm * x.pu, qs: qtd - qm, vs: (qtd - qm) * x.pu, bmv,
+  // valor do boletim: a planilha arredonda a quantidade em 2 casas, então qtd x PU
+  // nao reproduz o lançamento. Usa o valor da coluna R$ TotalBMxx, que é o que sai
+  // no Dashboard e no boletim entregue; só cai para qtd x PU se o valor vier zerado.
+  const bmv = x.bm.map((q, k) => (x.vbm && x.vbm[k]) || q * x.pu);
+  const vm = bmv.reduce((a, b) => a + b, 0);
+  return { ...x, idx: i, qtd, pt: qtd * x.pu, qm, vm, qs: qtd - qm, vs: qtd * x.pu - vm, bmv,
     emp: x.emp || 'MARKA', contrato: x.contrato || '(não classificado)' };
 });
 const TOT = { ct: sum(IT, i => i.pt), vm: sum(IT, i => i.vm) };

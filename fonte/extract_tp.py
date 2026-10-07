@@ -34,7 +34,33 @@ def txt(v):
 
 
 # ---------------------------------------------------------------- QQP
-ws = wb["QQP"]
+def escolhe_qqp(wb):
+    """A planilha às vezes traz QQP e QQP (2); a mestre é a que tem mais medições
+    lançadas. Escolher pelo conteúdo evita publicar uma medição a menos quando o
+    planejamento duplica a aba para lançar o boletim novo."""
+    cands = []
+    for nome in wb.sheetnames:
+        if not nome.upper().startswith("QQP"):
+            continue
+        w = wb[nome]
+        hdr = {c.column: c.value for c in w[3] if c.value}
+        cols = [c for c, n in hdr.items() if isinstance(n, str) and n.startswith("QuantidadeBM")]
+        if not cols:
+            continue
+        # quantos boletins têm alguma quantidade lançada
+        comMed = 0
+        for c in cols:
+            if any(isinstance(w.cell(row=r, column=c).value, (int, float)) and w.cell(row=r, column=c).value
+                   for r in range(4, w.max_row + 1)):
+                comMed += 1
+        cands.append((comMed, nome))
+    if not cands:
+        raise SystemExit("nenhuma aba QQP encontrada")
+    cands.sort(reverse=True)
+    return cands[0][1], cands
+
+ABA_QQP, CAND_QQP = escolhe_qqp(wb)
+ws = wb[ABA_QQP]
 hdr = {c.column: c.value for c in ws[3] if c.value}
 bm_cols = []
 for col, name in sorted(hdr.items()):
@@ -64,6 +90,11 @@ for r in range(4, ws.max_row + 1):
         "un": unit, "pu": num(g("R")),
         "base": {k: num(row[c - 1].value) for k, c in base_cols.items()},
         "bm": [num(row[c - 1].value) for c, _ in bm_cols],
+        # valor lançado no boletim. A quantidade na planilha vem arredondada em 2
+        # casas, então qtd x PU não reproduz o boletim: em Administração Local a
+        # diferença é de R$ 8.368,55 num único item. O valor da coluna R$ TotalBMxx
+        # é o que o Dashboard e a Vale enxergam, por isso é ele que manda.
+        "vbm": [num(row[c].value) for c, _ in bm_cols],
     })
 
 # ------------------------------------------------- Insumos por Medição
@@ -151,7 +182,8 @@ for nome in wb.sheetnames:
 
 out = {
     "meta": {
-        "arquivo": src.split("/")[-1],
+        "arquivo": src.split("/")[-1], "aba_qqp": ABA_QQP,
+        "abas_qqp": [{"aba": n, "medicoes": q} for q, n in CAND_QQP],
         "extraido_em": datetime.date.today().isoformat(),
         "bms": [l for _, l in bm_cols],
         "meses": meses,
