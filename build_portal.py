@@ -41,6 +41,15 @@ h1,h2,h3{margin:0;text-wrap:balance}
 main{max-width:1180px;margin:0 auto;padding:26px 24px 56px}
 .intro{font-size:14.5px;color:var(--ink2);max-width:70ch;margin-bottom:24px}
 .sec-h{display:flex;align-items:baseline;gap:12px;margin:30px 0 12px}
+.farol-bl{background:linear-gradient(100deg,#3871C1,#2B5898);color:#fff;border-radius:10px;padding:22px 26px;display:flex;gap:26px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.farol-bl h3{font-size:19px;font-weight:700}
+.farol-bl p{margin:5px 0 0;font-size:13.5px;opacity:.93;max-width:60ch}
+.farol-bl .fk{display:flex;gap:26px;margin-left:auto;flex-wrap:wrap}
+.farol-bl .fk div small{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.farol-bl .fk div b{font-size:22px;font-weight:700}
+.farol-bl .acao{background:#fff;color:#3871C1;font-weight:700;padding:10px 18px;border-radius:6px;display:inline-block;margin-top:14px;font-size:13.5px}
+.farol-bl .acao:hover{text-decoration:none;opacity:.9}
+@media(max-width:760px){.farol-bl .fk{margin-left:0;gap:18px}}
 .sec-h h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--azul);font-weight:700}
 .sec-h .sub{font-size:12.5px;color:var(--ink3)}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
@@ -105,7 +114,21 @@ RODAPE_OBRA = "Vale S.A. · Terminal Ferroviário da Ponta da Madeira · São Lu
 portal_corpo = """
 <p class="intro">Central de painéis gerenciais das obras da Marka Engenharia no TFPM. Cada área reúne os painéis interativos gerados a partir das planilhas de controle, atualizados a cada boletim de medição.</p>
 
-<div class="sec-h"><h2>Áreas</h2><span class="sub">três frentes de acompanhamento</span></div>
+<div class="sec-h"><h2>Visão de uma tela</h2><span class="sub">para quem quer a resposta sem abrir painel</span></div>
+<div class="farol-bl">
+  <div>
+    <h3>Farol da Obra &middot; Trem de Passageiros</h3>
+    <p>Avanço contra o prazo do contrato, contagem regressiva de cada marco contratual e o que está travando a obra agora. Uma tela, sem sigla e sem planilha.</p>
+    <a class="acao" href="cronogramas/farol/">Abrir o Farol</a>
+  </div>
+  <div class="fk">
+    <div><small>Executado</small><b>24,5%</b></div>
+    <div><small>Previsto</small><b>29,3%</b></div>
+    <div><small>Marcos em risco</small><b>9 de 12</b></div>
+  </div>
+</div>
+
+<div class="sec-h"><h2>Áreas</h2><span class="sub">quatro frentes de acompanhamento</span></div>
 <div class="cards">
 
   <div class="card">
@@ -115,18 +138,19 @@ portal_corpo = """
     <div class="kpis">
       <div><small>Contratos</small><b>2</b></div>
       <div><small>Valor somado</small><b>R$ 126,2 mi</b></div>
-      <div><small>Medido</small><b class="ouro">R$ 48,6 mi</b></div>
+      <div><small>Medido</small><b class="ouro">R$ 49,9 mi</b></div>
     </div>
     <a class="acao" href="medicao/">Abrir Medição</a>
   </div>
 
   <div class="card">
-    <span class="tag ativo">1 painel no ar</span>
+    <span class="tag ativo">3 painéis no ar</span>
     <h3>Cronogramas</h3>
-    <p class="desc">Evolução física e análises de prazo: apontamento de escavação do Trem de Passageiros, curva de avanço e produtividade por frente. Caminho crítico e look ahead entram com o cronograma da obra.</p>
+    <p class="desc">Prazo e produção: guia da semana com look ahead e marcos contratuais, curvas de produção por frente, aderência à linha de base e projeção de término.</p>
     <div class="kpis">
-      <div><small>Painéis</small><b>1</b></div>
-      <div><small>Obra</small><b style="color:var(--ink2);font-size:13px">Trem de Passageiros</b></div>
+      <div><small>Semana</small><b>SEM 40</b></div>
+      <div><small>Avanço físico</small><b>24,5%</b></div>
+      <div><small>IDP</small><b class="ouro">0,837</b></div>
     </div>
     <a class="acao" href="cronogramas/">Abrir Cronogramas</a>
   </div>
@@ -141,6 +165,18 @@ portal_corpo = """
       <div><small>Margem</small><b class="ouro">10,9%</b></div>
     </div>
     <a class="acao" href="dre/">Abrir DRE e Custos</a>
+  </div>
+
+  <div class="card">
+    <span class="tag ativo">1 painel no ar</span>
+    <h3>Efetivo</h3>
+    <p class="desc">Efetivo x salário por função nas duas obras: folha mensal contratual, peso da mão de obra indireta, escala salarial por família e concentração da folha.</p>
+    <div class="kpis">
+      <div><small>Efetivo</small><b>273</b></div>
+      <div><small>Folha mensal</small><b>R$ 823.886</b></div>
+      <div><small>MOI na folha</small><b class="ouro">40,7%</b></div>
+    </div>
+    <a class="acao" href="efetivo/">Abrir Efetivo</a>
   </div>
 
 </div>
@@ -175,11 +211,11 @@ medicao_corpo = """
   <div class="li">
     <div class="txt">
       <b>Medição TP · Oficina de Carros de Passageiros</b>
-      <span>PQ-2180KF-G-10017 · L9057 · 346 itens · 1ª a 3ª medição</span>
+      <span>PQ-2180KF-G-10017 · L9057 · 346 itens · 1ª a 4ª medição</span>
     </div>
     <div class="kpis" style="border:0;gap:22px">
       <div><small>Contrato</small><b>R$ 37.476.724</b></div>
-      <div><small>Medido</small><b class="ouro">10,9%</b></div>
+      <div><small>Medido</small><b class="ouro">14,3%</b></div>
     </div>
     <a class="acao" href="trem/">Abrir painel</a>
   </div>
@@ -199,37 +235,61 @@ medicao_corpo = """
 
 # ---------------------------------------------------- cronogramas (preparação)
 cron_corpo = """
-<p class="intro">Análises de prazo e de evolução física das obras. O primeiro painel já está no ar; as demais análises entram nesta mesma página assim que o cronograma da obra for enviado, sem alterar endereços.</p>
+<p class="intro">Prazo e produção da Oficina de Carros de Passageiros. Os painéis leem o cronograma semanal emitido pelo planejamento e a planilha de curvas de produção, e são refeitos a cada semana sem mudar o endereço desta página.</p>
 
-<div class="sec-h"><h2>Painéis no ar</h2><span class="sub">1 painel publicado</span></div>
-<div class="cards g2">
-  <div class="card">
-    <span class="tag ativo">no ar</span>
-    <h3>Evolução da Escavação · Trem de Passageiros</h3>
-    <p class="desc">Apontamento diário de escavação de 07/07 a 05/09/2026, em volume líquido com desconto de 33% de empolamento. Painel gerencial com KPIs, curva de avanço, produtividade por talhão e DMT, mais duas versões da timeline para apresentação.</p>
-    <div class="kpis">
-      <div><small>Obra</small><b>Trem de Passageiros</b></div>
-      <div><small>Período</small><b>07/07 a 05/09</b></div>
-      <div><small>Volume</small><b class="ouro">líquido</b></div>
+<div class="sec-h"><h2>Painéis publicados</h2></div>
+<div class="lista">
+
+  <div class="li">
+    <div class="txt">
+      <b>Farol da Obra &middot; SEM 40</b>
+      <span>Uma tela para diretoria: avanço contra o prazo do contrato, contagem regressiva dos 12 marcos e o que está travando agora &middot; sem sigla e sem EAP</span>
     </div>
-    <a class="acao" href="escavacao-trem/">Abrir painel</a>
+    <div class="kpis" style="border:0;gap:22px">
+      <div><small>Executado</small><b>24,5%</b></div>
+      <div><small>Marcos em risco</small><b class="ouro">9 de 12</b></div>
+    </div>
+    <a class="acao" href="farol/">Abrir painel</a>
   </div>
+
+  <div class="li">
+    <div class="txt">
+      <b>Guia da Semana &middot; SEM 40</b>
+      <span>Cronograma Rev. 00 / LB_rev1 &middot; 409 linhas &middot; 12 marcos contratuais &middot; datas de referência pela linha de base</span>
+    </div>
+    <div class="kpis" style="border:0;gap:22px">
+      <div><small>Atrasadas (LB)</small><b>16</b></div>
+      <div><small>Tendência</small><b class="ouro">28/08/2027</b></div>
+    </div>
+    <a class="acao" href="semana/">Abrir painel</a>
+  </div>
+
+  <div class="li">
+    <div class="txt">
+      <b>Curvas de Produção &middot; SEM 38</b>
+      <span>9 frentes acompanhadas por curva S &middot; corte em 18/09/2026</span>
+    </div>
+    <div class="kpis" style="border:0;gap:22px">
+      <div><small>Escavação 1ª cat.</small><b>58,8%</b></div>
+      <div><small>Término proj.</small><b class="ouro">21/10/2026</b></div>
+    </div>
+    <a class="acao" href="curvas/">Abrir painel</a>
+  </div>
+
 </div>
 
-<div class="sec-h"><h2>Em preparação</h2><span class="sub">a partir do cronograma da obra em .xlsx, .mpp exportado ou PDF</span></div>
-<div class="cards">
-  <div class="card prep"><h3>Linha de base × tendência</h3><p class="desc">Comparação entre a revisão aprovada e a data projetada de cada atividade, com o desvio em dias e o impacto nos marcos contratuais.</p></div>
-  <div class="card prep"><h3>Caminho crítico</h3><p class="desc">Atividades que determinam a data de conclusão, folga de cada frente e as amarrações que travam o avanço.</p></div>
-  <div class="card prep"><h3>Curva de avanço</h3><p class="desc">Avanço físico previsto contra realizado por semana e por mês, com a projeção de conclusão no ritmo atual.</p></div>
-  <div class="card prep"><h3>Look ahead</h3><p class="desc">Programação das próximas semanas por frente, com pendências de liberação de área, projeto e material.</p></div>
+<div class="sec-h"><h2>O que cada painel traz</h2></div>
+<div class="cards g2">
+  <div class="card"><h3>Minha Semana</h3><p class="desc">O que está atrasado, o que encerra e o que começa nos próximos sete dias, tudo pela data de linha de base e separado por frente, com a data replanejada e o desvio em dias ao lado.</p></div>
+  <div class="card"><h3>Look ahead de 4 semanas</h3><p class="desc">Carga semana a semana e carga por frente, separando atrasadas, o que já está em curso e o que entra novo, para diligenciar material e mobilizar equipe com antecedência.</p></div>
+  <div class="card"><h3>Análise gerencial</h3><p class="desc">O que está atrasado contra a linha de base, a evolução até a data de corte e a tendência de término em dois cenários, com a memória de cálculo aberta.</p></div>
+  <div class="card"><h3>Marcos contratuais</h3><p class="desc">Os 17 marcos do ramo 1.1 em gráfico de dias restantes até a data de linha de base, com o deslocamento que o cronograma já tomou empilhado ao lado.</p></div>
+  <div class="card"><h3>Curva S por frente</h3><p class="desc">Previsto BL0, previsto BL1, realizado e tendência em cada frente medida por volume, com produção semanal e desvio acumulado.</p></div>
+  <div class="card"><h3>Projeção de término</h3><p class="desc">Projeção da escavação de 1ª categoria pela produtividade por dia útil dos últimos 15 dias, no calendário real da obra, dia útil a dia útil.</p></div>
+  <div class="card"><h3>Comparativo</h3><p class="desc">Todas as frentes na mesma escala: quanto falta de cada uma e qual é a aderência de cada uma ao baseline, lado a lado.</p></div>
 </div>
 
-<div class="sec-h"><h2>Para publicar as análises de prazo</h2></div>
-<ol class="passos">
-  <li><b>Envie o cronograma</b> da obra, na revisão vigente. Cronograma com linha de base e percentual realizado permite montar as quatro análises acima; sem linha de base, saem apenas as duas primeiras.</li>
-  <li><b>Confirme os marcos contratuais</b> que precisam aparecer em destaque, como entrega de frente, liberação de área e datas de medição.</li>
-  <li><b>O painel entra nesta mesma página</b> com o mesmo padrão dos painéis de medição, e o link desta seção já pode ser divulgado desde agora.</li>
-</ol>
+<p class="nota"><b>Regra de leitura:</b> no Guia da Semana toda data de referência é da linha de base (LB_rev1), não da data replanejada. Cobrar pela data atual esconde o atraso, porque a data atual já foi movida. Fontes: <code>Trem de Passageiro - SEM 40 - Cronograma.pdf</code> e <code>Trem de Passageiro - SEM 38 - Curvas de Produção.xlsx</code>. Para atualizar, basta enviar a revisão da semana seguinte: os scripts de extração leem as mesmas colunas e abas.</p>
 """
 
 # ------------------------------------------------------ DRE (preparação)
@@ -272,64 +332,48 @@ dre_corpo = """
 <p class="nota">Confidencialidade: esta central está publicada em repositório público, e custo e margem são dados mais sensíveis que medição. Se o acesso precisar ser restrito, esta área pode ser movida para repositório privado sem alterar as demais.</p>
 """
 
-# ------------------------------------------------ escavação Trem de Passageiros
-esc_corpo = """
-<p class="intro">Acompanhamento gerencial da escavação da obra do Trem de Passageiros, montado a partir do apontamento diário de produção. Os três painéis abaixo leem a mesma base: o painel gerencial para leitura de números e duas versões da timeline para apresentação.</p>
+efetivo_corpo = """
+<p class="intro">Efetivo e folha contratual das duas obras do TFPM, por função. A base é a Listagem de Talentos do Fortes; o painel trabalha por função, família e nível, sem dados nominais.</p>
 
-<div class="sec-h"><h2>Painéis</h2><span class="sub">abrem em tela cheia, sem instalação</span></div>
-<div class="cards">
-
-  <div class="card">
-    <span class="tag ativo">no ar</span>
-    <h3>Painel gerencial</h3>
-    <p class="desc">KPIs de volume, curva de avanço, filtros por material e por destino, produtividade por talhão, calendário de dias úteis e análise de DMT.</p>
-    <div class="kpis">
-      <div><small>Período</small><b>07/07 a 05/09</b></div>
-      <div><small>Empolamento</small><b class="ouro">33%</b></div>
-    </div>
-    <a class="acao" href="painel-escavacao.html">Abrir painel gerencial</a>
-  </div>
-
-  <div class="card">
-    <span class="tag ativo">no ar</span>
-    <h3>Timeline · versão palco</h3>
-    <p class="desc">A evolução do período em 64 segundos, em fundo escuro e uma estatística por momento. Feita para projeção em auditório.</p>
-    <div class="kpis">
-      <div><small>Duração</small><b>64 s</b></div>
-      <div><small>Uso</small><b style="color:var(--ink2);font-size:13px">auditório</b></div>
-    </div>
-    <a class="acao" href="timeline-palco.html">Abrir versão palco</a>
-  </div>
-
-  <div class="card">
-    <span class="tag ativo">no ar</span>
-    <h3>Timeline · versão clara</h3>
-    <p class="desc">A mesma evolução em fundo branco, com as anotações dos marcos do período. Indicada para telão claro e para impressão de quadros.</p>
-    <div class="kpis">
-      <div><small>Duração</small><b>53 s</b></div>
-      <div><small>Uso</small><b style="color:var(--ink2);font-size:13px">telão claro</b></div>
-    </div>
-    <a class="acao" href="timeline-escavacao.html">Abrir versão clara</a>
-  </div>
-
-</div>
-
-<div class="sec-h"><h2>Base de dados</h2><span class="sub">o que alimenta os dois painéis</span></div>
+<div class="sec-h"><h2>Painel publicado</h2></div>
 <div class="lista">
-  <div class="li"><div class="txt"><b>Apontamento diário de escavação</b><span>Volume por dia, talhão, material e destino, de 07/07/2026 a 05/09/2026.</span></div></div>
-  <div class="li"><div class="txt"><b>Volume líquido</b><span>Todo volume exibido já está com o desconto de 33% de empolamento aplicado sobre o volume solto medido em caminhão.</span></div></div>
-  <div class="li"><div class="txt"><b>Dias úteis do contrato</b><span>Segunda, terça, quinta, sexta e sábado. O calendário do painel separa dias produtivos de paradas, o que sustenta a produtividade média e a projeção de término.</span></div></div>
+  <div class="li">
+    <div class="txt">
+      <b>Efetivo x Salário por Função</b>
+      <span>Obras Civis e Oficina de Trens de Passageiros &middot; 273 colaboradores &middot; base Fortes de 03/09/2026</span>
+    </div>
+    <div class="kpis" style="border:0;gap:22px">
+      <div><small>Folha mensal</small><b>R$ 823.886</b></div>
+      <div><small>MOI na folha</small><b class="ouro">40,7%</b></div>
+    </div>
+    <a class="acao" href="painel/">Abrir painel</a>
+  </div>
 </div>
 
-<p class="nota">Para atualizar: envie o apontamento com os dias novos. Os painéis são regerados e substituídos nesta pasta, e o endereço desta página não muda.</p>
+<div class="sec-h"><h2>O que o painel traz</h2></div>
+<div class="cards g2">
+  <div class="card"><h3>Concentração da folha</h3><p class="desc">Pareto das funções de maior folha mensal e o acumulado sobre o total, que mostra em quantas funções o controle de custo de mão de obra realmente se resolve.</p></div>
+  <div class="card"><h3>Direta x indireta</h3><p class="desc">Peso da MOI no efetivo e na folha, por obra, e quantas vezes cada pessoa de MOI custa em relação a uma de MOD.</p></div>
+  <div class="card"><h3>Escala por família</h3><p class="desc">Níveis de cada função lado a lado, com o salto percentual entre níveis e destaque para inversões, em que o nível superior paga menos que o inferior.</p></div>
+  <div class="card"><h3>Faixas e tempo de casa</h3><p class="desc">Distribuição do efetivo por faixa salarial e por tempo de casa, que é o indicador de curva de aprendizado e de risco de integração de SSMA.</p></div>
+</div>
+
+<div class="sec-h"><h2>Base e limites</h2></div>
+<ol class="passos">
+  <li><b>Folha é salário contratual do Fortes.</b> Não inclui encargos, periculosidade, horas extras, adicionais nem benefícios. Para custo real de mão de obra, a fonte é o DRE.</li>
+  <li><b>Aprendizes entram por conversão.</b> Vêm com salário por hora e são convertidos por 150 h/mês; confirmar a premissa com o DP antes de usar em orçamento.</li>
+  <li><b>Sem dados nominais.</b> Nome, matrícula e data de admissão individual ficam apenas na planilha de trabalho. Esta central é pública e não carrega esses campos.</li>
+</ol>
+
+<p class="nota">Fonte: <code>Efetivo_Salario_x_Funcao_Consolidado_TFPM.xlsx</code>, gerado da Listagem de Talentos do Fortes emitida em 03/09/2026.</p>
 """
 
 PAGS = [
     ("index.html", pagina("Marka Central", "Painéis gerenciais de obra · " + RODAPE_OBRA, portal_corpo, tit_tag="Marka Central")),
     ("medicao/index.html", pagina("Medição", "Boletins de medição por contrato · " + RODAPE_OBRA, medicao_corpo, volta=("../", "← Marka Central"), tit_tag="Medição · Marka Central")),
     ("cronogramas/index.html", pagina("Cronogramas", "Análises de prazo · " + RODAPE_OBRA, cron_corpo, volta=("../", "← Marka Central"), tit_tag="Cronogramas · Marka Central")),
-    ("cronogramas/escavacao-trem/index.html", pagina("Evolução da Escavação · Trem de Passageiros", "Apontamento de produção · 07/07 a 05/09/2026 · volume líquido com desconto de 33% de empolamento", esc_corpo, volta=("../", "← Cronogramas"), tit_tag="Evolução da Escavação · Marka Central")),
     ("dre/index.html", pagina("DRE e Custos", "Resultado dos contratos · " + RODAPE_OBRA, dre_corpo, volta=("../", "← Marka Central"), tit_tag="DRE e Custos · Marka Central")),
+    ("efetivo/index.html", pagina("Efetivo", "Efetivo e folha por função · " + RODAPE_OBRA, efetivo_corpo, volta=("../", "← Marka Central"), tit_tag="Efetivo · Marka Central")),
 ]
 
 for caminho, html in PAGS:
