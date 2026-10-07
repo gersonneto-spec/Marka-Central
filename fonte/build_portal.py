@@ -41,6 +41,15 @@ h1,h2,h3{margin:0;text-wrap:balance}
 main{max-width:1180px;margin:0 auto;padding:26px 24px 56px}
 .intro{font-size:14.5px;color:var(--ink2);max-width:70ch;margin-bottom:24px}
 .sec-h{display:flex;align-items:baseline;gap:12px;margin:30px 0 12px}
+.farol-bl{background:linear-gradient(100deg,#3871C1,#2B5898);color:#fff;border-radius:10px;padding:22px 26px;display:flex;gap:26px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.farol-bl h3{font-size:19px;font-weight:700}
+.farol-bl p{margin:5px 0 0;font-size:13.5px;opacity:.93;max-width:60ch}
+.farol-bl .fk{display:flex;gap:26px;margin-left:auto;flex-wrap:wrap}
+.farol-bl .fk div small{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.farol-bl .fk div b{font-size:22px;font-weight:700}
+.farol-bl .acao{background:#fff;color:#3871C1;font-weight:700;padding:10px 18px;border-radius:6px;display:inline-block;margin-top:14px;font-size:13.5px}
+.farol-bl .acao:hover{text-decoration:none;opacity:.9}
+@media(max-width:760px){.farol-bl .fk{margin-left:0;gap:18px}}
 .sec-h h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--azul);font-weight:700}
 .sec-h .sub{font-size:12.5px;color:var(--ink3)}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
@@ -105,6 +114,20 @@ RODAPE_OBRA = "Vale S.A. · Terminal Ferroviário da Ponta da Madeira · São Lu
 portal_corpo = """
 <p class="intro">Central de painéis gerenciais das obras da Marka Engenharia no TFPM. Cada área reúne os painéis interativos gerados a partir das planilhas de controle, atualizados a cada boletim de medição.</p>
 
+<div class="sec-h"><h2>Visão de uma tela</h2><span class="sub">para quem quer a resposta sem abrir painel</span></div>
+<div class="farol-bl">
+  <div>
+    <h3>Farol da Obra &middot; Trem de Passageiros</h3>
+    <p>Avanço contra o prazo do contrato, contagem regressiva de cada marco contratual e o que está travando a obra agora. Uma tela, sem sigla e sem planilha.</p>
+    <a class="acao" href="cronogramas/farol/">Abrir o Farol</a>
+  </div>
+  <div class="fk">
+    <div><small>Executado</small><b>24,5%</b></div>
+    <div><small>Previsto</small><b>29,3%</b></div>
+    <div><small>Marcos em risco</small><b>9 de 12</b></div>
+  </div>
+</div>
+
 <div class="sec-h"><h2>Áreas</h2><span class="sub">quatro frentes de acompanhamento</span></div>
 <div class="cards">
 
@@ -121,13 +144,13 @@ portal_corpo = """
   </div>
 
   <div class="card">
-    <span class="tag ativo">2 painéis no ar</span>
+    <span class="tag ativo">3 painéis no ar</span>
     <h3>Cronogramas</h3>
     <p class="desc">Prazo e produção: guia da semana com look ahead e marcos contratuais, curvas de produção por frente, aderência à linha de base e projeção de término.</p>
     <div class="kpis">
-      <div><small>Semana</small><b>SEM 38</b></div>
-      <div><small>Avanço físico</small><b>17,3%</b></div>
-      <div><small>IDP</small><b class="ouro">0,896</b></div>
+      <div><small>Semana</small><b>SEM 40</b></div>
+      <div><small>Avanço físico</small><b>24,5%</b></div>
+      <div><small>IDP</small><b class="ouro">0,837</b></div>
     </div>
     <a class="acao" href="cronogramas/">Abrir Cronogramas</a>
   </div>
@@ -219,12 +242,24 @@ cron_corpo = """
 
   <div class="li">
     <div class="txt">
-      <b>Guia da Semana &middot; SEM 38</b>
-      <span>Cronograma Rev. 00 / LB_rev1 &middot; 460 linhas &middot; 317 atividades executáveis &middot; 17 marcos contratuais &middot; datas de referência pela linha de base</span>
+      <b>Farol da Obra &middot; SEM 40</b>
+      <span>Uma tela para diretoria: avanço contra o prazo do contrato, contagem regressiva dos 12 marcos e o que está travando agora &middot; sem sigla e sem EAP</span>
     </div>
     <div class="kpis" style="border:0;gap:22px">
-      <div><small>Atrasadas (LB)</small><b>8</b></div>
-      <div><small>Tendência</small><b class="ouro">09/08/2027</b></div>
+      <div><small>Executado</small><b>24,5%</b></div>
+      <div><small>Marcos em risco</small><b class="ouro">9 de 12</b></div>
+    </div>
+    <a class="acao" href="farol/">Abrir painel</a>
+  </div>
+
+  <div class="li">
+    <div class="txt">
+      <b>Guia da Semana &middot; SEM 40</b>
+      <span>Cronograma Rev. 00 / LB_rev1 &middot; 409 linhas &middot; 12 marcos contratuais &middot; datas de referência pela linha de base</span>
+    </div>
+    <div class="kpis" style="border:0;gap:22px">
+      <div><small>Atrasadas (LB)</small><b>16</b></div>
+      <div><small>Tendência</small><b class="ouro">28/08/2027</b></div>
     </div>
     <a class="acao" href="semana/">Abrir painel</a>
   </div>
@@ -254,7 +289,7 @@ cron_corpo = """
   <div class="card"><h3>Comparativo</h3><p class="desc">Todas as frentes na mesma escala: quanto falta de cada uma e qual é a aderência de cada uma ao baseline, lado a lado.</p></div>
 </div>
 
-<p class="nota"><b>Regra de leitura:</b> no Guia da Semana toda data de referência é da linha de base (LB_rev1), não da data replanejada. Cobrar pela data atual esconde o atraso, porque a data atual já foi movida. Fontes: <code>Trem de Passageiro - SEM38 - Cronograma.pdf</code> e <code>Trem de Passageiro - SEM 38 - Curvas de Produção.xlsx</code>. Para atualizar, basta enviar a revisão da semana seguinte: os scripts de extração leem as mesmas colunas e abas.</p>
+<p class="nota"><b>Regra de leitura:</b> no Guia da Semana toda data de referência é da linha de base (LB_rev1), não da data replanejada. Cobrar pela data atual esconde o atraso, porque a data atual já foi movida. Fontes: <code>Trem de Passageiro - SEM 40 - Cronograma.pdf</code> e <code>Trem de Passageiro - SEM 38 - Curvas de Produção.xlsx</code>. Para atualizar, basta enviar a revisão da semana seguinte: os scripts de extração leem as mesmas colunas e abas.</p>
 """
 
 # ------------------------------------------------------ DRE (preparação)
