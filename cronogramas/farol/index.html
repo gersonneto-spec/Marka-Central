@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Farol da Obra &middot; Trem de Passageiros</title>
+<style>
+:root{--azul:#3871C1;--navy:#1B2A4A;--ouro:#C9A84C;--cinza:#656263;--vermelho:#C0392B;
+--ok:#1BA39C;--atencao:#C9A84C;--risco:#E07B39;
+--bg:#F4F6FA;--card:#FFFFFF;--ink:#16202E;--ink2:#4A5869;--ink3:#8A96A6;--linha:#DFE5EE}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--bg:#0F1621;--card:#18212F;--ink:#E8EDF4;--ink2:#A9B6C6;--ink3:#6F7E91;--linha:#273345;--azul:#5B93D9;--risco:#D95926}}
+:root[data-theme="dark"]{--bg:#0F1621;--card:#18212F;--ink:#E8EDF4;--ink2:#A9B6C6;--ink3:#6F7E91;--linha:#273345;--azul:#5B93D9;--risco:#D95926}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Arial,Helvetica,sans-serif}
+.topo{background:var(--azul);color:#fff;padding:18px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.marca b{font-size:22px;letter-spacing:4px;display:block}
+.marca span{font-size:9px;letter-spacing:5px;opacity:.85}
+.topo h1{margin:0;font-size:21px} .topo p{margin:2px 0 0;font-size:13px;opacity:.9}
+.topo .quando{margin-left:auto;text-align:right;font-size:13px;opacity:.92}
+main{max-width:1180px;margin:0 auto;padding:26px 20px 60px}
+.hero{background:var(--card);border-radius:14px;padding:26px 28px;border-left:10px solid var(--c);
+display:flex;gap:28px;align-items:center;flex-wrap:wrap;box-shadow:0 1px 3px rgba(16,24,40,.07)}
+.farol{width:74px;height:74px;border-radius:50%;background:var(--c);flex:none;
+display:flex;align-items:center;justify-content:center;color:#fff;font-size:34px;font-weight:bold}
+.hero h2{margin:0 0 4px;font-size:26px} .hero p{margin:0;color:var(--ink2);max-width:640px}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin:20px 0 10px}
+.num{background:var(--card);border-radius:12px;padding:16px 18px;border-top:4px solid var(--azul);
+box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.num small{display:block;color:var(--ink3);font-size:11px;letter-spacing:1.2px;text-transform:uppercase}
+.num b{display:block;font-size:30px;margin:6px 0 2px;color:var(--azul)}
+.num i{font-style:normal;font-size:13px;color:var(--ink2)}
+.num.ouro{border-top-color:var(--ouro)} .num.ouro b{color:var(--ouro)}
+.num.risco{border-top-color:var(--risco)} .num.risco b{color:var(--risco)}
+h3.sec{font-size:13px;letter-spacing:1.6px;text-transform:uppercase;color:var(--azul);
+margin:34px 0 4px} h3.sec span{color:var(--ink3);letter-spacing:0;text-transform:none;font-weight:normal;margin-left:10px;font-size:13px}
+.linhatempo{background:var(--card);border-radius:12px;padding:22px 26px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.lt{position:relative;height:8px;background:var(--linha);border-radius:4px;margin:62px 0 72px}
+.lt i{position:absolute;left:0;top:0;bottom:0;background:var(--azul);border-radius:4px}
+.pin{position:absolute;top:-50px;transform:translateX(-50%);text-align:center;font-size:12px;white-space:nowrap}
+.pin b{display:block;font-size:14px;line-height:1.35} .pin:after{content:"";position:absolute;left:50%;top:44px;width:2px;height:14px;background:var(--pc);transform:translateX(-50%)}
+.pin.baixo{top:auto;bottom:-50px} .pin.baixo:after{top:auto;bottom:44px}
+.marcos{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-top:10px}
+.marco{background:var(--card);border-radius:12px;padding:16px 18px;box-shadow:0 1px 3px rgba(16,24,40,.06);
+border-left:6px solid var(--mc)}
+.marco.ok{--mc:#1BA39C} .marco.prazo{--mc:#3871C1} .marco.atencao{--mc:#C9A84C}
+.marco.risco{--mc:#E07B39} .marco.vencido{--mc:#C0392B}
+.mtopo{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.mtopo b{font-size:16px;line-height:1.3}
+.tag{font-size:10px;letter-spacing:.6px;text-transform:uppercase;padding:3px 8px;border-radius:20px;
+color:#fff;background:var(--mc);flex:none;white-space:nowrap}
+.mdata{font-size:13px;color:var(--ink2);margin:8px 0 10px}
+.track{height:7px;background:var(--linha);border-radius:4px;overflow:hidden}
+.track i{display:block;height:100%;background:var(--mc)}
+.mfalta{font-size:13px;color:var(--ink2);margin-top:8px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;
+box-shadow:0 1px 3px rgba(16,24,40,.06)}
+th{background:var(--azul);color:#fff;font-size:12px;letter-spacing:.8px;text-transform:uppercase;
+padding:11px 14px;text-align:left}
+td{padding:11px 14px;border-top:1px solid var(--linha);font-size:14px}
+td.n,th.n{text-align:right;white-space:nowrap}
+.rodape{margin-top:34px;font-size:12px;color:var(--ink3);line-height:1.7}
+.volta{display:inline-block;margin-top:18px;background:var(--azul);color:#fff;text-decoration:none;
+padding:9px 16px;border-radius:8px;font-size:14px}
+@media(max-width:640px){.topo{padding:14px 16px}main{padding:18px 14px 44px}.hero h2{font-size:21px}}
+</style></head><body>
+<header class="topo">
+  <div class="marca"><b>MARKA</b><span>ENGENHARIA</span></div>
+  <div><h1>Farol da Obra &middot; Trem de Passageiros</h1>
+  <p>Oficina de Manutenção de Carros de Passageiros &middot; Vale S.A. &middot; TFPM &middot; São Luís, MA</p></div>
+  <div class="quando">Posição de <b>07/10/2026</b><br>SEM 40 &middot; cronograma do planejamento</div>
+</header>
+<main>
+
+<div class="hero" style="--c:#C9A84C">
+  <div class="farol">!</div>
+  <div>
+    <h2>Atrasada, ainda recuperável</h2>
+    <p>A obra deveria estar com <b>29,3%</b> dos serviços prontos e está com <b>24,5%</b>.
+    São <b>4,8 pontos</b> abaixo do planejado. Mantido o ritmo atual, a entrega final
+    cai para <b>28/08/2027</b>, contra o prazo de contrato de <b>06/07/2027</b>.</p>
+  </div>
+</div>
+
+<div class="nums">
+  <div class="num"><small>Executado até hoje</small><b>24,5%</b><i>de tudo que o contrato prevê</i></div>
+  <div class="num ouro"><small>Deveria estar em</small><b>29,3%</b><i>segundo a linha de base</i></div>
+  <div class="num risco"><small>Diferença</small><b>&minus;4,8 pp</b><i>pontos abaixo do planejado</i></div>
+  <div class="num"><small>Ritmo de entrega</small><b>0,84</b><i>a cada 10 dias planejados, a obra entrega 8,4</i></div>
+  <div class="num"><small>Marcos do contrato</small><b>1 de 12</b><i>entregues &middot; 9 em risco</i></div>
+  <div class="num risco"><small>Atividades paradas ou vencidas</small><b>15</b><i>somando 106 dias de atraso</i></div>
+</div>
+
+<h3 class="sec">Entrega final <span>três datas que precisam estar na mesma conversa</span></h3>
+<div class="linhatempo">
+  <div class="lt"><i style="width:30%"></i>
+    <div class="pin" style="left:30%;--pc:var(--azul);color:var(--azul)">
+      <b>07/10/2026</b>hoje</div>
+    <div class="pin baixo" style="left:84%;--pc:#1BA39C;color:#1BA39C">
+      <b>06/07/2027</b>prazo do contrato</div>
+    <div class="pin" style="left:95%;--pc:#E07B39;color:#E07B39">
+      <b>28/08/2027</b>no ritmo de hoje</div>
+  </div>
+  <p style="margin:0;color:var(--ink2);font-size:14px">
+  O planejamento já declara o término em <b>16/07/2027</b>, 10 dias depois do contrato.
+  Pelo ritmo efetivo das frentes, a projeção é <b>28/08/2027</b>, ou seja <b>53 dias</b> além do prazo
+  contratual. A diferença entre essas duas datas é o que precisa ser recuperado ou formalizado.</p>
+</div>
+
+<h3 class="sec">Marcos do contrato <span>o que foi prometido e quanto falta para cada entrega</span></h3>
+<div class="marcos"><div class="marco ok">
+      <div class="mtopo"><b>Geral</b><span class="tag ok">Entregue</span></div>
+      <div class="mdata">Prazo do contrato <b>12/06/2026</b></div>
+      <div class="track"><i style="width:100%"></i></div>
+      <div class="mfalta">Concluído</div>
+    </div><div class="marco risco">
+      <div class="mtopo"><b>Galeria TP05</b><span class="tag risco">Replanejado para depois do prazo</span></div>
+      <div class="mdata">Prazo do contrato <b>14/11/2026</b> &middot; obra projeta <b>23/11/2026</b></div>
+      <div class="track"><i style="width:14%"></i></div>
+      <div class="mfalta">faltam <b>38</b> dias &middot; escorregou 9 dias</div>
+    </div><div class="marco atencao">
+      <div class="mtopo"><b>Opção de Compra · Superestrutura</b><span class="tag atencao">Prazo próximo</span></div>
+      <div class="mdata">Prazo do contrato <b>27/11/2026</b></div>
+      <div class="track"><i style="width:19%"></i></div>
+      <div class="mfalta">faltam <b>51</b> dias</div>
+    </div><div class="marco risco">
+      <div class="mtopo"><b>Vias Férreas</b><span class="tag risco">Replanejado para depois do prazo</span></div>
+      <div class="mdata">Prazo do contrato <b>27/11/2026</b> &middot; obra projeta <b>15/12/2026</b></div>
+      <div class="track"><i style="width:19%"></i></div>
+      <div class="mfalta">faltam <b>51</b> dias &middot; escorregou 18 dias</div>
+    </div><div class="marco risco">
+      <div class="mtopo"><b>Caminho Seguro TP05</b><span class="tag risco">Replanejado para depois do prazo</span></div>
+      <div class="mdata">Prazo do contrato <b>07/12/2026</b> &middot; obra projeta <b>10/12/2026</b></div>
+      <div class="track"><i style="width:22%"></i></div>
+      <div class="mfalta">faltam <b>61</b> dias &middot; escorregou 3 dias</div>
+    </div><div class="marco risco">
+      <div class="mtopo"><b>Sala de Sobressalentes TP05</b><span class="tag risco">Replanejado para depois do prazo</span></div>
+      <div class="mdata">Prazo do contrato <b>07/12/2026</b> &middot; obra projeta <b>18/12/2026</b></div>
+      <div class="track"><i style="width:22%"></i></div>
+      <div class="mfalta">faltam <b>61</b> dias &middot; escorregou 11 dias</div>
+    </div><div class="marco risco">
+      <div class="mtopo"><b>Emissão OS TP03</b><span class="tag risco">Replanejado para depois do prazo</span></div>
+      <div class="mdata">Prazo do contrato <b>07/12/2026</b> &middot; obra projeta <b>18/12/2026</b></div>
+      <div class="track"><i style="width:22%"></i></div>
+      <div class="mfalta">faltam <b>61</b> dias &middot; escorregou 11 dias</div>
+    </div><div class="marco risco">
+      <div class="mtopo"><b>Lavador de Vagões TP03</b><span class="tag risco">Replanejado para depois do prazo</span></div>
+      <div class="mdata">Prazo do contrato <b>09/03/2027</b> &middot; obra projeta <b>19/03/2027</b></div>
+      <div class="track"><i style="width:56%"></i></div>
+      <div class="mfalta">faltam <b>153</b> dias &middot; escorregou 10 dias</div>
+    </div><div class="marco risco">
+      <div class="mtopo"><b>Galeria TP03</b><span class="tag risco">Replanejado para depois do prazo</span></div>
+      <div class="mdata">Prazo do contrato <b>08/04/2027</b> &middot; obra projeta <b>16/04/2027</b></div>
+      <div class="track"><i style="width:67%"></i></div>
+      <div class="mfalta">faltam <b>183</b> dias &middot; escorregou 8 dias</div>
+    </div><div class="marco risco">
+      <div class="mtopo"><b>Mesa Falsa TP03</b><span class="tag risco">Replanejado para depois do prazo</span></div>
+      <div class="mdata">Prazo do contrato <b>08/05/2027</b> &middot; obra projeta <b>18/05/2027</b></div>
+      <div class="track"><i style="width:78%"></i></div>
+      <div class="mfalta">faltam <b>213</b> dias &middot; escorregou 10 dias</div>
+    </div><div class="marco risco">
+      <div class="mtopo"><b>Caminho Seguro TP03</b><span class="tag risco">Replanejado para depois do prazo</span></div>
+      <div class="mdata">Prazo do contrato <b>07/06/2027</b> &middot; obra projeta <b>15/06/2027</b></div>
+      <div class="track"><i style="width:89%"></i></div>
+      <div class="mfalta">faltam <b>243</b> dias &middot; escorregou 8 dias</div>
+    </div><div class="marco prazo">
+      <div class="mtopo"><b>Desmobilização final</b><span class="tag prazo">Dentro do prazo</span></div>
+      <div class="mdata">Prazo do contrato <b>06/07/2027</b></div>
+      <div class="track"><i style="width:100%"></i></div>
+      <div class="mfalta">faltam <b>272</b> dias</div>
+    </div></div>
+
+<h3 class="sec">O que está travando agora <span>atividades que passaram da data e não andaram</span></h3>
+<table><thead><tr><th>Atividade</th><th class="n">Data da linha de base</th>
+<th class="n">Atraso</th><th class="n">Executado</th></tr></thead>
+<tbody><tr><td>Construção de Canaleta Retangular Plataforma (b=70cm) - 774m<br><small style="color:var(--ink3)">deveria ter começado</small></td>
+    <td class="n">10/09/2026</td>
+    <td class="n"><b style="color:var(--vermelho)">27 d</b></td>
+    <td class="n">0%</td></tr><tr><td>Liberação de 30% da Plataforma de Terraplenagem<br><small style="color:var(--ink3)">deveria ter terminado</small></td>
+    <td class="n">25/09/2026</td>
+    <td class="n"><b style="color:var(--vermelho)">12 d</b></td>
+    <td class="n">0%</td></tr><tr><td>Carga e Descarga de Dormentes de Concreto 2,80 m<br><small style="color:var(--ink3)">deveria ter terminado</small></td>
+    <td class="n">25/09/2026</td>
+    <td class="n"><b style="color:var(--vermelho)">12 d</b></td>
+    <td class="n">0%</td></tr><tr><td>Carga e Descarga de TLS em Trem Especial com Pórtico<br><small style="color:var(--ink3)">deveria ter terminado</small></td>
+    <td class="n">25/09/2026</td>
+    <td class="n"><b style="color:var(--vermelho)">12 d</b></td>
+    <td class="n">0%</td></tr><tr><td>Carga e Descarga de trilhos curtos com Guindaste<br><small style="color:var(--ink3)">deveria ter terminado</small></td>
+    <td class="n">25/09/2026</td>
+    <td class="n"><b style="color:var(--vermelho)">12 d</b></td>
+    <td class="n">0%</td></tr><tr><td>SERVIÇOS PRELIMINARES<br><small style="color:var(--ink3)">deveria ter terminado</small></td>
+    <td class="n">02/10/2026</td>
+    <td class="n"><b style="color:var(--vermelho)">5 d</b></td>
+    <td class="n">45%</td></tr><tr><td>DEMOLIÇÕES<br><small style="color:var(--ink3)">deveria ter começado</small></td>
+    <td class="n">02/10/2026</td>
+    <td class="n"><b style="color:var(--vermelho)">5 d</b></td>
+    <td class="n">0%</td></tr><tr><td>Corte em Trilho TR68<br><small style="color:var(--ink3)">deveria ter terminado</small></td>
+    <td class="n">03/10/2026</td>
+    <td class="n"><b style="color:var(--vermelho)">4 d</b></td>
+    <td class="n">0%</td></tr></tbody></table>
+
+<div class="rodape">
+  <b>Como ler esta página.</b> Todas as datas de referência são as da linha de base do contrato, não as datas
+  já remarcadas pelo planejamento. Cobrar pela data remarcada esconde o atraso, porque a data remarcada já foi
+  movida. Fonte: cronograma SEM 40 do planejamento, 409 atividades.<br>
+  Marka Engenharia &middot; Coordenação de Obras &middot; atualizado em 07/10/2026
+  <br><a class="volta" href="../../">&larr; Marka Central</a>
+</div>
+</main></body></html>
