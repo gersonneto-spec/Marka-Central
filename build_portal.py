@@ -170,11 +170,11 @@ portal_corpo = """
   <div class="card">
     <span class="tag ativo">1 painel no ar</span>
     <h3>Efetivo</h3>
-    <p class="desc">Efetivo x salário por função nas duas obras: folha mensal contratual, peso da mão de obra indireta, escala salarial por família e concentração da folha.</p>
+    <p class="desc">Efetivo das duas obras: quem está na obra, mobilização, vencimento de crachá, perfil da equipe, turnover e folha estimada por função.</p>
     <div class="kpis">
-      <div><small>Efetivo</small><b>273</b></div>
-      <div><small>Folha mensal</small><b>R$ 823.886</b></div>
-      <div><small>MOI na folha</small><b class="ouro">40,7%</b></div>
+      <div><small>Efetivo</small><b>269</b></div>
+      <div><small>Folha mensal</small><b>R$ 807.352</b></div>
+      <div><small>MOI na folha</small><b class="ouro">37,8%</b></div>
     </div>
     <a class="acao" href="efetivo/">Abrir Efetivo</a>
   </div>
@@ -333,18 +333,18 @@ dre_corpo = """
 """
 
 efetivo_corpo = """
-<p class="intro">Efetivo e folha contratual das duas obras do TFPM, por função. A base é a Listagem de Talentos do Fortes; o painel trabalha por função, família e nível, sem dados nominais.</p>
+<p class="intro">Efetivo das duas obras do TFPM. A base são as planilhas SGC de colaboradores, que trazem quem está cadastrado, onde está, quando foi mobilizado, quando o crachá vence e quem saiu. O painel trabalha por função, sem dados nominais.</p>
 
 <div class="sec-h"><h2>Painel publicado</h2></div>
 <div class="lista">
   <div class="li">
     <div class="txt">
-      <b>Efetivo x Salário por Função</b>
-      <span>Obras Civis e Oficina de Trens de Passageiros &middot; 273 colaboradores &middot; base Fortes de 03/09/2026</span>
+      <b>Efetivo &middot; Obras Civis e Trem de Passageiros</b>
+      <span>269 cadastrados &middot; 255 na obra &middot; base SGC de 07/10/2026 &middot; cinco abas: panorama, mobilização, crachá, perfil e turnover</span>
     </div>
     <div class="kpis" style="border:0;gap:22px">
-      <div><small>Folha mensal</small><b>R$ 823.886</b></div>
-      <div><small>MOI na folha</small><b class="ouro">40,7%</b></div>
+      <div><small>Folha mensal</small><b>R$ 807.352</b></div>
+      <div><small>MOI na folha</small><b class="ouro">37,8%</b></div>
     </div>
     <a class="acao" href="painel/">Abrir painel</a>
   </div>
@@ -352,20 +352,21 @@ efetivo_corpo = """
 
 <div class="sec-h"><h2>O que o painel traz</h2></div>
 <div class="cards g2">
-  <div class="card"><h3>Concentração da folha</h3><p class="desc">Pareto das funções de maior folha mensal e o acumulado sobre o total, que mostra em quantas funções o controle de custo de mão de obra realmente se resolve.</p></div>
-  <div class="card"><h3>Direta x indireta</h3><p class="desc">Peso da MOI no efetivo e na folha, por obra, e quantas vezes cada pessoa de MOI custa em relação a uma de MOD.</p></div>
-  <div class="card"><h3>Escala por família</h3><p class="desc">Níveis de cada função lado a lado, com o salto percentual entre níveis e destaque para inversões, em que o nível superior paga menos que o inferior.</p></div>
-  <div class="card"><h3>Faixas e tempo de casa</h3><p class="desc">Distribuição do efetivo por faixa salarial e por tempo de casa, que é o indicador de curva de aprendizado e de risco de integração de SSMA.</p></div>
+  <div class="card"><h3>Panorama e folha</h3><p class="desc">Efetivo por obra, peso da mão de obra indireta no quadro e na folha, funções com mais gente e funções que mais pesam no custo mensal.</p></div>
+  <div class="card"><h3>Mobilização</h3><p class="desc">Quem está na obra e quem está cadastrado sem presença, prazo entre admissão e mobilização dos admitidos no ano e a folha parada do pessoal não mobilizado.</p></div>
+  <div class="card"><h3>Crachá e acesso</h3><p class="desc">Prazo de bloqueio do crachá por função, com vencidos, críticos e alertas. Sem renovação a pessoa não entra no terminal e a frente perde o dia.</p></div>
+  <div class="card"><h3>Perfil e turnover</h3><p class="desc">Faixa etária, tempo de casa, composição por sexo, saídas mês a mês, motivo do desligamento e funções que mais perdem gente.</p></div>
 </div>
 
 <div class="sec-h"><h2>Base e limites</h2></div>
 <ol class="passos">
-  <li><b>Folha é salário contratual do Fortes.</b> Não inclui encargos, periculosidade, horas extras, adicionais nem benefícios. Para custo real de mão de obra, a fonte é o DRE.</li>
-  <li><b>Aprendizes entram por conversão.</b> Vêm com salário por hora e são convertidos por 150 h/mês; confirmar a premissa com o DP antes de usar em orçamento.</li>
-  <li><b>Sem dados nominais.</b> Nome, matrícula e data de admissão individual ficam apenas na planilha de trabalho. Esta central é pública e não carrega esses campos.</li>
+  <li><b>As planilhas SGC não trazem salário.</b> A folha vem da tabela por função da base Fortes anterior, casada pelo nome da função sem o nível. É estimativa: cinco funções não têm referência e ficam fora do cálculo. Para custo real de mão de obra, a fonte é o DRE.</li>
+  <li><b>Folha é salário contratual.</b> Não inclui encargos, periculosidade, horas extras, adicionais nem benefícios.</li>
+  <li><b>Prazo de mobilização conta só quem foi admitido no ano.</b> Para quem é de empresa antiga, a diferença entre admissão e mobilização mede tempo de casa até a alocação nesta obra, não prazo de mobilização.</li>
+  <li><b>Sem dados nominais.</b> Nome, matrícula, CPF e data de nascimento ficam apenas na planilha de trabalho. Esta central é pública: a idade sai em faixa e o tempo de casa em anos.</li>
 </ol>
 
-<p class="nota">Fonte: <code>Efetivo_Salario_x_Funcao_Consolidado_TFPM.xlsx</code>, gerado da Listagem de Talentos do Fortes emitida em 03/09/2026.</p>
+<p class="nota">Fontes: <code>Efetivo_Atualizado_07.10 - Colaboradores 5900124870 SGC - Obras Civis.xlsx</code> e <code>07.10 - Efetivo Atualizado - Colaboradores 5900134359 SGC - Trem de Passageiros.xlsx</code>. Para atualizar, basta enviar a revisão seguinte das duas planilhas.</p>
 """
 
 PAGS = [
@@ -373,7 +374,7 @@ PAGS = [
     ("medicao/index.html", pagina("Medição", "Boletins de medição por contrato · " + RODAPE_OBRA, medicao_corpo, volta=("../", "← Marka Central"), tit_tag="Medição · Marka Central")),
     ("cronogramas/index.html", pagina("Cronogramas", "Análises de prazo · " + RODAPE_OBRA, cron_corpo, volta=("../", "← Marka Central"), tit_tag="Cronogramas · Marka Central")),
     ("dre/index.html", pagina("DRE e Custos", "Resultado dos contratos · " + RODAPE_OBRA, dre_corpo, volta=("../", "← Marka Central"), tit_tag="DRE e Custos · Marka Central")),
-    ("efetivo/index.html", pagina("Efetivo", "Efetivo e folha por função · " + RODAPE_OBRA, efetivo_corpo, volta=("../", "← Marka Central"), tit_tag="Efetivo · Marka Central")),
+    ("efetivo/index.html", pagina("Efetivo", "Efetivo das duas obras · " + RODAPE_OBRA, efetivo_corpo, volta=("../", "← Marka Central"), tit_tag="Efetivo · Marka Central")),
 ]
 
 for caminho, html in PAGS:
