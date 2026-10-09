@@ -170,12 +170,15 @@ tfoot td{background:var(--gold);color:#fff;font-weight:bold;position:sticky;bott
 .kpis{grid-template-columns:repeat(auto-fit,minmax(176px,1fr))}
 .kpi.clic{cursor:pointer;transition:transform .12s,box-shadow .12s}
 .kpi.clic:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(16,24,40,.13)}
-.kpi.clic:after{content:"ver nomes";display:block;margin-top:7px;font-size:11px;color:var(--azul);letter-spacing:.04em}
+.kpi.clic:after{content:"ver a lista";display:block;margin-top:7px;font-size:11px;color:var(--azul);letter-spacing:.04em}
 .hb{row-gap:9px}
 .hb .clic{cursor:pointer}
 .hb .lab.clic:hover,.hb .val.clic:hover{color:var(--azul)}
 .hb .trk.clic:hover .fil{filter:brightness(1.12)}
-.ch{height:320px;position:relative}
+/* sem min-width:0 o canvas do Chart.js entra em laço com a coluna do grid e vai a 20.000px */
+.grid2>*{min-width:0}
+.ch{height:320px;position:relative;width:100%;max-width:100%;overflow:hidden}
+.ch canvas{max-width:100%!important}
 .ch.alto{height:400px}
 .ch.mini{height:230px}
 .tw{overflow-x:auto}
