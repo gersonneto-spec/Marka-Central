@@ -12,7 +12,7 @@ da Ponta da Madeira (Vale S.A., São Luís/MA).
 | Área | Conteúdo | Situação |
 |---|---|---|
 | [Medição](medicao/) | Boletins de medição por contrato | 2 painéis |
-| [Cronogramas](cronogramas/) | Guia da semana, look-ahead, marcos e curvas de produção | 2 painéis |
+| [Cronogramas](cronogramas/) | Guia da semana, look-ahead, marcos e curvas de produção | 3 painéis |
 | [DRE e Custos](dre/) | Resultado por contrato, custo por natureza, material por fornecedor | 1 painel |
 | [Efetivo](efetivo/) | Efetivo e folha por função, com gráficos e análise | 1 painel |
 
@@ -22,6 +22,7 @@ da Ponta da Madeira (Vale S.A., São Luís/MA).
 |---|---|---|
 | [Medição OCG](medicao/ocg/) | Obras Civis Gerais · RT-2180KF-G-17251 · Obra 754 | `Medição OCG.xlsx`, aba QQP |
 | [Medição TP](medicao/trem/) | Oficina de Carros de Passageiros · PQ-2180KF-G-10017 | `Medição Trem de Passageiros.xlsx`, aba QQP |
+| [Cronograma por Obra](cronogramas/por-obra/) | Oficina de Carros de Passageiros | cronograma semanal (.mpp ou PDF), SEM 42 |
 | [Guia da Semana](cronogramas/semana/) | Oficina de Carros de Passageiros | cronograma semanal em PDF, Rev. 00 / LB_rev1 |
 | [Curvas de Produção](cronogramas/curvas/) | Oficina de Carros de Passageiros | `Curvas de Produção.xlsx`, 9 frentes |
 | [DRE e Custos 754](dre/754/) | Obras Civis Gerais · Obra 754 | DRE contábil + painel de apropriações do SIENGE |
