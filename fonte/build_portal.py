@@ -242,6 +242,18 @@ cron_corpo = """
 
   <div class="li">
     <div class="txt">
+      <b>Cronograma por Obra &middot; SEM 42</b>
+      <span>As 11 frentes separadas, com abas de Reunião, Campo (para o mestre), Gantt por obra, Fornecimentos e Visão geral</span>
+    </div>
+    <div class="kpis" style="border:0;gap:22px">
+      <div><small>Realizado</small><b>26,4%</b></div>
+      <div><small>IDP</small><b class="ouro">0,68</b></div>
+    </div>
+    <a class="acao" href="por-obra/">Abrir painel</a>
+  </div>
+
+  <div class="li">
+    <div class="txt">
       <b>Farol da Obra &middot; SEM 40</b>
       <span>Uma tela para diretoria: avanço contra o prazo do contrato, contagem regressiva dos 12 marcos e o que está travando agora &middot; sem sigla e sem EAP</span>
     </div>
